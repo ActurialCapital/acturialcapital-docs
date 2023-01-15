@@ -1,0 +1,227 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+site_name: DanaPointCapital
+
+# Configuration
+theme:
+  favicon: assets/images/kiss.png
+  logo: assets/images/kiss.png
+  icon:
+    repo: fontawesome/brands/git-alt 
+  name: material
+  language: en    
+  palette:
+  # - media: '(prefers-color-scheme: light)'
+  #   scheme: default
+  #   primary: black
+  #   accent: blue
+  #   toggle:
+  #     icon: material/brightness-7 
+  #     name: Switch to light mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    # primary: black
+    accent: blue
+    # toggle:
+    #   icon: material/brightness-4
+    #   name: Switch to dark mode
+      
+  font:
+    text: Roboto
+    code: Roboto Mono  
+      
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    # - navigation.sections
+    # - navigation.expand
+    - navigation.indexes
+    - toc.follow
+    # - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - header.autohide
+    # - announce.dismiss
+    - content.code.annotate 
+    
+# Repository
+copyright: Copyright &copy; 2015 - 2022 ActurialCapital
+repo_url: https://github.com/ActurialCapital/xyz
+repo_name: acturialcapital/xyz
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/squidfunk
+    - icon: fontawesome/brands/gitter
+      link: https://gitter.im/squidfunk/mkdocs-material
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/squidfunk/mkdocs-material/
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/mkdocs-material/
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/squidfunk   
+    - icon: fontawesome/brands/linkedin
+      link: https://twitter.com/squidfunk       
+  version:
+    provider: mike
+  analytics: 
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/heart
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/heart-broken
+          name: This page could be improved
+          data: 0
+          note: >- 
+            Thanks for your feedback! Help us improve this page by
+            using our <a href="..." target="_blank" rel="noopener">feedback form</a>.
+
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  
+extra_css:
+  - assets/css/extra.css
+  - assets/css/termynal.css
+  - assets/css/custom.css
+  
+plugins:
+  - glightbox
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+  - search:
+      separator: '[\s\-\.]' 
+      prebuild_index: true
+  - autorefs
+  - tags
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+      python:
+        options:
+          show_source: false
+          show_csource_code: false
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.critic
+  
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/shortcuts.js
+  - assets/js/termynal.js
+  - assets/js/termynal.min.js
+  - assets/js/custom.js
+  
+# use_directory_urls: true
+
+
+  
+nav:
+  - Getting Started:
+      - getting_started/index.md
+      - getting_started/installation.md
+      - getting_started/main_concepts.md
+      - getting_started/create_blocks.md
+      - getting_started/optimize_blocks.md
+      - getting_started/backtest_blocks.md
+      - API Reference:
+        - api_reference/index.md
+        - Strategy:
+            - api_reference/strategy/index.md
+            - api_reference/strategy/exposures.md
+            - Portfolio Construction:
+              - api_reference/strategy/portfolio_construction/index.md
+              - api_reference/strategy/portfolio_construction/optimize.md
+              - api_reference/strategy/portfolio_construction/discrete_allocation.md
+            - api_reference/strategy/backtest.md
+        - Signals:
+            - api_reference/signals/index.md
+      - Contributing:
+        - contributing/index.md
+        - contributing/philosophy.md
+        - contributing/development_guidelines.md
+  - Model Glossary: 
+      - model_glossary/index.md
+      - Sentiment:
+          -  model_glossary/sentiment/hurst_exponent.md
+          -  model_glossary/sentiment/range_strategy_models.md
+          -  model_glossary/sentiment/reversion_models.md
+          -  model_glossary/sentiment/short_interest_models.md
+          -  model_glossary/sentiment/trend_following_models.md
+      - Valuation:        
+          -  model_glossary/valuation/zscore_models.md
+      - Phase Identification:
+          - model_glossary/phase_identification/index.md
+          - model_glossary/phase_identification/factor_performance.md
+          - Cluster Models:
+            - model_glossary/phase_identification/cluster_models/index.md
+            - model_glossary/phase_identification/cluster_models/gaussian_mixture.md
+            - model_glossary/phase_identification/cluster_models/asset_allocation.md
+          - model_glossary/phase_identification/markov_models.md
+          - model_glossary/phase_identification/signal_models.md
+  - Dataset: 
+      - dataset/index.md
+  # - Data Workflow:
+  #     - data_workflow/index.md
+  - Terminal:
+      - terminal/index.md
+      
+      
