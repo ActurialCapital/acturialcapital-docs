@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
-site_name: DanaPointCapital
+site_name: Dana
 
 # Configuration
 theme:
-  favicon: assets/images/kiss.png
-  logo: assets/images/kiss.png
+  favicon: assets/images/lightning.png
+  logo: assets/images/lightning.png
   icon:
     repo: fontawesome/brands/git-alt 
   name: material

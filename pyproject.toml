@@ -6,6 +6,12 @@ authors = ["ActurialCapital <36569113+ActurialCapital@users.noreply.github.com>"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+mkdocs-glightbox = "^0.3.1"
+mkdocstrings-python = "^0.8.3"
+mkdocstrings = "^0.19.1"
+mkdocs-autorefs = "^0.4.1"
+mkdocs-git-revision-date-localized-plugin = "^1.1.0"
+mkdocs-material = "^9.0.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
