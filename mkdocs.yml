@@ -5,7 +5,7 @@ site_name: Dana
 # Configuration
 theme:
   favicon: assets/images/lightning.png
-  logo: assets/images/lightning.png
+  logo: assets/images/flash.png
   icon:
     repo: fontawesome/brands/git-alt 
   name: material
