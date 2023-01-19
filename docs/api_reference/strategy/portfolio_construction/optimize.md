@@ -44,12 +44,82 @@ Backend optimizer library. Defaults to `pyportopt`.
 
 `opendesk.strategy.Strategy` instance.
 
+!!! example "Example Optimizer"
+
+        Portfolio construction, which involves optimizing the allocation of assets within a portfolio, can be a complex and nuanced process. We have developed a method that allows for greater flexibility and experimentation in the portfolio optimization process. This approach enables the exploration of a wide range of potential portfolio compositions, and the example provided illustrates this method applied from the initial stages of portfolio construction:
+
+        * A mapping table, `mapping_table`, has been defined to specify the group membership of each investable stocks
+        * The base model is set `mvo`, the Mean-Variance Optimization from the [pypfopt library](https://pyportfolioopt.readthedocs.io/en/latest/MeanVariance.html), with the appropriate return and risk models
+        * The weight bounds parameter, `weight_bounds` is set to `(-1, 1)`, which serves as the first constraint by limiting the minimum and maximum weight of each asset in portfolios that allow short positions
+        * Additionally, new constraints are introduced to the optimization problem in the form of convex inequalities, which ensure that long positions do not exceed 10% and short positions do not fall below -10%
+
+        ```py
+        from opendesk import Strategy
+
+        strategy = (
+            Strategy(
+            steps=steps, 
+            topdown=True,
+            mapping_table=mapping_table # (3)
+            )
+            .fit(df) # (1)
+            .estimate(sum)
+            .optimize(
+                data=stock_prices, # (2)
+                backend="pypfopt"        
+            )
+            .portfolio(
+                model="mvo",
+                expected_returns_params={
+                    "method": "capm_return",
+                },
+                cov_matrix_params={
+                    "method": "sample_cov",
+                },   
+                weight_bounds=(-1, 1) # (4)
+            )
+            .add(
+                custom_constraints=[
+                    lambda w: w <=  .1, 
+                    lambda w: w >= -.1
+                ] # (5)
+            )
+        )
+        ```
+
+        1.  pandas.DataFrame object, with specifiy the variation of sector returns over time.
+        2.  pandas.DataFrame object, with specifiy the variation of stock prices over time.
+        3.  Mapping table where stock ticker/id are keys and sector name are values.
+        4. `weight_bounds` parameter serves as a constraint by limiting the minimum and maximum weight of each asset in portfolios. Because it ranges from `-1` to `1`, it allows Long and Shorts.
+        5. Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
+
+        The wrapper class creates `portfolio`, a public method, allowing for the efficient computation of optimized asset weights through inheritance. Here is an example with `efficient_risk()`, which maximises return for a given target risk of 8% (`target_volatility=.08`) and market neutrality (`market_neutral=True`):
+
+        <div class="termy">
+        ```console
+        $ strategy.efficient_risk(target_volatility=.08, market_neutral=True)
+        $ weights = pd.Series(strategy.clean_weights(), name="weights")
+        <span style="color: grey;">asset 1      0.10
+        asset 2      0.03
+        asset 3     -0.02
+        asset 4      0.03
+        asset 5     -0.05
+
+        asset 96     0.00
+        asset 97    -0.09
+        asset 98     0.00
+        asset 99    -0.07
+        asset 100    0.00
+        Name: weights, Length: 100, dtype: float64
+        </span>
+        ```
+
 ## Optimizer
 
 ```python
 class optimizer.Optimizer(
     self,
-    data: pd.DataFrame,
+    data: pandas.core.frame.DataFrame,
     group_constraints: Optional[Dict[str, Tuple[float, float]]] = None,
     exposures: Optional[pd.Series] = None,
     topdown: Optional[bool] = False,
@@ -125,7 +195,7 @@ Optional[int] = 252
 Number of time periods in a year, Defaults to 252 (the number of trading days in a year).
 </div>
 
-### Instance Variables
+### Attributes
 
 #### asset_scores
 
@@ -366,78 +436,3 @@ Model specificities.
 ##### Returns
 
 `opendesk.optimizer.Optimizer` instance.
- 
-## Example Optimize
-
-Portfolio construction, which involves optimizing the allocation of assets within a portfolio, can be a complex and nuanced process. We have developed a method that allows for greater flexibility and experimentation in the portfolio optimization process. This approach enables the exploration of a wide range of potential portfolio compositions, and the example provided illustrates this method applied from the initial stages of portfolio construction:
-
-* A mapping table, `mapping_table`, has been defined to specify the group membership of each investable stocks
-* The base model is set `mvo`, the Mean-Variance Optimization from the [pypfopt library](https://pyportfolioopt.readthedocs.io/en/latest/MeanVariance.html), with the appropriate return and risk models
-* The weight bounds parameter, `weight_bounds` is set to `(-1, 1)`, which serves as the first constraint by limiting the minimum and maximum weight of each asset in portfolios that allow short positions
-* Additionally, new constraints are introduced to the optimization problem in the form of convex inequalities, which ensure that long positions do not exceed 10% and short positions do not fall below -10%
-
-```py
-from opendesk import Strategy
-from opendesk.blocks import Reversion
-    
-steps = 
-
-strategy = (
-    Strategy(
-      steps=[("reversion", Reversion)], # (1),
-      topdown=True,
-      mapping_table=mapping_table # (4)
-    )
-    .fit(df) # (2)
-    .estimate(sum)
-    .optimize(
-      data=stock_prices, # (3)
-      backend="pypfopt"        
-    )
-    .portfolio(
-      model="mvo",
-      expected_returns_params={
-          "method": "capm_return",
-      },
-      cov_matrix_params={
-          "method": "sample_cov",
-      },   
-      weight_bounds=(-1, 1) # (5)
-    )
-    .add(
-        custom_constraints=[
-            lambda w: w <=  .1, 
-            lambda w: w >= -.1
-        ] # (6)
-    )
-)
-```
-
-1.  Calculate sentiment using Reversion Ranking Method.
-    More information provided in the [Model Glossary](/pro_version/model_glossary/sentiment/reversion_models).
-2.  pandas.DataFrame object, with specifiy the variation of sector returns over time.
-3.  pandas.DataFrame object, with specifiy the variation of stock prices over time.
-4.  Mapping table where stock ticker/id are keys and sector name are values.
-5. `weight_bounds` parameter serves as a constraint by limiting the minimum and maximum weight of each asset in portfolios. Because it ranges from `-1` to `1`, it allows Long and Shorts.
-6. Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
-
-The wrapper class creates `portfolio`, a public method, allowing for the efficient computation of optimized asset weights through inheritance. Here is an example with `efficient_risk()`, which maximises return for a given target risk of 8% (`target_volatility=.08`) and market neutrality (`market_neutral=True`):
-
-<div class="termy">
-  ```console
-  $ strategy.efficient_risk(target_volatility=.08, market_neutral=True)
-  $ weights = pd.Series(strategy.clean_weights(), name="weights")
-  <span style="color: grey;">asset 1      0.10
-  asset 2      0.03
-  asset 3     -0.02
-  asset 4      0.03
-  asset 5     -0.05
-
-  asset 96     0.00
-  asset 97    -0.09
-  asset 98     0.00
-  asset 99    -0.07
-  asset 100    0.00
-  Name: weights, Length: 100, dtype: float64
-  </span>
-  ```

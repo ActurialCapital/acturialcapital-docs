@@ -110,23 +110,7 @@ Optional[Dict[str, Tuple(float, float)]]
 Strategy constraints by group. Product of `exposures` and `mapping_weights`.
 </div>
 
-#### `lower_bound`
 
-``` markdown title="lower_bound"
-Dict[str, Tuple]
-```
-<div class="result" markdown>
-Lower bound constraints by group, from `group_constraints`.
-</div>
-
-#### `mid_bound`
-
-``` markdown title="mid_bound"
-Dict[str, Tuple]
-```
-<div class="result" markdown>
-Mid level constraints by group, from `group_constraints`.
-</div>
 
 #### `model_data`
 
@@ -135,15 +119,6 @@ pandas.core.frame.DataFrame
 ```
 <div class="result" markdown>
 Adjusted closing prices of the asset, each row is a date and each column is a ticker/id.
-</div>
-
-#### `upper_bound`
-
-``` markdown title="upper_bound"
-Dict[str, Tuple]
-```
-<div class="result" markdown>
-Upper level constraints by group, from `group_constraints`.
 </div>
 
 #### `weights`
