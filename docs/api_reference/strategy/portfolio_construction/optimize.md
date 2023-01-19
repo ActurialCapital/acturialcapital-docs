@@ -6,14 +6,13 @@
 Strategy.optimize(
   self, 
   data: Optional[pandas.core.frame.DataFrame] = None, 
-  returns_data: Optional[bool] = False, 
   backend: Optional[str] = 'pypfopt'
 ) ‑> opendesk.strategy.Strategy
 ```
 
-Portfolio optimization capabilities, which is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `Strategy.optimizer()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
+Portfolio optimization capabilities, which is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `optimize()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
 
-The `Strategy.optimize` (backend) calls the `Optimizer` class, which includes the implementation of the following public methods:
+The `optimize()` (backend) calls the `Optimizer` class, which includes the implementation of the following public methods:
 
 * `add()` Add a new objectives and constraints to the optimization problem
 * `portfolio()` Base optimizer model
@@ -21,17 +20,10 @@ The `Strategy.optimize` (backend) calls the `Optimizer` class, which includes th
 ### Parameters
 
 ``` markdown title="data"
-Optional[pandas.core.frame.DataFrame]
+Optional[pandas.core.frame.DataFrame] = None
 ```
 <div class="result" markdown>
-Market price time-series, each row is a date and each column is a ticker/id.
-</div>
-
-``` markdown title="returns_data"
-Optional[bool] = True
-```
-<div class="result" markdown>
-If true, the first argument is returns instead of prices. Defaults to `True`
+Market price time-series, each row is a date and each column is a ticker/id. If `None`, it takes `model_data`, the dataset used in the `fit()` method. Defaults to `None`.
 </div>
 
 ``` markdown title="backend"
@@ -42,6 +34,10 @@ Backend optimizer library. Defaults to `pyportopt`.
 
 * `pyportopt`: PyPortfolioOpt is a library that implements portfolio optimization methods, including classical efficient frontier techniques and Black-Litterman allocation, as well as more recent developments in the field like shrinkage and Hierarchical Risk Parity, along with some novel experimental features, like exponentially-weighted covariance matrices. 
 * `riskfolio`: Riskfolio-Lib is a library for making portfolio optimization and quantitative strategic asset allocation in Python. Its objective is to help students, academics and practitioners to build investment portfolios based on mathematically complex models with low effort. It is built on top of CVXPY and closely integrated with pandas data structures.
+
+!!! warning "Riskfolio-Lib"
+    The Riskfolio-Lib integration is still work-in-progress.
+
 </div>
 
 ### Returns
@@ -53,18 +49,16 @@ Backend optimizer library. Defaults to `pyportopt`.
 ```python
 class optimizer.Optimizer(
     self,
-    data: pandas.core.frame.DataFrame,
-    group_constraints: Optional[Dict[str, Tuple[float, float]]],
+    data: pd.DataFrame,
+    group_constraints: Optional[Dict[str, Tuple[float, float]]] = None,
+    exposures: Optional[pd.Series] = None,
     topdown: Optional[bool] = False,
     mapping_table: Optional[Dict[str, str]] = None,
-    returns_data: Optional[bool] = False,
+    freq: Optional[int] = 252
 )
 ```
 
-Initalize portfolio optimization processes.
-
-!!! warning "New Object Instantiation"
-    A new object should be instantiated if you want to make any change to objectives/constraints/bounds/parameters.
+Initalize the portfolio optimization process. 
 
 ### Parameters
 
@@ -76,42 +70,169 @@ Adjusted closing prices of the asset, each row is a date and each column is a ti
 </div>
 
 ``` markdown title="group_constraints"
-Optional[Dict[str, Tuple(float, float)]]
+Optional[Dict[str, Tuple[float, float]]] = None
 ```
 <div class="result" markdown>
-Strategy constraints by group. Product of `exposures` and `mapping_weights`.
+Strategy constraints by group. Product of `mapping_weights` inputs and `exposures` outputs from the `Strategy` class.
+</div>
+
+``` markdown title="exposures"
+Optional[pd.Series] = None
+```
+<div class="result" markdown>
+Strategy exposures attribute estimated from the `estimate()` function. Used in `asset_views` properties. Used to limiting the overall average score (exposure) to a level, as a custom constraint. E.i. suppose that for each asset you have some “score” – it could be an ESG metric, or some custom risk/return metric. It is simple to specify linear constraints, like “portfolio ESG score must be greater than x”: you simply create a vector of scores, add a constraint on the dot product of those scores with the portfolio weights, then optimize your objective:
+
+!!! example ESG Scores
+    ```python hl_lines="2 11"
+    # portolfio mininum score to find
+    portfolio_min_score = 0.5
+
+    # start strategy
+    esg_strategy = Strategy(steps=[("ESG", ESGModel)], topdown=True, mapping_table=mapping_table)
+    esg_strategy.fit(df).estimate(sum) # (1)
+    esg_strategy.optimize(stock_prices)
+    esg_strategy.portfolio(**portfolio_params) # (2)
+    esg_strategy.add(
+        custom_constraints=[
+            lambda w: strategy.asset_scores @ w >= portfolio_min_score
+        ]
+    )
+    ```
+
+    1.  Here, ESG scores are produced by the strategy `estimate()` function.
+    2.  Portfolio parameters are not explained here, as the goal of this snippet is to showcase the `custom_constraints` parameter with the optimizer `asset_scores` proprety.
+
+</div>
+
+``` markdown title="topdown"
+Optional[bool] = False
+```
+<div class="result" markdown>
+Activates top-down strategy. The strategy tilts is processed at a higher level (e.i. sector level) than the actual allocation exectution (e.i. stock level). If set to True, a mapping table should be passed. Defaults to False.
 </div>
 
 ``` markdown title="mapping_table"
-Optional[Dict[str, str]]
+Optional[Dict[str, str]] = None
 ```
 <div class="result" markdown>
 Maps higher with lower level assets. Variable `topdown` needs to be turned to `True`. Defaults to `None`.
 </div>
 
-``` markdown title="returns_data"
-Optional[bool]
+``` markdown title="freq"
+Optional[int] = 252
 ```
 <div class="result" markdown>
-If true, the first argument is returns instead of prices. Defaults to False.
+Number of time periods in a year, Defaults to 252 (the number of trading days in a year).
+</div>
+
+### Instance Variables
+
+#### asset_scores
+
+``` markdown title="asset_scores"
+Dict[str, float]
+```
+<div class="result" markdown>
+Transform exposures to score at any level. If `topdown` is set to `True`, it transforms exposures at the lower level. Otherwise, It returns `exposures`.
+</div>
+
+#### asset_views
+
+``` markdown title="asset_views"
+Dict[str, float]
+```
+<div class="result" markdown>
+
+The alpha blocks implementation works with the Black-Litterman `asset_views`, where views direction is extracted from the median of weight range and the magnitude is $1.96 \sigma$, where $\sigma$ is the annualized volatility calculated from log returns.
+
+!!! note "1.96 is Hardcoded"
+    In probability and statistics, the 97.5th percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.
+</div>
+
+#### bounds
+
+``` markdown title="bounds"
+List[Dict[str, float]]
+```
+<div class="result" markdown>
+Split range of weights, where the first element is the lower weight and the second element is the higher weight.
+</div>
+
+#### risk_free_rate
+
+``` markdown title="risk_free_rate"
+float
+```
+<div class="result" markdown>
+Risk free rate. Defaults to 0.02.
 </div>
 
 ### Public Methods
 
 #### Optimizer.add
 
+```python
+Optimizer.add(
+    self,
+    alpha_block_constraints: Optional[bool] = True,
+    n_asset_constraints: Optional[int] = None,
+    l2_regularization: Optional[bool] = True,
+    gamma: Optional[int] = 2,
+    custom_objectives: Optional[List[Tuple[Type, Dict[str, Any]]]] = None,
+    custom_constraints: Optional[List[Type]] = None
+) -> "Optimizer"
+```
+
 Add a new objectives and constraints to the optimization problem.
 
 ##### Parameters
 
-``` markdown title="objectives"
+``` markdown title="alpha_block_constraints"
+Optional[bool] = True
+```
+<div class="result" markdown>
+Alpha blocks core constraints. It adds constraints on the sum of weights of different groups of assets. Most commonly, these will be sector constraints. These constraints a particularly relevant when working with alpha blocks (top-down or bottom-up), as we aim to limit our exposure to paricular group of assets. Defaults to `True`.
+</div>
+
+``` markdown title="n_asset_constraints"
 Optional[List[Type]] = None
+```
+<div class="result" markdown>
+Number of assets in the portfolio constraints. Cardinality constraints are not convex, making them difficult to implement. However, we can treat it as a mixed-integer program and solve (provided you have access to a solver). for small problems with less than 1000 variables and constraints, you can use the community version of [CPLEX](https://en.wikipedia.org/wiki/CPLEX) available in python `pip install cplex`.
+
+!!! warning "`n_asset_constraints`"
+    This functionnality is still work in progress, as it requires external capabilities (`cplex`).
+</div>
+
+``` markdown title="l2_regularization"
+Optional[bool] = True
+```
+<div class="result" markdown>
+L2 regularisation, i.e $\gamma ||w||^2$, to increase the number of nonzero weights.
+
+Mean-variance optimization often results in many weights being negligible, i.e the efficient portfolio does not end up including most of the assets. This is expected behaviour, but it may be undesirable if you need a certain number of assets in your portfolio. 
+
+In order to coerce the mean-variance optimizer to produce more non-negligible weights, we add what can be thought of as a “small weights penalty” to all of the objective functions, parameterised by $\gamma$ (gamma). This term reduces the number of negligible weights, because it has a minimum value when all weights are equally distributed, and maximum value in the limiting case where the entire portfolio is allocated to one asset. We refer to it as L2 regularisation because it has exactly the same form as the L2 regularisation term in machine learning, though a slightly different purpose (in ML it is used to keep weights small while here it is used to make them larger).
+
+!!! note "Gamma"
+    In practice, $\gamma$ must be tuned to achieve the level of regularisation that you want. However, if the universe of assets is small (less than 20 assets), then gamma=1 is a good starting point. For larger universes, or if you want more non-negligible weights in the final portfolio, increase gamma.
+</div>
+
+``` markdown title="gamma"
+Optional[int] = 2
+```
+<div class="result" markdown>
+L2 regularisation parameter. Defaults to 2. Increase if you want more non-negligible weights
+</div>
+
+``` markdown title="custom_objectives"
+Optional[List[Tuple[Type, Dict[str, Any]]]] = None
 ```
 <div class="result" markdown>
 List of lambda functions to add new term into the based objective function. This term must be convex, and built from cvxpy atomic functions.
 </div>
 
-``` markdown title="constraints"
+``` markdown title="custom_constraints"
 Optional[List[Type]] = None
 ```
 <div class="result" markdown>
@@ -126,9 +247,26 @@ Optional[List[Type]] = None
 
 `opendesk.optimizer.Optimizer` instance.
 
+
 #### Optimizer.portfolio
 
+```python
+Optimizer.portfolio(
+    self,
+    model: str,
+    cov_matrix_params: Dict[str, Any],
+    expected_returns_params: Optional[Dict[str, Any]] = None,
+    black_litterman: Optional[bool] = False,
+    black_litterman_params: Optional[Dict[str, Any]] = None,
+    weight_bounds: Optional[Tuple[int, int]] = (-1, 1),
+    **kwargs
+) -> "Optimizer":
+```
+
 Base optimizer model, allowing for the efficient computation of optimized asset weights. The portfolio method houses different optimization methods, which generate optimal portfolios for various possible objective functions and parameters.
+
+!!! warning "New Object Instantiation"
+    A new object should be instantiated if you want to make any change to objectives/constraints/bounds/parameters.
 
 ##### Parameters
 
@@ -140,25 +278,12 @@ Type of optimizer to be used.
 Type of optimization:
 
 * `mvo`: Mean-variance optimization
+* `hrp`: Hierarchical Risk Parity
   
 Work in progress:
 
-* `bl`: Black-Litterman allocation
-* `hrp`: Hierarchical Risk Parity
-* `cla`: Critical Line Algorithm
-</div>
+* `kelly`: Kelly criterion
 
-``` markdown title="expected_returns_params"
-Dict[str, Any]
-```
-<div class="result" markdown>
-Parameters to compute an estimate of future returns:
-
-* `method` (str): the return model to use. Should be one of:
-    * `mean_historical_return`
-    * `ema_historical_return`
-    * `capm_return`
-* `**kwargs`: Method specificities
 </div>
 
 ``` markdown title="cov_matrix_params"
@@ -177,6 +302,51 @@ Parameters to compute a covariance matrix:
     * `ledoit_wolf_constant_correlation`
     * `oracle_approximating`
 * `**kwargs`: Method specificities
+</div>
+
+``` markdown title="expected_returns_params"
+Dict[str, Any]
+```
+<div class="result" markdown>
+Parameters to compute an estimate of future returns:
+
+* `method` (str): the return model to use. Should be one of:
+    * `mean_historical_return`
+    * `ema_historical_return`
+    * `capm_return`
+* `**kwargs`: Method specificities
+</div>
+
+``` markdown title="black_litterman"
+ Optional[bool] = False
+```
+<div class="result" markdown>
+Black-litterman integration.
+
+Black-Litterman model takes a Bayesian approach to asset allocation. Specifically, it combines a prior estimate of returns (for example, the market-implied returns) with views on certain assets, to produce a posterior estimate of expected returns. It will then meaningfully propagate views, taking into account the covariance with other assets. 
+
+The alpha blocks implementation works with the Black-Litterman absolute views, where views direction is extracted from the median of weight range and the magnitude is $1.96\sigma$ ($\sigma$ is the annualized volatility calculated from log returns).
+
+!!! note "1.96 is Hardcoded"
+    In probability and statistics, the 97.5th percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.
+    
+</div>
+
+``` markdown title="black_litterman_params"
+Optional[Dict[str, Any]] = None
+```
+<div class="result" markdown>
+
+Black-Litterman parameters. It accepts the following variables:
+
+* `pi` (np.ndarray, pd.Series, optional) – Nx1 prior estimate of returns, defaults to None. If pi=”market”, calculate a market-implied prior (requires market_caps to be passed). If pi=”equal”, use an equal-weighted prior.
+* `omega` (np.ndarray or Pd.DataFrame, or string, optional) – KxK view uncertainty matrix (diagonal), defaults to None Can instead pass “idzorek” to use Idzorek’s method (requires you to pass view_confidences). If omega=”default” or None, we set the uncertainty proportional to the variance.
+* `view_confidences` (np.ndarray, pd.Series, list, optional) – Kx1 vector of percentage view confidences (between 0 and 1), required to compute omega via Idzorek’s method.
+* `tau` (float, optional) – the weight-on-views scalar (default is 0.05)
+risk_aversion (positive float, optional) – risk aversion parameter, defaults to 1
+* `market_caps` (np.ndarray, pd.Series, optional) – (kwarg) market caps for the assets, required if pi=”market”
+* `risk_free_rate` (float, defaults to 0.02) – (kwarg) risk_free_rate is needed in some methods
+
 </div>
 
 ``` markdown title="weight_bounds"
@@ -208,13 +378,13 @@ Portfolio construction, which involves optimizing the allocation of assets withi
 
 ```py
 from opendesk import Strategy
-from opendesk.alpha_blocks import Reversion
+from opendesk.blocks import Reversion
     
-steps = [("reversion", Reversion)] # (1)
+steps = 
 
 strategy = (
     Strategy(
-      steps,
+      steps=[("reversion", Reversion)], # (1),
       topdown=True,
       mapping_table=mapping_table # (4)
     )
@@ -235,8 +405,7 @@ strategy = (
       weight_bounds=(-1, 1) # (5)
     )
     .add(
-        objectives=None,
-        constraints=[
+        custom_constraints=[
             lambda w: w <=  .1, 
             lambda w: w >= -.1
         ] # (6)

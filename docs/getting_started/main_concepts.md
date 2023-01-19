@@ -58,7 +58,9 @@ graph LR
   E --> I;
 ```
 
-### Multiprocessing
+### Speed
+
+#### Multiprocessing
 
 Using multiprocessing can be an efficient way to integrate the blocks. Multiprocessing refers to the ability of a computer to execute multiple processes concurrently, which can be useful for completing tasks more quickly. By utilizing multiprocessing to integrate each individual units, it is possible to speed up the process of constructing code pipelines and evaluating the performance of investment strategies or models.
 
@@ -87,8 +89,6 @@ graph LR
 
     However, it is important to note that the efficiency of using multiprocessing will depend on the specific characteristics of the blocks and the hardware being used. It may be necessary to carefully analyze the performance of the code and the available resources in order to determine the most appropriate approach for integrating the blocks in the sequence.
 
-### Speed
-
 In the above example, **5 blocks** (processes) were executed concurrently using backend `LokyBackend` with 8 concurrent workers[^5],
 each operating on a dataset of **1000 samples** times **20 sectors**.
 
@@ -104,6 +104,33 @@ The elapsed time for this operation was 1.2 seconds.
   <span style="color: yellow;">[Parallel(n_jobs=-1)]:   </span><span style="color: lime;">Done 5 out of 5 | elapsed: 1.2s finished</span>
   ```
 </div>
+
+#### Polars
+
+In some instances, we use [polars](https://www.pola.rs/), a lightning-fast DataFrame library for Rust and Python. Polars is written in Rust, uncompromising in its choices to provide a feature-complete DataFrame API to the Rust ecosystem. We use it as a DataFrame library for your data models. Polars is built upon the safe Arrow2 implementation of the Apache Arrow specification, enabling efficient resource use and processing performance. By doing so it also integrates seamlessly with other tools in the Arrow ecosystem.
+
+For example, the `apply` function is used to aggregate scores from different blocks. Here, we tested 10000 rows x 10 columns:
+
+**In pandas:**
+```pyton
+df.apply(func, axis=1).rename(func.__name__)
+```
+Time to apply with pandas: `3.211 seconds`
+
+**In polars:**
+```python
+import polars as pl
+
+pd.Series(
+      list(pl.DataFrame(df).with_column(
+          pl.fold(0, lambda acc, s: acc + s, pl.all()).alias("sum")
+      )[:,-1])
+  )
+```
+Time to apply with polars: `1.012 seconds`
+
+Both function return a `pandas.Series` object, however, Polars is ==3.17x faster== than pandas at `apply`. In a near future, if time complexity becomes an issue, we might turn the entire code base to polars.
+
 
 ## Step-by-Step Example
 
@@ -123,7 +150,7 @@ The Strategy class is initialized by defining the steps as outlined above and se
 
 ```python
 from opendesk import Strategy
-from opendesk.alpha_blocks import Reversion, TrendFollowing
+from opendesk.blocks import Reversion, TrendFollowing
 
 strategy = Strategy(
   steps = [

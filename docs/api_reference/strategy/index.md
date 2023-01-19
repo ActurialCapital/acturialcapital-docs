@@ -2,8 +2,6 @@
 
 ## Strategy
 
-The main implementation of the library is the `Strategy` class, which initializes the execution of the sequence and allows to compute tilts/exposures, create and backtest portfolios.
-
 ```python
 opendesk.Strategy(
     steps: List[Tuple[str, Type, Dict, Dict]], 
@@ -12,6 +10,13 @@ opendesk.Strategy(
     mapping_weights: Optional[Dict[int, Tuple]] = None
 )
 ```
+
+The main implementation of the library is the `Strategy` class, which initializes the execution of the sequence and allows to compute tilts/exposures, create and backtest portfolios.
+
+!!! info "Fluent interface"
+    In object-oriented programming, returning self from a method allows for the implementation of a fluent interface, where methods can be cascaded i a single statement.
+
+    In object-oriented programming, returning `self` from a method can be useful for several reasons. One common use case is to create a fluent interface, which is an API design style that allows method calls to be chained together in a single statement. This can make the code more readable and concise, as it eliminates the need to create intermediate variables to store the results of intermediate method calls. For example, with a fluent interface, this code could be written as `results = SomeClass().method1().method2().method3()`.
 
 ### Parameters
 
@@ -29,28 +34,28 @@ The parameter `steps` is required to enable the smooth integration of the strate
 
 !!! example "Example"
     ```python
-    from opendesk.alpha_blocks import Reversion
+    from opendesk.blocks import Reversion
     steps=[("Reversion", Reversion)]
     ```
 
 </div>
 
 ``` markdown title="topdown"
-Optional[bool]
+Optional[bool] = False
 ```
 <div class="result" markdown>
 Activates top-down strategy. The strategy tilts is processed at a higher level (e.i. sector level) than the actual allocation exectution (e.i. stock level). If set to `True`, a mapping table should be passed. Defaults to `False`.
 </div>
 
 ``` markdown title="mapping_table"
-Optional[Dict[str, str]]
+Optional[Dict[str, str]] = None
 ```
 <div class="result" markdown>
 Maps higher with lower level assets. Variable `topdown` needs to be turned to `True`. Defaults to `None`.
 </div>
 
 ``` markdown title="mapping_weights"
-Optional[Dict[int, Tuple]]
+Optional[Dict[int, Tuple]] = None
 ```
 <div class="result" markdown>
 Maps scores with range of weights. Defaults to `None`.
@@ -66,23 +71,24 @@ pandas.core.frame.DataFrame
 <div class="result" markdown>
 Output (scores) of all provided blocks. Following the method `fit()`, the attribute `breakdown` can be accessed, which contains the output from various models in a single `pandas.DataFrame` object
 
-<div class="termy">
-```console
-$ strategy.breakdown
-<span style="color: grey;">           Model 1  Model 2  Model 3  Model 4
-sector 1        -1        0        2        1
-sector 2         2       -2        0        1
-sector 3         1        1       -2        2
-sector 4        -2        0       -1        0
-sector 5         0       -1       -1        2
-sector 6        -1        0        1       -2
-sector 7        -2        1       -2       -1
-sector 8         1        2        0       -1
-sector 9         0        0       -1        0
-sector 10        2        0        1        0
-</span>
-```
-</div>
+!!! example "Breakdown"
+    <div class="termy">
+    ```console
+    $ strategy.breakdown
+    <span style="color: grey;">           Model 1  Model 2  Model 3  Model 4
+    sector 1        -1        0        2        1
+    sector 2         2       -2        0        1
+    sector 3         1        1       -2        2
+    sector 4        -2        0       -1        0
+    sector 5         0       -1       -1        2
+    sector 6        -1        0        1       -2
+    sector 7        -2        1       -2       -1
+    sector 8         1        2        0       -1
+    sector 9         0        0       -1        0
+    sector 10        2        0        1        0
+    </span>
+    ```
+    </div>
 
 </div>
 
@@ -131,81 +137,82 @@ Dict[str, Tuple]
 Upper level constraints by group, from `group_constraints`.
 </div>
 
-=== "Group Constraints"
+!!! example "Bounds"
+    === "Group Constraints"
 
-    <div class="termy">
-      ```console
-      $ strategy.group_constraints
-      <span style="color: grey;">{'sector 1': (0.0, 0.0),
-      'sector 2': (0.05, 0.15),
-      'sector 3': (0.0, 0.0),
-      'sector 4': (-0.15, -0.05),
-      'sector 5': (0.0, 0.0),
-      'sector 6': (0.0, 0.0),
-      'sector 7': (0.0, 0.0),
-      'sector 8': (0.05, 0.15),
-      'sector 9': (0.0, 0.0),
-      'sector 10': (0.0, 0.0)}
-      </span>
-      ```
-    </div>
+        <div class="termy">
+          ```console
+          $ strategy.group_constraints
+          <span style="color: grey;">{'sector 1': (0.0, 0.0),
+          'sector 2': (0.05, 0.15),
+          'sector 3': (0.0, 0.0),
+          'sector 4': (-0.15, -0.05),
+          'sector 5': (0.0, 0.0),
+          'sector 6': (0.0, 0.0),
+          'sector 7': (0.0, 0.0),
+          'sector 8': (0.05, 0.15),
+          'sector 9': (0.0, 0.0),
+          'sector 10': (0.0, 0.0)}
+          </span>
+          ```
+        </div>
 
-=== "Lower Bound"
+    === "Lower Bound"
 
-    <div class="termy">
-      ```console
-      $ strategy.lower_bound
-      <span style="color: grey;">{'sector 1': 0.0,
-      'sector 2': 0.05,
-      'sector 3': 0.0,
-      'sector 4': -0.15,
-      'sector 5': 0.0,
-      'sector 6': 0.0,
-      'sector 7': 0.0,
-      'sector 8': 0.05,
-      'sector 9': 0.0,
-      'sector 10': 0.0}
-      </span>
-      ```
-    </div>
+        <div class="termy">
+          ```console
+          $ strategy.lower_bound
+          <span style="color: grey;">{'sector 1': 0.0,
+          'sector 2': 0.05,
+          'sector 3': 0.0,
+          'sector 4': -0.15,
+          'sector 5': 0.0,
+          'sector 6': 0.0,
+          'sector 7': 0.0,
+          'sector 8': 0.05,
+          'sector 9': 0.0,
+          'sector 10': 0.0}
+          </span>
+          ```
+        </div>
 
-=== "Mid Bound"
+    === "Mid Bound"
 
-    <div class="termy">
-      ```console
-      $ strategy.mid_bound
-      <span style="color: grey;">{'sector 1': 0.0,
-      'sector 2': 0.1,
-      'sector 3': 0.0,
-      'sector 4': -0.1,
-      'sector 5': 0.0,
-      'sector 6': 0.0,
-      'sector 7': 0.0,
-      'sector 8': 0.1,
-      'sector 9': 0.0,
-      'sector 10': 0.0}
-      </span>
-      ```
-    </div>
+        <div class="termy">
+          ```console
+          $ strategy.mid_bound
+          <span style="color: grey;">{'sector 1': 0.0,
+          'sector 2': 0.1,
+          'sector 3': 0.0,
+          'sector 4': -0.1,
+          'sector 5': 0.0,
+          'sector 6': 0.0,
+          'sector 7': 0.0,
+          'sector 8': 0.1,
+          'sector 9': 0.0,
+          'sector 10': 0.0}
+          </span>
+          ```
+        </div>
 
-=== "Upper Bound"
+    === "Upper Bound"
 
-    <div class="termy">
-      ```console
-      $ strategy.upper_bound
-      <span style="color: grey;">{'feature 1': 0.0,
-      'feature 2': 0.15,
-      'feature 3': 0.0,
-      'feature 4': -0.05,
-      'feature 5': 0.0,
-      'feature 6': 0.0,
-      'feature 7': 0.0,
-      'feature 8': 0.15,
-      'feature 9': 0.0,
-      'feature 10': 0.0}
-      </span>
-      ```
-    </div>
+        <div class="termy">
+          ```console
+          $ strategy.upper_bound
+          <span style="color: grey;">{'feature 1': 0.0,
+          'feature 2': 0.15,
+          'feature 3': 0.0,
+          'feature 4': -0.05,
+          'feature 5': 0.0,
+          'feature 6': 0.0,
+          'feature 7': 0.0,
+          'feature 8': 0.15,
+          'feature 9': 0.0,
+          'feature 10': 0.0}
+          </span>
+          ```
+        </div>
 
 #### `weights`
 
@@ -218,9 +225,14 @@ Portfolio weights calculated through the discrete allocation `method`.
 
 ### Public Methods
 
+[Exposures](./exposures.md):
+
 * `add_blocks()` After initialization, additional blocks can be added to `steps`
 * `check_group_constraints()` Check group constraints after creating a portfolio
-* `discrete_allocation()` Set portfolio weights following a discrete allocation procedure
 * `estimate()` Aggregate exposures by summing each units using a predetermined function
 * `fit()` Executes each provided blocks with provided dataset
+
+[Portfolio Construction](./portfolio_construction/index.md):
+
+* `discrete_allocation()` Set portfolio weights following a discrete allocation procedure
 * `optimize()` Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints

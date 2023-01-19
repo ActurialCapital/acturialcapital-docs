@@ -36,7 +36,7 @@ Bound from `mapping_weights`. Total budget (in %) to apply.
 
 ```python
 from opendesk import Strategy
-from opendesk.alpha_blocks import Reversion, TrendFollowing
+from opendesk.blocks import Reversion, TrendFollowing
 
 strategy = Strategy(steps=steps, topdown=True, mapping_table=mapping_table)
 strategy.fit(df).estimate(sum)

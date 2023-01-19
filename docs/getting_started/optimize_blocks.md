@@ -42,7 +42,7 @@ Portfolio construction, which involves optimizing the allocation of assets withi
 
 ```py
 from opendesk import Strategy
-from opendesk.alpha_blocks import Reversion
+from opendesk.blocks import Reversion
 
 strategy = Strategy([("reversion", Reversion)]).fit(df).estimate(sum) # (1)
 

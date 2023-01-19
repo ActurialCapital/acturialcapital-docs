@@ -5,7 +5,7 @@
 ```python
 @classmethod
 opendesk.Strategy.backtest(
-    pipeline: Pipeline, 
+    config: BacktestConfig, 
     **kwargs
 ) ‑> vectorbt.portfolio.base.Portfolio
 ```
@@ -404,7 +404,7 @@ stock_prices.columns = assets
 
 ```python
 from opendesk.backtest import BacktestConfig
-from opendesk.alpha_blocks import Reversion, SignalBased, TrendFollowing
+from opendesk.blocks import Reversion, SignalBased, TrendFollowing
 from opendesk.strategy import Strategy
 
 # Config

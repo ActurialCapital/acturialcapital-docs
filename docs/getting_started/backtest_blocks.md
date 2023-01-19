@@ -50,14 +50,14 @@ In cases where a function is required to operate on multiple arguments, it is su
 
 This is why we created `Pipeline`, a dataclass object, which encapsultes required arguments to create exposure and build portfolio at each rebalancing period.
 
-### Step 1: BacktestPipeline
+### Step 1: BacktestConfig
 
-The `backtest` method is initalized through the `BacktestPipeline` dataclass, which facilitates feature integration. For example, variables `universe`, `model_data`, `steps`, `topdown` and `mapping_table` are set to match your requirement. All other variables are pre-set.
+The `backtest` method is initalized through the `BacktestConfig` dataclass, which facilitates feature integration. For example, variables `universe`, `model_data`, `steps`, `topdown` and `mapping_table` are set to match your requirement. All other variables are pre-set.
 
 ```python
-from opendesk import Pipeline
+from opendesk.backtest import BacktestConfig
 
-pipeline = BacktestPipeline(
+config = BacktestConfig(
     universe=stock_prices, 
     model_data=model_data, 
     steps=[(
@@ -88,7 +88,7 @@ pipeline = BacktestPipeline(
 )
 ```
 
-The backtest implementation initializes, fits and estimates exposures using the `fit()` and the `estimate()` methods. Then, it optimizes the portfolio at the stock level using the `optimize().portfolio()` methods and finds weights that align with the desired level of risk. 
+The backtest implementation initializes, fits and estimates exposures using the `fit()` and the `estimate()` methods. Then, it optimizes the portfolio at the stock level using the `.optimize()` and `.portfolio()` methods and finds weights that align with the desired level of risk. 
 
 The strategy is rebalanced on a monthly basis, and a `discrete_allocation` is used as a fallback in the event that the optimizer is unable to deliver feasible weights.
 
@@ -98,7 +98,7 @@ The output is a [vectorbt.Portfolio object](https://vectorbt.dev/api/portfolio/)
 
 <div class="termy">
   ```console
-  $ backtest = Strategy.backtest(pipeline)
+  $ backtest = Strategy.backtest(config)
   $ backtest.stats()
   <span style="color: grey;">Start                                 2019-01-02 00:00:00
   End                                   2022-12-30 00:00:00
