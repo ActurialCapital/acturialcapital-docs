@@ -66,7 +66,7 @@ Initalize the portfolio optimization process.
 pandas.core.frame.DataFrame
 ```
 <div class="result" markdown>
-Adjusted closing prices of the asset, each row is a date and each column is a ticker/id. If returns data, variable `returns_data` should be turned to `True`.
+Adjusted closing prices of the asset, each row is a date and each column is a ticker/id.
 </div>
 
 ``` markdown title="group_constraints"

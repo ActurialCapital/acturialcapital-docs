@@ -61,7 +61,7 @@ Optional[Dict[int, Tuple]] = None
 Maps scores with range of weights. Defaults to `None`.
 </div>
 
-### Instance Variables
+### Attributes
 
 #### `breakdown`
 
@@ -128,6 +128,15 @@ Dict[str, Tuple]
 Mid level constraints by group, from `group_constraints`.
 </div>
 
+#### `model_data`
+
+``` markdown title="model_data"
+pandas.core.frame.DataFrame
+```
+<div class="result" markdown>
+Adjusted closing prices of the asset, each row is a date and each column is a ticker/id.
+</div>
+
 #### `upper_bound`
 
 ``` markdown title="upper_bound"
@@ -135,6 +144,15 @@ Dict[str, Tuple]
 ```
 <div class="result" markdown>
 Upper level constraints by group, from `group_constraints`.
+</div>
+
+#### `weights`
+
+``` markdown title="weights"
+Dict[str, float]
+```
+<div class="result" markdown>
+Portfolio weights calculated through the discrete allocation `method`.
 </div>
 
 !!! example "Bounds"
@@ -213,15 +231,6 @@ Upper level constraints by group, from `group_constraints`.
           </span>
           ```
         </div>
-
-#### `weights`
-
-``` markdown title="weights"
-Dict[str, float]
-```
-<div class="result" markdown>
-Portfolio weights calculated through the discrete allocation `method`.
-</div>
 
 ### Public Methods
 
