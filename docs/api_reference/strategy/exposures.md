@@ -3,8 +3,7 @@
 ## Strategy.add_blocks
 
 ```python
-add_blocks(
-  self, 
+Strategy.add_blocks(
   *args: Tuple[str, Type, Dict, Dict]
 ) -> opendesk.strategy.Strategy:
 ```
@@ -65,8 +64,7 @@ Additional blocks to be added.
 ## Strategy.check_goup_constraints
 
 ```python
-check_group_constraints(
-  self, 
+Strategy.check_group_constraints(
   weights: pandas.core.series.Series
 ) ‑> pandas.core.frame.DataFrame
 ```
@@ -144,8 +142,7 @@ Portfolio weights calculated either with the `optimize` or the `discrete_allocat
 ## Strategy.estimate
 
 ```python
-estimate(
-  self, 
+Strategy.estimate(
   func: Type, 
   inplace: Optional[bool] = False
 ) ‑> Union[pandas.core.series.Series, opendesk.strategy.Strategy]
@@ -259,8 +256,7 @@ Returns a copy of `exposures`. Defaults to `False`.
 ## Strategy.fit
 
 ```python
-fit(
-  self, 
+Strategy.fit(
   model_data: pandas.core.frame.DataFrame, 
   backend: Optional[str] = 'joblib', 
   verbose: Optional[bool] = True
