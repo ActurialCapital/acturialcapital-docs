@@ -105,10 +105,6 @@ Optional[List[Type]] = None
  List of lambda function (e.i. all assets <= 3% of the total portfolio = [lambda w: w <= .03]. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
 </div>
 
-
-!!! notes "Top-Down Method"
-    When `topdown` is set to `True`, it adds constraints on the sum of weights of different groups of assets. Most commonly, these will be sector constraints e.g portfolio’s exposure to tech must be less than x%.
-
 #### Returns
 
 `opendesk.strategy.Strategy` instance.
