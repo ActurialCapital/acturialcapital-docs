@@ -1,136 +1,19 @@
-# Optimization
-
-## strategy.optimize
+# Portfolio
 
 ```python
-Strategy.optimize(
-  self, 
-  data: Optional[pandas.core.frame.DataFrame] = None, 
-  backend: Optional[str] = 'pypfopt'
-) ‑> opendesk.strategy.Strategy
-```
-
-Portfolio optimization capabilities, which is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `optimize()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
-
-The `optimize()` (backend) calls the `Optimizer` class, which includes the implementation of the following public methods:
-
-* `add()` Add a new objectives and constraints to the optimization problem
-* `portfolio()` Base optimizer model
-
-### Parameters
-
-``` markdown title="data"
-Optional[pandas.core.frame.DataFrame] = None
-```
-<div class="result" markdown>
-Market price time-series, each row is a date and each column is a ticker/id. If `None`, it takes `model_data`, the dataset used in the `fit()` method. Defaults to `None`.
-</div>
-
-``` markdown title="backend"
-Optional[str] = "pypfopt"
-```
-<div class="result" markdown>
-Backend optimizer library. Defaults to `pyportopt`.
-
-* `pyportopt`: PyPortfolioOpt is a library that implements portfolio optimization methods, including classical efficient frontier techniques and Black-Litterman allocation, as well as more recent developments in the field like shrinkage and Hierarchical Risk Parity, along with some novel experimental features, like exponentially-weighted covariance matrices. 
-* `riskfolio`: Riskfolio-Lib is a library for making portfolio optimization and quantitative strategic asset allocation in Python. Its objective is to help students, academics and practitioners to build investment portfolios based on mathematically complex models with low effort. It is built on top of CVXPY and closely integrated with pandas data structures.
-
-!!! warning "Riskfolio-Lib"
-    The Riskfolio-Lib integration is still work-in-progress.
-
-</div>
-
-### Returns
-
-`opendesk.strategy.Strategy` instance.
-
-!!! example "Example Optimizer"
-
-        Portfolio construction, which involves optimizing the allocation of assets within a portfolio, can be a complex and nuanced process. We have developed a method that allows for greater flexibility and experimentation in the portfolio optimization process. This approach enables the exploration of a wide range of potential portfolio compositions, and the example provided illustrates this method applied from the initial stages of portfolio construction:
-
-        * A mapping table, `mapping_table`, has been defined to specify the group membership of each investable stocks
-        * The base model is set `mvo`, the Mean-Variance Optimization from the [pypfopt library](https://pyportfolioopt.readthedocs.io/en/latest/MeanVariance.html), with the appropriate return and risk models
-        * The weight bounds parameter, `weight_bounds` is set to `(-1, 1)`, which serves as the first constraint by limiting the minimum and maximum weight of each asset in portfolios that allow short positions
-        * Additionally, new constraints are introduced to the optimization problem in the form of convex inequalities, which ensure that long positions do not exceed 10% and short positions do not fall below -10%
-
-        ```py
-        from opendesk import Strategy
-
-        strategy = (
-            Strategy(
-            steps=steps, 
-            topdown=True,
-            mapping_table=mapping_table # (3)
-            )
-            .fit(df) # (1)
-            .estimate(sum)
-            .optimize(
-                data=stock_prices, # (2)
-                backend="pypfopt"        
-            )
-            .portfolio(
-                model="mvo",
-                expected_returns_params={
-                    "method": "capm_return",
-                },
-                cov_matrix_params={
-                    "method": "sample_cov",
-                },   
-                weight_bounds=(-1, 1) # (4)
-            )
-            .add(
-                custom_constraints=[
-                    lambda w: w <=  .1, 
-                    lambda w: w >= -.1
-                ] # (5)
-            )
-        )
-        ```
-
-        1.  pandas.DataFrame object, with specifiy the variation of sector returns over time.
-        2.  pandas.DataFrame object, with specifiy the variation of stock prices over time.
-        3.  Mapping table where stock ticker/id are keys and sector name are values.
-        4. `weight_bounds` parameter serves as a constraint by limiting the minimum and maximum weight of each asset in portfolios. Because it ranges from `-1` to `1`, it allows Long and Shorts.
-        5. Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
-
-        The wrapper class creates `portfolio`, a public method, allowing for the efficient computation of optimized asset weights through inheritance. Here is an example with `efficient_risk()`, which maximises return for a given target risk of 8% (`target_volatility=.08`) and market neutrality (`market_neutral=True`):
-
-        <div class="termy">
-        ```console
-        $ strategy.efficient_risk(target_volatility=.08, market_neutral=True)
-        $ weights = pd.Series(strategy.clean_weights(), name="weights")
-        <span style="color: grey;">asset 1      0.10
-        asset 2      0.03
-        asset 3     -0.02
-        asset 4      0.03
-        asset 5     -0.05
-
-        asset 96     0.00
-        asset 97    -0.09
-        asset 98     0.00
-        asset 99    -0.07
-        asset 100    0.00
-        Name: weights, Length: 100, dtype: float64
-        </span>
-        ```
-
-## Optimizer
-
-```python
-class optimizer.Optimizer(
-    self,
+portfolio.Portfolio(
     data: pandas.core.frame.DataFrame,
     group_constraints: Optional[Dict[str, Tuple[float, float]]] = None,
-    exposures: Optional[pd.Series] = None,
+    exposures: Optional[pandas.core.series.Series] = None,
     topdown: Optional[bool] = False,
     mapping_table: Optional[Dict[str, str]] = None,
     freq: Optional[int] = 252
 )
 ```
 
-Initalize the portfolio optimization process. 
+Portfolio construction is the process of creating a balanced collection of investments that aligns with an investor's financial goals, risk tolerance, and investment horizon. The goal of portfolio construction is to maximize returns while minimizing risk.
 
-### Parameters
+## Parameters
 
 ``` markdown title="data"
 pandas.core.frame.DataFrame
@@ -147,13 +30,17 @@ Strategy constraints by group. Product of `mapping_weights` inputs and `exposure
 </div>
 
 ``` markdown title="exposures"
-Optional[pd.Series] = None
+Optional[pandas.core.series.Series] = None
 ```
 <div class="result" markdown>
-Strategy exposures attribute estimated from the `estimate()` function. Used in `asset_views` properties. Used to limiting the overall average score (exposure) to a level, as a custom constraint. E.i. suppose that for each asset you have some “score” – it could be an ESG metric, or some custom risk/return metric. It is simple to specify linear constraints, like “portfolio ESG score must be greater than x”: you simply create a vector of scores, add a constraint on the dot product of those scores with the portfolio weights, then optimize your objective:
+Strategy exposures attribute estimated from the `estimate()` function. 
+
+In the portfolio optimization section, it also core to the `asset_views` property, to limit the overall average score (exposure) as a custom constraint. E.i. suppose that for each asset you have some “score” – it could be an ESG metric, or some custom risk/return metric. It is simple to specify linear constraints, like “portfolio ESG score must be greater than x”: you simply create a vector of scores, add a constraint on the dot product of those scores with the portfolio weights, then optimize your objective:
 
 !!! example ESG Scores
-    ```python hl_lines="2 11"
+    ```python hl_lines="4 13"
+    from opendesk.blocks import ESGModel
+
     # portolfio mininum score to find
     portfolio_min_score = 0.5
 
@@ -195,9 +82,9 @@ Optional[int] = 252
 Number of time periods in a year, Defaults to 252 (the number of trading days in a year).
 </div>
 
-### Attributes
+## Attributes
 
-#### asset_scores
+### asset_scores
 
 ``` markdown title="asset_scores"
 Dict[str, float]
@@ -206,7 +93,7 @@ Dict[str, float]
 Transform exposures to score at any level. If `topdown` is set to `True`, it transforms exposures at the lower level. Otherwise, It returns `exposures`.
 </div>
 
-#### asset_views
+### asset_views
 
 ``` markdown title="asset_views"
 Dict[str, float]
@@ -219,43 +106,78 @@ The alpha blocks implementation works with the Black-Litterman `asset_views`, wh
     In probability and statistics, the 97.5th percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.
 </div>
 
-#### bounds
+### lower_bound
 
-``` markdown title="bounds"
-List[Dict[str, float]]
+``` markdown title="lower_bound"
+Dict[str, Tuple]
 ```
 <div class="result" markdown>
-Split range of weights, where the first element is the lower weight and the second element is the higher weight.
+Lower weight level constraints by group, from `group_constraints`.
 </div>
 
-#### risk_free_rate
+### mid_bound
 
-``` markdown title="risk_free_rate"
-float
+``` markdown title="mid_bound"
+Dict[str, Tuple]
 ```
 <div class="result" markdown>
-Risk free rate. Defaults to 0.02.
+Mid weight level constraints by group, from `group_constraints`.
 </div>
 
-### Public Methods
+### target_weights
 
-#### Optimizer.add
+``` markdown title="target_weights"
+Dict[str, float]
+```
+<div class="result" markdown>
+Target weights set through `range_bound` parameter, which equals either `lower_bound`, `mid_bound` or `upper_bound`.
+</div>
+
+### upper_bound
+
+``` markdown title="upper_bound"
+Dict[str, Tuple]
+```
+<div class="result" markdown>
+Upper weight level constraints by group, from `group_constraints`.
+</div>
+
+### weights
+
+``` markdown title="weights"
+pandas.core.series.Series
+```
+<div class="result" markdown>
+Weights output from the model.
+</div>
+
+### weight_bounds
+
+``` markdown title="weight_bounds"
+Optional[Tuple[int, int]]
+```
+<div class="result" markdown>
+Minimum and maximum weight of each asset or single min/max pair if all identical, defaults to (-1, 1). If `weight_bounds=(-1, 1)`, allows short positions.
+</div>
+
+## Public Methods
+
+### Portfolio.add
 
 ```python
-Optimizer.add(
-    self,
+Portfolio.add(
     alpha_block_constraints: Optional[bool] = True,
     n_asset_constraints: Optional[int] = None,
     l2_regularization: Optional[bool] = True,
     gamma: Optional[int] = 2,
     custom_objectives: Optional[List[Tuple[Type, Dict[str, Any]]]] = None,
     custom_constraints: Optional[List[Type]] = None
-) -> "Optimizer"
+) -> opendesk.portfolio.Portfolio
 ```
 
 Add a new objectives and constraints to the optimization problem.
 
-##### Parameters
+#### Parameters
 
 ``` markdown title="alpha_block_constraints"
 Optional[bool] = True
@@ -313,16 +235,68 @@ Optional[List[Type]] = None
 !!! notes "Top-Down Method"
     When `topdown` is set to `True`, it adds constraints on the sum of weights of different groups of assets. Most commonly, these will be sector constraints e.g portfolio’s exposure to tech must be less than x%.
 
-##### Returns
+#### Returns
 
-`opendesk.optimizer.Optimizer` instance.
+`opendesk.portfolio.Portfolio` instance.
 
-
-#### Optimizer.portfolio
+### Portfolio.discrete_allocation
 
 ```python
-Optimizer.portfolio(
-    self,
+Portfolio.discrete_allocation(
+    model: str,
+    model_params: Dict[str, Any] = None,
+    range_bound: Optional[str] = 'mid'
+) -> opendesk.portfolio.Portfolio
+```
+
+Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale.
+
+#### Parameters
+
+``` markdown title="model"
+Optional[str] = "equal_weighted"
+```
+<div class="result" markdown>
+Model used to allocate weights. Possible methods are:
+
+* `equal_weighted`: Asset equally weighted
+* `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
+* `score_weighted`: Asset weighted in proportion to their target-factor scores
+* `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
+* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
+* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
+
+Defaults to `equal_weighted`.
+</div>
+
+``` markdown title="model_params"
+Dict[str, Any] = None
+```
+<div class="result" markdown>
+Model specific parameters.
+</div>
+
+``` markdown title="range_bound"
+Optional[str] = "mid"
+```
+<div class="result" markdown>
+Weight bound (from `mapping_weights`). Total budget (in %) to apply. Possible values are:
+
+* `lower`: Lower weight bound
+* `mid`: Median weight
+* `upper`: Upper weight bound
+
+Defaults to `mid`.
+</div>
+
+#### Returns
+
+opendesk.portfolio.Portfolio instance.
+
+### Portfolio.optimize
+
+```python
+Portfolio.optimize(
     model: str,
     cov_matrix_params: Dict[str, Any],
     expected_returns_params: Optional[Dict[str, Any]] = None,
@@ -330,7 +304,7 @@ Optimizer.portfolio(
     black_litterman_params: Optional[Dict[str, Any]] = None,
     weight_bounds: Optional[Tuple[int, int]] = (-1, 1),
     **kwargs
-) -> "Optimizer":
+) -> opendesk.portfolio.Portfolio
 ```
 
 Base optimizer model, allowing for the efficient computation of optimized asset weights. The portfolio method houses different optimization methods, which generate optimal portfolios for various possible objective functions and parameters.
@@ -338,7 +312,7 @@ Base optimizer model, allowing for the efficient computation of optimized asset 
 !!! warning "New Object Instantiation"
     A new object should be instantiated if you want to make any change to objectives/constraints/bounds/parameters.
 
-##### Parameters
+#### Parameters
 
 ``` markdown title="model"
 Optional[str] = "mvo"
@@ -433,6 +407,6 @@ Dict
 Model specificities.
 </div>
 
-##### Returns
+#### Returns
 
-`opendesk.optimizer.Optimizer` instance.
+`opendesk.portfolio.Portfolio` instance.

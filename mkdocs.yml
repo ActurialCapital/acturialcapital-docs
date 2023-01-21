@@ -187,11 +187,9 @@ nav:
         - Strategy:
             - api_reference/strategy/index.md
             - api_reference/strategy/exposures.md
-            - Portfolio Construction:
-              - api_reference/strategy/portfolio_construction/index.md
-              - api_reference/strategy/portfolio_construction/optimize.md
-              - api_reference/strategy/portfolio_construction/discrete_allocation.md
+            - api_reference/strategy/portfolio_construction.md
             - api_reference/strategy/backtest.md
+        - api_reference/portfolio.md
         - Signals:
             - api_reference/signals/index.md
       - Contributing:

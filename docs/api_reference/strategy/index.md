@@ -209,14 +209,23 @@ Portfolio weights calculated through the discrete allocation `method`.
 
 ### Public Methods
 
-[Exposures](./exposures.md):
+#### Exposures
+
+!!! note "Exposures API"
+    API available in [Exposures](./exposures.md).
 
 * `add_blocks()` After initialization, additional blocks can be added to `steps`
 * `check_group_constraints()` Check group constraints after creating a portfolio
 * `estimate()` Aggregate exposures by summing each units using a predetermined function
 * `fit()` Executes each provided blocks with provided dataset
 
-[Portfolio Construction](./portfolio_construction/index.md):
+#### Portfolio Construction
 
-* `discrete_allocation()` Set portfolio weights following a discrete allocation procedure
-* `optimize()` Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
+!!! note "Portfolio Construction API"
+    API available in [Portfolio Construction](./portfolio_construction/index.md).
+
+
+* `portfolio()`:
+    * `add()`: Add a new objectives and constraints to the optimization problem 
+    * `discrete_allocation()`: Set portfolio weights following a discrete allocation weighting scheme
+    * `optimize()`: Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
