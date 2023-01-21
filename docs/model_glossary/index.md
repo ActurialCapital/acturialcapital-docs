@@ -1,3 +1,3 @@
 # Model Glossary
 
-## DOCS IN PROGRESS
+## Coming Soon!

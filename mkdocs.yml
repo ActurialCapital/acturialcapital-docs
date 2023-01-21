@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
-site_name: Dana
+site_name: ActurialCapital
 
 # Configuration
 theme:
@@ -187,9 +187,13 @@ nav:
         - Strategy:
             - api_reference/strategy/index.md
             - api_reference/strategy/exposures.md
-            - api_reference/strategy/portfolio_construction.md
+            - Porfolio Construction:
+              - api_reference/strategy/portfolio_construction/index.md
+              - api_reference/strategy/portfolio_construction/optimization.md
+              - api_reference/strategy/portfolio_construction/discrete_allocation.md
             - api_reference/strategy/backtest.md
         - api_reference/portfolio.md
+        - api_reference/backtest.md
         - Signals:
             - api_reference/signals/index.md
       - Contributing:

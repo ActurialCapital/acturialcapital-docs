@@ -1,40 +1,25 @@
-# Porfolio Construction
-
-Portfolio construction, which involves translating scores into weights, can be a complex and nuanced process. We have developed two methods that allows for greater flexibility and experimentation: Optimization and Discrete Allocation. These approach enables the exploration of a wide range of potential portfolio compositions.
-
-### Strategy.portfolio
-
-```python
-Strategy.portfolio(
-  data: Optional[pandas.core.frame.DataFrame] = None, 
-) ‑> opendesk.strategy.Strategy
-```
-
-#### Parameters
-
-``` markdown title="data"
-Optional[pandas.core.frame.DataFrame] = None
-```
-<div class="result" markdown>
-Market price time-series, each row is a date and each column is a ticker/id. If `None`, it takes `model_data`, the dataset used in the `fit()` method. Defaults to `None`.
-</div>
-
-
-#### Returns
-
-`opendesk.strategy.Strategy` instance.
-
-## Optimization
+# Optimization
 
 Portfolio optimization capabilities, which is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `portfolio()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
 
-The `portfolio()` calls the [`Portfolio`](../portfolio.md) class, which includes the implementation of the following public methods for optimization procedures:
+The `portfolio()` calls the [`Portfolio`](../portfolio.md) class, which includes the implementation of the following built-in public methods for optimization procedures:
 
 * `add()` Add a new objectives and constraints to the optimization problem
 * `optimize()` Base optimizer model
 
+Which triggers **PyPortfolioOpt** inherited methods:
+
+* `min_volatility()`: optimizes for minimum volatility
+* `max_sharpe()`: optimizes for maximal Sharpe ratio (a.k.a the tangency portfolio)
+* `max_quadratic_utility()`: maximises the quadratic utility, given some risk aversion
+* `efficient_risk()`: maximises return for a given target risk
+* `efficient_return()`: minimises risk for a given target return
+* `clean_weights()`: rounds the weights and clips near-zeros
+
 !!! sucess "PyPortfolioOpt"
     `pyportopt`: PyPortfolioOpt is a library that implements portfolio optimization methods, including classical efficient frontier techniques and Black-Litterman allocation, as well as more recent developments in the field like shrinkage and Hierarchical Risk Parity, along with some novel experimental features, like exponentially-weighted covariance matrices. 
+
+## Built-In Methods
 
 ### Strategy.add
 
@@ -227,7 +212,172 @@ Model specificities.
 
 `opendesk.strategy.Strategy` instance.
 
+## Inherited Methods
 
+### Strategy.min_volatility
+
+```python
+Strategy.min_volatility() ‑> OrderedDict
+```
+
+Optimizes for minimum volatility
+
+#### Returns
+
+`OrderedDict`, asset weights for the volatility-minimising portfolio.
+
+### Strategy.max_sharpe
+
+```python
+Strategy.max_sharpe(
+    risk_free_rate: Optional[float] = 0.02
+) ‑> OrderedDict
+```
+
+Maximise the Sharpe Ratio. The result is also referred to as the tangency portfolio, as it is the portfolio for which the capital market line is tangent to the efficient frontier.
+
+This is a convex optimization problem after making a certain variable substitution. See [Cornuejols and Tutuncu (2006)](http://web.math.ku.dk/~rolf/CT_FinOpt.pdf) for more.
+
+#### Parameters
+
+``` markdown title="risk_free_rate"
+Optional[float] = 0.02
+```
+<div class="result" markdown>
+Risk-free rate of borrowing/lending, defaults to 0.02. The period of the risk-free rate should correspond to the frequency of expected returns.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the Sharpe-maximising portfolio.
+
+### Strategy.max_quadratic_utility
+
+```python
+Strategy.max_quadratic_utility(
+    risk_aversion: Optional[int] = 1, 
+    market_neutral: Optional[bool] = False
+) ‑> OrderedDict
+```
+
+Maximise the given quadratic utility, i.e:
+
+$$
+\max_w w^T \mu - \frac \delta 2 w^T \Sigma w
+$$
+
+#### Parameters
+
+``` markdown title="risk_aversion"
+Optional[int] = 1
+```
+<div class="result" markdown>
+Risk aversion parameter (must be greater than 0), defaults to 1.
+</div>
+
+``` markdown title="market_neutral"
+Optional[bool] = False
+```
+<div class="result" markdown>
+whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the maximum-utility portfolio.
+
+### Strategy.efficient_risk
+
+```python
+Strategy.max_quadratic_utility(
+    target_volatility: float, 
+    market_neutral: Optional[bool] = False
+) ‑> OrderedDict
+```
+
+Maximise return for a target risk. The resulting portfolio will have a volatility less than the target (but not guaranteed to be equal).
+
+#### Parameters
+
+``` markdown title="target_volatility"
+float
+```
+<div class="result" markdown>
+The desired maximum volatility of the resulting portfolio.
+</div>
+
+``` markdown title="market_neutral"
+Optional[bool] = False
+```
+<div class="result" markdown>
+whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the efficient risk portfolio.
+
+### Strategy.efficient_return
+
+```python
+Strategy.max_quadratic_utility(
+    target_return: float, 
+    market_neutral: Optional[bool] = False
+) ‑> OrderedDict
+```
+
+Calculate the ‘Markowitz portfolio’, minimising volatility for a given target return.
+
+#### Parameters
+
+```markdown title="target_return"
+float
+```
+<div class="result" markdown>
+The desired return of the resulting portfolio.
+</div>
+
+``` markdown title="market_neutral"
+Optional[bool] = False
+```
+<div class="result" markdown>
+whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the Markowitz portfolio.
+
+### Strategy.clean_weights
+
+```python
+Strategy.clean_weights(
+    cutoff: Optional[float] = 0.0001, 
+    rounding: Optional[int] = 5
+) ‑> OrderedDict
+```
+
+Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
+
+#### Parameters
+
+``` markdown title="cutoff"
+Optional[float] = 0.0001
+```
+<div class="result" markdown>
+The lower bound, defaults to 1e-4
+</div>
+
+``` markdown title="rounding"
+Optional[int] = 5
+```
+<div class="result" markdown>
+Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights.
 
 !!! example "Example Optimizer"
 
@@ -297,92 +447,3 @@ Model specificities.
         Name: weights, Length: 100, dtype: float64
         </span>
         ```
-
-## Discrete Allocation
-
-The `portfolio()` calls the [`Portfolio`](../portfolio.md) class, which includes the implementation of the following public methods for discrete allocation procedures:
-
-* `discrete_allocation()` Implementation of single or multiple pre-determined rule-based allocation strategies
-
-### Strategy.discrete_allocation
-
-```python
-Strategy.discrete_allocation(
-    model: str,
-    model_params: Dict[str, Any] = None,
-    range_bound: Optional[str] = 'mid'
-) ‑> opendesk.strategy.Strategy
-```
-
-Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale. 
-
-#### Parameters
-
-``` markdown title="model"
-Optional[str] = "equal_weighted"
-```
-<div class="result" markdown>
-Model used to allocate weights. Possible methods are:
-
-* `equal_weighted`: Asset equally weighted
-* `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
-* `score_weighted`: Asset weighted in proportion to their target-factor scores
-* `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
-* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
-* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
-
-Defaults to `equal_weighted`.
-</div>
-
-``` markdown title="model_params"
-Dict[str, Any] = None
-```
-<div class="result" markdown>
-Model specific parameters.
-</div>
-
-``` markdown title="range_bound"
-Optional[str] = "mid"
-```
-<div class="result" markdown>
-Weight bound (from `mapping_weights`). Total budget (in %) to apply. Possible values are:
-
-* `lower`: Lower weight bound
-* `mid`: Median weight
-* `upper`: Upper weight bound
-
-Defaults to `mid`.
-</div>
-
-#### Returns
-
-`opendesk.strategy.Strategy` instance
-
-!!! example "Example Discrete Allocation"
-
-    ```python
-    from opendesk import Strategy
-
-    strategy = Strategy(steps=steps, topdown=True, mapping_table=mapping_table)
-    strategy.fit(df).estimate(sum)
-    strategy.discrete_allocation(stock_prices).portfolio(model="equal_weighted")
-    ```
-
-    <div class="termy">
-      ```console
-      $ weights = pd.Series(strategy.clean_weights(), name="weights")
-      <span style="color: grey;">asset 1      0.00
-      asset 2      0.01
-      asset 3      0.00
-      asset 4      0.00
-      asset 5      0.01
-
-      asset 96     0.00
-      asset 97    -0.01
-      asset 98     0.00
-      asset 99    -0.01
-      asset 100    0.00
-      Name: weights, Length: 100, dtype: float64
-      </span>
-      ```
-

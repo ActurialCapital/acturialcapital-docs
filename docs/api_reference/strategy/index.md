@@ -61,9 +61,17 @@ Optional[Dict[int, Tuple]] = None
 Maps scores with range of weights. Defaults to `None`.
 </div>
 
+### Ancestors (in MRO)
+
+* opendesk.portfolio.Portfolio
+* pypfopt.efficient_frontier.efficient_frontier.EfficientFrontier
+* pypfopt.base_optimizer.BaseConvexOptimizer
+* pypfopt.base_optimizer.BaseOptimizer
+
+
 ### Attributes
 
-#### `breakdown`
+#### breakdown
 
 ``` markdown title="breakdown"
 pandas.core.frame.DataFrame
@@ -92,7 +100,7 @@ Output (scores) of all provided blocks. Following the method `fit()`, the attrib
 
 </div>
 
-#### `exposures`
+#### exposures
 
 ``` markdown title="exposures"
 pandas.core.frame.DataFrame
@@ -101,18 +109,8 @@ pandas.core.frame.DataFrame
 Strategy exposures/tilts aggregated from model scores.
 </div>
 
-#### `group_constraints`
 
-``` markdown title="group_constraints"
-Optional[Dict[str, Tuple(float, float)]]
-```
-<div class="result" markdown>
-Strategy constraints by group. Product of `exposures` and `mapping_weights`.
-</div>
-
-
-
-#### `model_data`
+#### model_data
 
 ``` markdown title="model_data"
 pandas.core.frame.DataFrame
@@ -121,7 +119,7 @@ pandas.core.frame.DataFrame
 Adjusted closing prices of the asset, each row is a date and each column is a ticker/id.
 </div>
 
-#### `weights`
+#### weights
 
 ``` markdown title="weights"
 Dict[str, float]
@@ -207,6 +205,17 @@ Portfolio weights calculated through the discrete allocation `method`.
           ```
         </div>
 
+### Instance variables
+
+#### group_constraints
+
+``` markdown title="group_constraints"
+Optional[Dict[str, Tuple(float, float)]]
+```
+<div class="result" markdown>
+Strategy constraints by group. Product of `exposures` and `mapping_weights`.
+</div>
+
 ### Public Methods
 
 #### Exposures
@@ -225,7 +234,24 @@ Portfolio weights calculated through the discrete allocation `method`.
     API available in [Portfolio Construction](./portfolio_construction/index.md).
 
 
-* `portfolio()`:
-    * `add()`: Add a new objectives and constraints to the optimization problem 
-    * `discrete_allocation()`: Set portfolio weights following a discrete allocation weighting scheme
-    * `optimize()`: Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
+* `portfolio()`: Find portfolio weights, at any levels
+
+#### Discrete Allocation
+
+* `discrete_allocation()`: Set portfolio weights following a discrete allocation weighting scheme
+
+#### Optimization
+
+##### Built-In Methods
+
+* `add()`: Add a new objectives and constraints to the optimization problem 
+* `optimize()`: Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
+
+##### Inherited Methods
+
+* `min_volatility()`: optimizes for minimum volatility
+* `max_sharpe()`: optimizes for maximal Sharpe ratio (a.k.a the tangency portfolio)
+* `max_quadratic_utility()`: maximises the quadratic utility, given some risk aversion
+* `efficient_risk()`: maximises return for a given target risk
+* `efficient_return()`: minimises risk for a given target return
+* `clean_weights()`: rounds the weights and clips near-zeros

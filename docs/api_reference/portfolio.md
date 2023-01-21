@@ -82,7 +82,17 @@ Optional[int] = 252
 Number of time periods in a year, Defaults to 252 (the number of trading days in a year).
 </div>
 
-## Attributes
+## Ancestors (in MRO)
+
+* pypfopt.efficient_frontier.efficient_frontier.EfficientFrontier
+* pypfopt.base_optimizer.BaseConvexOptimizer
+* pypfopt.base_optimizer.BaseOptimizer
+  
+## Descendants
+
+* opendesk.strategy.Strategy
+  
+## Instance variables
 
 ### asset_scores
 
@@ -124,15 +134,6 @@ Dict[str, Tuple]
 Mid weight level constraints by group, from `group_constraints`.
 </div>
 
-### target_weights
-
-``` markdown title="target_weights"
-Dict[str, float]
-```
-<div class="result" markdown>
-Target weights set through `range_bound` parameter, which equals either `lower_bound`, `mid_bound` or `upper_bound`.
-</div>
-
 ### upper_bound
 
 ``` markdown title="upper_bound"
@@ -140,6 +141,17 @@ Dict[str, Tuple]
 ```
 <div class="result" markdown>
 Upper weight level constraints by group, from `group_constraints`.
+</div>
+
+## Attributes
+
+### target_weights
+
+``` markdown title="target_weights"
+Dict[str, float]
+```
+<div class="result" markdown>
+Target weights set through `range_bound` parameter, which equals either `lower_bound`, `mid_bound` or `upper_bound`.
 </div>
 
 ### weights
@@ -406,3 +418,170 @@ Model specificities.
 #### Returns
 
 `opendesk.portfolio.Portfolio` instance.
+
+## Inherited Methods
+
+### Portfolio.min_volatility
+
+```python
+Portfolio.min_volatility() ‑> OrderedDict
+```
+
+Optimizes for minimum volatility
+
+#### Returns
+
+`OrderedDict`, asset weights for the volatility-minimising portfolio.
+
+### Portfolio.max_sharpe
+
+```python
+Portfolio.max_sharpe(
+    risk_free_rate: Optional[float] = 0.02
+) ‑> OrderedDict
+```
+
+Maximise the Sharpe Ratio. The result is also referred to as the tangency portfolio, as it is the portfolio for which the capital market line is tangent to the efficient frontier.
+
+This is a convex optimization problem after making a certain variable substitution. See [Cornuejols and Tutuncu (2006)](http://web.math.ku.dk/~rolf/CT_FinOpt.pdf) for more.
+
+#### Parameters
+
+``` markdown title="risk_free_rate"
+Optional[float] = 0.02
+```
+<div class="result" markdown>
+Risk-free rate of borrowing/lending, defaults to 0.02. The period of the risk-free rate should correspond to the frequency of expected returns.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the Sharpe-maximising portfolio.
+
+### Portfolio.max_quadratic_utility
+
+```python
+Portfolio.max_quadratic_utility(
+    risk_aversion: Optional[int] = 1, 
+    market_neutral: Optional[bool] = False
+) ‑> OrderedDict
+```
+
+Maximise the given quadratic utility, i.e:
+
+$$
+\max_w w^T \mu - \frac \delta 2 w^T \Sigma w
+$$
+
+#### Parameters
+
+``` markdown title="risk_aversion"
+Optional[int] = 1
+```
+<div class="result" markdown>
+Risk aversion parameter (must be greater than 0), defaults to 1.
+</div>
+
+``` markdown title="market_neutral"
+Optional[bool] = False
+```
+<div class="result" markdown>
+whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the maximum-utility portfolio.
+
+### Portfolio.efficient_risk
+
+```python
+Portfolio.max_quadratic_utility(
+    target_volatility: float, 
+    market_neutral: Optional[bool] = False
+) ‑> OrderedDict
+```
+
+Maximise return for a target risk. The resulting portfolio will have a volatility less than the target (but not guaranteed to be equal).
+
+#### Parameters
+
+``` markdown title="target_volatility"
+float
+```
+<div class="result" markdown>
+The desired maximum volatility of the resulting portfolio.
+</div>
+
+``` markdown title="market_neutral"
+Optional[bool] = False
+```
+<div class="result" markdown>
+whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the efficient risk portfolio.
+
+### Portfolio.efficient_return
+
+```python
+Portfolio.max_quadratic_utility(
+    target_return: float, 
+    market_neutral: Optional[bool] = False
+) ‑> OrderedDict
+```
+
+Calculate the ‘Markowitz portfolio’, minimising volatility for a given target return.
+
+#### Parameters
+
+```markdown title="target_return"
+float
+```
+<div class="result" markdown>
+The desired return of the resulting portfolio.
+</div>
+
+``` markdown title="market_neutral"
+Optional[bool] = False
+```
+<div class="result" markdown>
+whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights for the Markowitz portfolio.
+
+### Portfolio.clean_weights
+
+```python
+Portfolio.clean_weights(
+    cutoff: Optional[float] = 0.0001, 
+    rounding: Optional[int] = 5
+) ‑> OrderedDict
+```
+
+Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
+
+#### Parameters
+
+``` markdown title="cutoff"
+Optional[float] = 0.0001
+```
+<div class="result" markdown>
+The lower bound, defaults to 1e-4
+</div>
+
+``` markdown title="rounding"
+Optional[int] = 5
+```
+<div class="result" markdown>
+Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
+</div>
+
+#### Returns
+
+`OrderedDict`, asset weights.

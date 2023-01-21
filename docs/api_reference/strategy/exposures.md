@@ -148,7 +148,7 @@ Strategy.estimate(
 ) ‑> Union[pandas.core.series.Series, opendesk.strategy.Strategy]
 ```
 
-Aggregate exposures by summing each units using a predetermined function `func`.
+Aggregate exposures by aggregating each units using a predetermined function `func`.
 
 ### Parameters
 
