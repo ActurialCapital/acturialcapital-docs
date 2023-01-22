@@ -1,3 +1,3 @@
 # Terminal
 
-## DOCS IN PROGRESS
+## Coming Soon!
