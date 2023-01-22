@@ -51,22 +51,22 @@ strategy = Strategy([("reversion", Reversion)]).fit(df).estimate(sum) # (1)
 1.  Calculate sentiment using Reversion Ranking Method.
     More information provided in the [Model Glossary](/pro_version/model_glossary/sentiment/reversion_models).
 
-### Step 1: Optimize
+### Step 1: Portfolio
 
 We aim to find weights for a large universe of stocks:
 
 ```python
-strategy.optimize(data=stock_prices) # (1)
+strategy.portfolio(data=stock_prices) # (1)
 ```
 
 1.  pandas.DataFrame object, with specifiy the variation of stock prices over time.
 
-### Step 2: Portfolio
+### Step 2: Optimize
 
-The wrapper class creates `portfolio`, a public method, allowing for the efficient computation of optimized asset weights through inheritance:
+The wrapper class inherite from `Portfolio`, which adds the `optimize` public method to your toolbox, allowing for the efficient computation of optimized asset weights:
 
 ```python
-strategy.portfolio(
+strategy.optimize(
     model="mvo",
     expected_returns_params={"method": "capm_return"},
     cov_matrix_params={"method": "sample_cov"},   
@@ -82,7 +82,7 @@ strategy.portfolio(
 Constraints are lambda functions (e.i. all assets must be lower or equal to 10% of the total portfolio would simply translate to `[lambda w: w <= .1]`. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint. We added the following:
 
 ```python
-strategy.add(constraints=[lambda w: w <= .1, lambda w: w >= -.1]) # (1)
+strategy.add(custom_constraints=[lambda w: w <= .1, lambda w: w >= -.1]) # (1)
 ```
 
 1. Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.

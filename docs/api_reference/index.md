@@ -14,7 +14,7 @@
 
 ![Portfolio](../assets/images/flaticon_7.png){ align=left width=80 }
 
-[Portfolio](./signals/index.md), which is the process of creating a balanced collection of investments that aligns with an investor's financial goals, risk tolerance, and investment horizon. The goal of portfolio construction is to maximize returns while minimizing risk.
+[Portfolio](./portfolio/index.md), which is the process of creating a balanced collection of investments that aligns with an investor's financial goals, risk tolerance, and investment horizon. The goal of portfolio construction is to maximize returns while minimizing risk.
 </div>
 
 ***

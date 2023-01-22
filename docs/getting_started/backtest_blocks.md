@@ -58,29 +58,30 @@ The `backtest` method is initalized through the `BacktestConfig` dataclass, whic
 from opendesk.backtest import BacktestConfig
 
 config = BacktestConfig(
-    universe=stock_prices, 
-    model_data=model_data, 
     steps=[(
         "my_block", 
         MyBlock, 
         {"mapping_score": mapping_score}, 
         {"price_earnings": price_earnings}
-    )], 
+    )],     
+    universe=stock_prices, 
+    model_data=model_data, 
     topdown=True, 
     mapping_table=mapping_table,
-    portfolio_construction='optimize',
-    portfolio_expected_returns_params=dict(
+    portfolio='optimize',
+    optimize_model="mvo",
+    optimize_expected_returns_params=dict(
         method="capm_return"
     ),
-    portfolio_cov_matrix_params=dict(
+    optimize_cov_matrix_params=dict(
         method="sample_cov"
     ),
-    solver_method="efficient_risk",
-    solver_params=dict(
+    optimize_method="efficient_risk",
+    optimize_params=dict(
         target_volatility=.08, 
         market_neutral=True
     ),
-    add_constraints = [
+    add_custom_constraints = [
         lambda w: w <=  .03, 
         lambda w: w >= -.03
     ],
@@ -88,9 +89,9 @@ config = BacktestConfig(
 )
 ```
 
-The backtest implementation initializes, fits and estimates exposures using the `fit()` and the `estimate()` methods. Then, it optimizes the portfolio at the stock level using the `.optimize()` and `.portfolio()` methods and finds weights that align with the desired level of risk. 
+The backtest implementation initializes, fits and estimates exposures using the `fit()` and the `estimate()` methods. Then, it optimizes the portfolio at the stock level using the `portfolio()` and `optimize()` methods and finds weights that align with the desired level of risk. 
 
-The strategy is rebalanced on a monthly basis, and a `discrete_allocation` is used as a fallback in the event that the optimizer is unable to deliver feasible weights.
+The strategy is rebalanced on a monthly basis, and the `discrete_allocation()` method is used as a fallback in the event that the optimizer is unable to deliver feasible weights.
 
 ### Step 2: Backtest
 

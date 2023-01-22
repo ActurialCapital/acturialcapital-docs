@@ -2,12 +2,12 @@
 
 Portfolio construction, which involves translating scores into weights, can be a complex and nuanced process. We have developed two methods that allows for greater flexibility and experimentation: 
 
-* [Optimization](./portfolio_construction/optimization.md)
-* [Discrete Allocation](./portfolio_construction/discrete_allocation.md)
+* [Optimization](./optimization.md)
+* [Discrete Allocation](./discrete_allocation.md)
 
 These approach enables the exploration of a wide range of potential portfolio compositions.
 
-### Strategy.portfolio
+## Strategy.portfolio
 
 ```python
 Strategy.portfolio(
@@ -15,7 +15,7 @@ Strategy.portfolio(
 ) ‑> opendesk.strategy.Strategy
 ```
 
-#### Parameters
+### Parameters
 
 ``` markdown title="data"
 Optional[pandas.core.frame.DataFrame] = None
@@ -25,6 +25,6 @@ Market price time-series, each row is a date and each column is a ticker/id. If 
 </div>
 
 
-#### Returns
+### Returns
 
 `opendesk.strategy.Strategy` instance.

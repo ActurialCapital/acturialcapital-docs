@@ -1,180 +1,6 @@
-# Portfolio
+# Optimization
 
-```python
-portfolio.Portfolio(
-    data: pandas.core.frame.DataFrame,
-    group_constraints: Optional[Dict[str, Tuple[float, float]]] = None,
-    exposures: Optional[pandas.core.series.Series] = None,
-    topdown: Optional[bool] = False,
-    mapping_table: Optional[Dict[str, str]] = None,
-    freq: Optional[int] = 252
-)
-```
-
-Portfolio construction is the process of creating a balanced collection of investments that aligns with an investor's financial goals, risk tolerance, and investment horizon. The goal of portfolio construction is to maximize returns while minimizing risk.
-
-## Parameters
-
-``` markdown title="data"
-pandas.core.frame.DataFrame
-```
-<div class="result" markdown>
-Adjusted closing prices of the asset, each row is a date and each column is a ticker/id.
-</div>
-
-``` markdown title="group_constraints"
-Optional[Dict[str, Tuple[float, float]]] = None
-```
-<div class="result" markdown>
-Strategy constraints by group. Product of `mapping_weights` inputs and `exposures` outputs from the `Strategy` class.
-</div>
-
-``` markdown title="exposures"
-Optional[pandas.core.series.Series] = None
-```
-<div class="result" markdown>
-Strategy exposures attribute estimated from the `estimate()` function. 
-
-In the portfolio optimization section, it also core to the `asset_views` property, to limit the overall average score (exposure) as a custom constraint. E.i. suppose that for each asset you have some “score” – it could be an ESG metric, or some custom risk/return metric. It is simple to specify linear constraints, like “portfolio ESG score must be greater than x”: you simply create a vector of scores, add a constraint on the dot product of those scores with the portfolio weights, then optimize your objective:
-
-!!! example ESG Scores
-    ```python hl_lines="4 13"
-    from opendesk.blocks import ESGModel
-
-    # portolfio mininum score to find
-    portfolio_min_score = 0.5
-
-    # start strategy
-    esg_strategy = Strategy(steps=[("ESG", ESGModel)], topdown=True, mapping_table=mapping_table)
-    esg_strategy.fit(df).estimate(sum) # (1)
-    esg_strategy.optimize(stock_prices)
-    esg_strategy.portfolio(**portfolio_params) # (2)
-    esg_strategy.add(
-        custom_constraints=[
-            lambda w: strategy.asset_scores @ w >= portfolio_min_score
-        ]
-    )
-    ```
-
-    1.  Here, ESG scores are produced by the strategy `estimate()` function.
-    2.  Portfolio parameters are not explained here, as the goal of this snippet is to showcase the `custom_constraints` parameter with the optimizer `asset_scores` proprety.
-
-</div>
-
-``` markdown title="topdown"
-Optional[bool] = False
-```
-<div class="result" markdown>
-Activates top-down strategy. The strategy tilts is processed at a higher level (e.i. sector level) than the actual allocation exectution (e.i. stock level). If set to True, a mapping table should be passed. Defaults to False.
-</div>
-
-``` markdown title="mapping_table"
-Optional[Dict[str, str]] = None
-```
-<div class="result" markdown>
-Maps higher with lower level assets. Variable `topdown` needs to be turned to `True`. Defaults to `None`.
-</div>
-
-``` markdown title="freq"
-Optional[int] = 252
-```
-<div class="result" markdown>
-Number of time periods in a year, Defaults to 252 (the number of trading days in a year).
-</div>
-
-## Ancestors (in MRO)
-
-* pypfopt.efficient_frontier.efficient_frontier.EfficientFrontier
-* pypfopt.base_optimizer.BaseConvexOptimizer
-* pypfopt.base_optimizer.BaseOptimizer
-  
-## Descendants
-
-* opendesk.strategy.Strategy
-  
-## Instance variables
-
-### asset_scores
-
-``` markdown title="asset_scores"
-Dict[str, float]
-```
-<div class="result" markdown>
-Transform exposures to score at any level. If `topdown` is set to `True`, it transforms exposures at the lower level. Otherwise, It returns `exposures`.
-</div>
-
-### asset_views
-
-``` markdown title="asset_views"
-Dict[str, float]
-```
-<div class="result" markdown>
-
-The alpha blocks implementation works with the Black-Litterman `asset_views`, where views direction is extracted from the median of weight range and the magnitude is $1.96 \sigma$, where $\sigma$ is the annualized volatility calculated from log returns.
-
-!!! note "1.96 is Hardcoded"
-    In probability and statistics, the 97.5th percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.
-</div>
-
-### lower_bound
-
-``` markdown title="lower_bound"
-Dict[str, Tuple]
-```
-<div class="result" markdown>
-Lower weight level constraints by group, from `group_constraints`.
-</div>
-
-### mid_bound
-
-``` markdown title="mid_bound"
-Dict[str, Tuple]
-```
-<div class="result" markdown>
-Mid weight level constraints by group, from `group_constraints`.
-</div>
-
-### upper_bound
-
-``` markdown title="upper_bound"
-Dict[str, Tuple]
-```
-<div class="result" markdown>
-Upper weight level constraints by group, from `group_constraints`.
-</div>
-
-## Attributes
-
-### target_weights
-
-``` markdown title="target_weights"
-Dict[str, float]
-```
-<div class="result" markdown>
-Target weights set through `range_bound` parameter, which equals either `lower_bound`, `mid_bound` or `upper_bound`.
-</div>
-
-### weights
-
-``` markdown title="weights"
-pandas.core.series.Series
-```
-<div class="result" markdown>
-Weights output from the model.
-</div>
-
-### weight_bounds
-
-``` markdown title="weight_bounds"
-Optional[Tuple[int, int]]
-```
-<div class="result" markdown>
-Minimum and maximum weight of each asset or single min/max pair if all identical, defaults to (-1, 1). If `weight_bounds=(-1, 1)`, allows short positions.
-</div>
-
-## Public Methods
-
-### Portfolio.add
+## Portfolio.add
 
 ```python
 Portfolio.add(
@@ -189,7 +15,7 @@ Portfolio.add(
 
 Add a new objectives and constraints to the optimization problem.
 
-#### Parameters
+### Parameters
 
 ``` markdown title="alpha_block_constraints"
 Optional[bool] = True
@@ -243,65 +69,11 @@ Optional[List[Type]] = None
  List of lambda function (e.i. all assets <= 3% of the total portfolio = [lambda w: w <= .03]. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
 </div>
 
-#### Returns
+### Returns
 
 `opendesk.portfolio.Portfolio` instance.
 
-### Portfolio.discrete_allocation
-
-```python
-Portfolio.discrete_allocation(
-    model: str,
-    model_params: Dict[str, Any] = None,
-    range_bound: Optional[str] = 'mid'
-) -> opendesk.portfolio.Portfolio
-```
-
-Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale.
-
-#### Parameters
-
-``` markdown title="model"
-Optional[str] = "equal_weighted"
-```
-<div class="result" markdown>
-Model used to allocate weights. Possible methods are:
-
-* `equal_weighted`: Asset equally weighted
-* `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
-* `score_weighted`: Asset weighted in proportion to their target-factor scores
-* `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
-* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
-* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
-
-Defaults to `equal_weighted`.
-</div>
-
-``` markdown title="model_params"
-Dict[str, Any] = None
-```
-<div class="result" markdown>
-Model specific parameters.
-</div>
-
-``` markdown title="range_bound"
-Optional[str] = "mid"
-```
-<div class="result" markdown>
-Weight bound (from `mapping_weights`). Total budget (in %) to apply. Possible values are:
-
-* `lower`: Lower weight bound
-* `mid`: Median weight
-* `upper`: Upper weight bound
-
-Defaults to `mid`.
-</div>
-
-#### Returns
-
-opendesk.portfolio.Portfolio instance.
-
-### Portfolio.optimize
+## Portfolio.optimize
 
 ```python
 Portfolio.optimize(
@@ -320,7 +92,7 @@ Base optimizer model, allowing for the efficient computation of optimized asset 
 !!! warning "New Object Instantiation"
     A new object should be instantiated if you want to make any change to objectives/constraints/bounds/parameters.
 
-#### Parameters
+### Parameters
 
 ``` markdown title="model"
 Optional[str] = "mvo"
@@ -415,13 +187,11 @@ Dict
 Model specificities.
 </div>
 
-#### Returns
+### Returns
 
 `opendesk.portfolio.Portfolio` instance.
 
-## Inherited Methods
-
-### Portfolio.min_volatility
+## Portfolio.min_volatility
 
 ```python
 Portfolio.min_volatility() ‑> OrderedDict
@@ -429,11 +199,11 @@ Portfolio.min_volatility() ‑> OrderedDict
 
 Optimizes for minimum volatility
 
-#### Returns
+### Returns
 
 `OrderedDict`, asset weights for the volatility-minimising portfolio.
 
-### Portfolio.max_sharpe
+## Portfolio.max_sharpe
 
 ```python
 Portfolio.max_sharpe(
@@ -445,7 +215,7 @@ Maximise the Sharpe Ratio. The result is also referred to as the tangency portfo
 
 This is a convex optimization problem after making a certain variable substitution. See [Cornuejols and Tutuncu (2006)](http://web.math.ku.dk/~rolf/CT_FinOpt.pdf) for more.
 
-#### Parameters
+### Parameters
 
 ``` markdown title="risk_free_rate"
 Optional[float] = 0.02
@@ -454,11 +224,11 @@ Optional[float] = 0.02
 Risk-free rate of borrowing/lending, defaults to 0.02. The period of the risk-free rate should correspond to the frequency of expected returns.
 </div>
 
-#### Returns
+### Returns
 
 `OrderedDict`, asset weights for the Sharpe-maximising portfolio.
 
-### Portfolio.max_quadratic_utility
+## Portfolio.max_quadratic_utility
 
 ```python
 Portfolio.max_quadratic_utility(
@@ -473,7 +243,7 @@ $$
 \max_w w^T \mu - \frac \delta 2 w^T \Sigma w
 $$
 
-#### Parameters
+### Parameters
 
 ``` markdown title="risk_aversion"
 Optional[int] = 1
@@ -489,11 +259,11 @@ Optional[bool] = False
 whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
 </div>
 
-#### Returns
+### Returns
 
 `OrderedDict`, asset weights for the maximum-utility portfolio.
 
-### Portfolio.efficient_risk
+## Portfolio.efficient_risk
 
 ```python
 Portfolio.max_quadratic_utility(
@@ -504,7 +274,7 @@ Portfolio.max_quadratic_utility(
 
 Maximise return for a target risk. The resulting portfolio will have a volatility less than the target (but not guaranteed to be equal).
 
-#### Parameters
+### Parameters
 
 ``` markdown title="target_volatility"
 float
@@ -520,11 +290,11 @@ Optional[bool] = False
 whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
 </div>
 
-#### Returns
+### Returns
 
 `OrderedDict`, asset weights for the efficient risk portfolio.
 
-### Portfolio.efficient_return
+## Portfolio.efficient_return
 
 ```python
 Portfolio.max_quadratic_utility(
@@ -535,7 +305,7 @@ Portfolio.max_quadratic_utility(
 
 Calculate the ‘Markowitz portfolio’, minimising volatility for a given target return.
 
-#### Parameters
+### Parameters
 
 ```markdown title="target_return"
 float
@@ -551,11 +321,11 @@ Optional[bool] = False
 whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.
 </div>
 
-#### Returns
+### Returns
 
 `OrderedDict`, asset weights for the Markowitz portfolio.
 
-### Portfolio.clean_weights
+## Portfolio.clean_weights
 
 ```python
 Portfolio.clean_weights(
@@ -566,7 +336,7 @@ Portfolio.clean_weights(
 
 Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
 
-#### Parameters
+### Parameters
 
 ``` markdown title="cutoff"
 Optional[float] = 0.0001
@@ -582,6 +352,6 @@ Optional[int] = 5
 Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
 </div>
 
-#### Returns
+### Returns
 
 `OrderedDict`, asset weights.

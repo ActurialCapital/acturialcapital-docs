@@ -1,6 +1,6 @@
 # Discrete Allocation
 
-The `portfolio()` calls the [`Portfolio`](../portfolio.md) class, which includes the implementation of the following built-in public methods for discrete allocation procedures:
+The `portfolio()` calls the [`Portfolio`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for discrete allocation procedures:
 
 * `discrete_allocation()` Implementation of single or multiple pre-determined rule-based allocation strategies
 
@@ -8,9 +8,7 @@ Which triggers **PyPortfolioOpt** inherited method:
 
 * `clean_weights()`: rounds the weights and clips near-zeros
   
-## Built-In Methods
-
-### Strategy.discrete_allocation
+## Strategy.discrete_allocation
 
 ```python
 Strategy.discrete_allocation(
@@ -22,7 +20,7 @@ Strategy.discrete_allocation(
 
 Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale. 
 
-#### Parameters
+### Parameters
 
 ``` markdown title="model"
 Optional[str] = "equal_weighted"
@@ -60,10 +58,42 @@ Weight bound (from `mapping_weights`). Total budget (in %) to apply. Possible va
 Defaults to `mid`.
 </div>
 
-#### Returns
+### Returns
 
 `opendesk.strategy.Strategy` instance
 
+## Strategy.clean_weights
+
+```python
+Strategy.clean_weights(
+    cutoff: Optional[float] = 0.0001, 
+    rounding: Optional[int] = 5
+) ‑> OrderedDict
+```
+
+Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
+
+### Parameters
+
+``` markdown title="cutoff"
+Optional[float] = 0.0001
+```
+<div class="result" markdown>
+The lower bound, defaults to 1e-4
+</div>
+
+``` markdown title="rounding"
+Optional[int] = 5
+```
+<div class="result" markdown>
+Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
+</div>
+
+### Returns
+
+`OrderedDict`, asset weights.
+
+## Example Discrete Allocation
 !!! example "Example Discrete Allocation"
 
     ```python
@@ -71,7 +101,7 @@ Defaults to `mid`.
 
     strategy = Strategy(steps=steps, topdown=True, mapping_table=mapping_table)
     strategy.fit(df).estimate(sum)
-    strategy.discrete_allocation(stock_prices).portfolio(model="equal_weighted")
+    strategy.portfolio(stock_prices).discrete_allocation(model="equal_weighted")
     ```
 
     <div class="termy">
@@ -92,35 +122,3 @@ Defaults to `mid`.
       </span>
       ```
 
-## Inherited Methods
-
-### Strategy.clean_weights
-
-```python
-Strategy.clean_weights(
-    cutoff: Optional[float] = 0.0001, 
-    rounding: Optional[int] = 5
-) ‑> OrderedDict
-```
-
-Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
-
-#### Parameters
-
-``` markdown title="cutoff"
-Optional[float] = 0.0001
-```
-<div class="result" markdown>
-The lower bound, defaults to 1e-4
-</div>
-
-``` markdown title="rounding"
-Optional[int] = 5
-```
-<div class="result" markdown>
-Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
-</div>
-
-#### Returns
-
-`OrderedDict`, asset weights.

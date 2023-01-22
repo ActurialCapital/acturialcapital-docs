@@ -85,11 +85,11 @@ Additional parameters for `vbt.portfolio.base.Portfolio.from_order_func` functio
         ```
         </div>
 
-## BacktestConfig
+## backtest.BacktestConfig
 
 ```python
 @dataclass
-opendesk.backtest.config.BacktestConfig(
+backtest.config.BacktestConfig(
     steps: List, 
     universe: pandas.core.frame.DataFrame, 
     model_data: Optional[pandas.core.frame.DataFrame] = None, 
@@ -430,6 +430,8 @@ Optional[Dict[str, Any]] = dict(range_bound="mid")
 Backtest "back-up" configuration. Defauts to `dict(range_bound="mid")` as `discrete_allocation` is set in `backtest_backup`.
 
 </div>
+
+## Example Backtest
 
 !!! example "Example Backtest"
 

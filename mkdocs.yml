@@ -36,7 +36,7 @@ theme:
     - navigation.tabs
     # - navigation.tabs.sticky
     # - navigation.sections
-    # - navigation.expand
+    - navigation.expand
     - navigation.indexes
     - toc.follow
     # - toc.integrate
@@ -128,6 +128,7 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      toc_depth: 2
 
   # Python Markdown Extensions
   - pymdownx.arithmatex:
@@ -185,15 +186,17 @@ nav:
       - API Reference:
         - api_reference/index.md
         - Strategy:
-            - api_reference/strategy/index.md
-            - api_reference/strategy/exposures.md
-            - Porfolio Construction:
-              - api_reference/strategy/portfolio_construction/index.md
-              - api_reference/strategy/portfolio_construction/optimization.md
-              - api_reference/strategy/portfolio_construction/discrete_allocation.md
-            - api_reference/strategy/backtest.md
-        - api_reference/portfolio.md
-        - api_reference/backtest.md
+          - api_reference/strategy/index.md
+          - api_reference/strategy/exposures.md
+          - Porfolio Construction:
+            - api_reference/strategy/portfolio_construction/index.md
+            - api_reference/strategy/portfolio_construction/optimization.md
+            - api_reference/strategy/portfolio_construction/discrete_allocation.md
+          - api_reference/strategy/backtest.md
+        - Portfolio:
+          - api_reference/portfolio/index.md
+          - api_reference/portfolio/optimization.md
+          - api_reference/portfolio/discrete_allocation.md
         - Signals:
             - api_reference/signals/index.md
       - Contributing:

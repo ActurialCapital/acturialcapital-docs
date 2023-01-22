@@ -112,8 +112,8 @@ In some instances, we use [polars](https://www.pola.rs/), a lightning-fast DataF
 For example, the `apply` function is used to aggregate scores from different blocks. Here, we tested 10000 rows x 10 columns:
 
 **In pandas:**
-```pyton
-df.apply(func, axis=1).rename(func.__name__)
+```python
+df.apply(sum, axis=1).rename("sum")
 ```
 Time to apply with pandas: `3.211 seconds`
 
@@ -122,10 +122,10 @@ Time to apply with pandas: `3.211 seconds`
 import polars as pl
 
 pd.Series(
-      list(pl.DataFrame(df).with_column(
-          pl.fold(0, lambda acc, s: acc + s, pl.all()).alias("sum")
-      )[:,-1])
-  )
+    list(pl.DataFrame(df).with_column(
+        pl.fold(0, lambda acc, s: acc + s, pl.all()).alias("sum")
+    )[:,-1])
+)
 ```
 Time to apply with polars: `1.012 seconds`
 
@@ -248,10 +248,10 @@ Additionally, we have the ability to incorporate additional constraints using th
 
 ```python
 # Optimize portfolio
-portfolio = (
+port = (
     strategy
-    .optimize(stock_prices) # (1)
-    .portfolio(
+    .portfolio(stock_prices) # (1)
+    .optimize(
         model="mvo",
         expected_returns_params=dict(
           method: "capm_return"
@@ -262,7 +262,7 @@ portfolio = (
         weight_bounds=(-1, 1) # (4)
     )
     .add(
-      constraints=[
+      custom_constraints=[
         lambda w: w <=  0.1, 
         lambda w: w >= -0.1
       ]
@@ -270,7 +270,7 @@ portfolio = (
 )
 
 # Solver target volatility and market neutrality
-portfolio.efficient_risk(target_volatility=0.08, market_neutral=True)
+port.efficient_risk(target_volatility=0.08, market_neutral=True)
 ```
 
 1.  Because it is a top-down strategy, we want to optimize your portfolio (finding weights which align with both objectives and constraints) at the stock level.
@@ -282,7 +282,7 @@ To finalize the portfolio weightings, we can utilize `clean_weights()`, a utilit
 
 <div class="termy">
   ```console
-  $ weights = pd.Series(portfolio.clean_weights(), name="weights")
+  $ weights = pd.Series(port.clean_weights(), name="weights")
   <span style="color: grey;">asset 1     -0.09
   stock 2      0.09
   stock 3     -0.08

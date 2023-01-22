@@ -1,7 +1,6 @@
 # Strategy
 
 ## Strategy
-
 ```python
 opendesk.Strategy(
     steps: List[Tuple[str, Type, Dict, Dict]], 
@@ -18,7 +17,7 @@ The main implementation of the library is the `Strategy` class, which initialize
 
     In object-oriented programming, returning `self` from a method can be useful for several reasons. One common use case is to create a fluent interface, which is an API design style that allows method calls to be chained together in a single statement. This can make the code more readable and concise, as it eliminates the need to create intermediate variables to store the results of intermediate method calls. For example, with a fluent interface, this code could be written as `results = SomeClass().method1().method2().method3()`.
 
-### Parameters
+## Parameters
 
 ``` markdown title="steps"
 List[Tuple[str, Type, Dict, Dict]]
@@ -61,7 +60,7 @@ Optional[Dict[int, Tuple]] = None
 Maps scores with range of weights. Defaults to `None`.
 </div>
 
-### Ancestors (in MRO)
+## Ancestors (in MRO)
 
 * opendesk.portfolio.Portfolio
 * pypfopt.efficient_frontier.efficient_frontier.EfficientFrontier
@@ -69,9 +68,9 @@ Maps scores with range of weights. Defaults to `None`.
 * pypfopt.base_optimizer.BaseOptimizer
 
 
-### Attributes
+## Attributes
 
-#### breakdown
+### breakdown
 
 ``` markdown title="breakdown"
 pandas.core.frame.DataFrame
@@ -100,7 +99,7 @@ Output (scores) of all provided blocks. Following the method `fit()`, the attrib
 
 </div>
 
-#### exposures
+### exposures
 
 ``` markdown title="exposures"
 pandas.core.frame.DataFrame
@@ -110,7 +109,7 @@ Strategy exposures/tilts aggregated from model scores.
 </div>
 
 
-#### model_data
+### model_data
 
 ``` markdown title="model_data"
 pandas.core.frame.DataFrame
@@ -119,7 +118,7 @@ pandas.core.frame.DataFrame
 Adjusted closing prices of the asset, each row is a date and each column is a ticker/id.
 </div>
 
-#### weights
+### weights
 
 ``` markdown title="weights"
 Dict[str, float]
@@ -205,9 +204,9 @@ Portfolio weights calculated through the discrete allocation `method`.
           ```
         </div>
 
-### Instance variables
+## Instance variables
 
-#### group_constraints
+### group_constraints
 
 ``` markdown title="group_constraints"
 Optional[Dict[str, Tuple(float, float)]]
@@ -216,19 +215,19 @@ Optional[Dict[str, Tuple(float, float)]]
 Strategy constraints by group. Product of `exposures` and `mapping_weights`.
 </div>
 
-### Public Methods
+## Public Methods
 
-#### Exposures
+### Exposures
 
 !!! note "Exposures API"
     API available in [Exposures](./exposures.md).
 
-* `add_blocks()` After initialization, additional blocks can be added to `steps`
-* `check_group_constraints()` Check group constraints after creating a portfolio
-* `estimate()` Aggregate exposures by summing each units using a predetermined function
-* `fit()` Executes each provided blocks with provided dataset
+* `add_blocks()`: After initialization, additional blocks can be added to `steps`
+* `check_group_constraints()`: Check group constraints after creating a portfolio
+* `estimate()`: Aggregate exposures by summing each units using a predetermined function
+* `fit()`: Executes each provided blocks with provided dataset
 
-#### Portfolio Construction
+### Portfolio Construction
 
 !!! note "Portfolio Construction API"
     API available in [Portfolio Construction](./portfolio_construction/index.md).
@@ -236,18 +235,29 @@ Strategy constraints by group. Product of `exposures` and `mapping_weights`.
 
 * `portfolio()`: Find portfolio weights, at any levels
 
-#### Discrete Allocation
+### Discrete Allocation
+
+#### Built-In Methods
 
 * `discrete_allocation()`: Set portfolio weights following a discrete allocation weighting scheme
 
-#### Optimization
+#### Inherited Methods
 
-##### Built-In Methods
+* `equal_weighted`: Asset equally weighted
+* `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
+* `score_weighted`: Asset weighted in proportion to their target-factor scores
+* `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
+* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
+* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
+  
+### Optimization
+
+#### Built-In Methods
 
 * `add()`: Add a new objectives and constraints to the optimization problem 
 * `optimize()`: Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
 
-##### Inherited Methods
+#### Inherited Methods
 
 * `min_volatility()`: optimizes for minimum volatility
 * `max_sharpe()`: optimizes for maximal Sharpe ratio (a.k.a the tangency portfolio)
