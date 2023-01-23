@@ -1,16 +1,16 @@
 # Optimization
 
-## Portfolio.add
+## add
 
 ```python
-Portfolio.add(
+portfolio.PortfolioConstruction.add(
     alpha_block_constraints: Optional[bool] = True,
     n_asset_constraints: Optional[int] = None,
     l2_regularization: Optional[bool] = True,
     gamma: Optional[int] = 2,
     custom_objectives: Optional[List[Tuple[Type, Dict[str, Any]]]] = None,
     custom_constraints: Optional[List[Type]] = None
-) -> opendesk.portfolio.Portfolio
+) -> opendesk.portfolio.PortfolioConstruction
 ```
 
 Add a new objectives and constraints to the optimization problem.
@@ -71,12 +71,12 @@ Optional[List[Type]] = None
 
 ### Returns
 
-`opendesk.portfolio.Portfolio` instance.
+`opendesk.portfolio.PortfolioConstruction` instance.
 
-## Portfolio.optimize
+## optimize
 
 ```python
-Portfolio.optimize(
+portfolio..PortfolioConstruction.optimize(
     model: str,
     cov_matrix_params: Dict[str, Any],
     expected_returns_params: Optional[Dict[str, Any]] = None,
@@ -84,7 +84,7 @@ Portfolio.optimize(
     black_litterman_params: Optional[Dict[str, Any]] = None,
     weight_bounds: Optional[Tuple[int, int]] = (-1, 1),
     **kwargs
-) -> opendesk.portfolio.Portfolio
+) -> opendesk.portfolio.PortfolioConstruction
 ```
 
 Base optimizer model, allowing for the efficient computation of optimized asset weights. The portfolio method houses different optimization methods, which generate optimal portfolios for various possible objective functions and parameters.
@@ -189,12 +189,12 @@ Model specificities.
 
 ### Returns
 
-`opendesk.portfolio.Portfolio` instance.
+`opendesk.portfolio.PortfolioConstruction` instance.
 
-## Portfolio.min_volatility
+## min_volatility
 
 ```python
-Portfolio.min_volatility() ‑> OrderedDict
+portfolio.PortfolioConstruction.min_volatility() ‑> OrderedDict
 ```
 
 Optimizes for minimum volatility
@@ -203,10 +203,10 @@ Optimizes for minimum volatility
 
 `OrderedDict`, asset weights for the volatility-minimising portfolio.
 
-## Portfolio.max_sharpe
+## max_sharpe
 
 ```python
-Portfolio.max_sharpe(
+portfolio.PortfolioConstruction.max_sharpe(
     risk_free_rate: Optional[float] = 0.02
 ) ‑> OrderedDict
 ```
@@ -228,10 +228,10 @@ Risk-free rate of borrowing/lending, defaults to 0.02. The period of the risk-fr
 
 `OrderedDict`, asset weights for the Sharpe-maximising portfolio.
 
-## Portfolio.max_quadratic_utility
+## max_quadratic_utility
 
 ```python
-Portfolio.max_quadratic_utility(
+portfolio.PortfolioConstruction.max_quadratic_utility(
     risk_aversion: Optional[int] = 1, 
     market_neutral: Optional[bool] = False
 ) ‑> OrderedDict
@@ -263,10 +263,10 @@ whether the portfolio should be market neutral (weights sum to zero), defaults t
 
 `OrderedDict`, asset weights for the maximum-utility portfolio.
 
-## Portfolio.efficient_risk
+## efficient_risk
 
 ```python
-Portfolio.max_quadratic_utility(
+portfolio.PortfolioConstruction.max_quadratic_utility(
     target_volatility: float, 
     market_neutral: Optional[bool] = False
 ) ‑> OrderedDict
@@ -294,10 +294,10 @@ whether the portfolio should be market neutral (weights sum to zero), defaults t
 
 `OrderedDict`, asset weights for the efficient risk portfolio.
 
-## Portfolio.efficient_return
+## efficient_return
 
 ```python
-Portfolio.max_quadratic_utility(
+portfolio.PortfolioConstruction.max_quadratic_utility(
     target_return: float, 
     market_neutral: Optional[bool] = False
 ) ‑> OrderedDict
@@ -325,10 +325,10 @@ whether the portfolio should be market neutral (weights sum to zero), defaults t
 
 `OrderedDict`, asset weights for the Markowitz portfolio.
 
-## Portfolio.clean_weights
+## clean_weights
 
 ```python
-Portfolio.clean_weights(
+portfolio.PortfolioConstruction.clean_weights(
     cutoff: Optional[float] = 0.0001, 
     rounding: Optional[int] = 5
 ) ‑> OrderedDict

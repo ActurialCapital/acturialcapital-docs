@@ -1,6 +1,7 @@
 # Strategy
 
 ## Strategy
+
 ```python
 opendesk.Strategy(
     steps: List[Tuple[str, Type, Dict, Dict]], 

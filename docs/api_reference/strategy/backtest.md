@@ -1,6 +1,6 @@
 # Backtest
 
-## Strategy.backtest
+## backtest
 
 ```python
 @classmethod
@@ -10,7 +10,39 @@ opendesk.Strategy.backtest(
 ) ‑> vectorbt.portfolio.base.Portfolio
 ```
 
-The `backtest` instance of the `Strategy` class is a **classmethod**. It is used to run a simulation using a custom order function `from_order_func`. It requires `BacktestConfig` **dataclass**, a configuration pipeline which simplifies model configurations.
+The `backtest` instance of the `Strategy` class is a **classmethod**. It is used to run a simulation using a custom order function `from_order_func` from `vectorbt.Portfolio` class. 
+
+> The job of the Portfolio class is to create a series of positions allocated against a cash component, produce an equity curve, incorporate basic transaction costs and produce a set of statistics about its performance. In particular, it outputs position/profit metrics and drawdown information.
+
+### Workflow
+
+**Preparation** phase (in the particular class method):
+
+* Receives a set of inputs, such as signal arrays and other parameters
+* Resolves parameter defaults by searching for them in the global settings
+* Brings input arrays to a single shape
+* Does some basic validation of inputs and converts Pandas objects to NumPy arrays
+* Passes everything to a Numba-compiled simulation function
+
+**Simulation** phase (in the particular simulation function using Numba):
+
+* The simulation function traverses the broadcasted shape element by element, row by row (time dimension), column by column (asset dimension)
+* For each asset and timestamp (= element):
+    * Gets all available information related to this element and executes the logic
+    * Generates an order or skips the element altogether
+    * If an order has been issued, processes the order and fills/ignores/rejects it
+    * If the order has been filled, registers the result by appending it to the order records
+    * Updates the current state such as the cash and asset balances
+
+**Construction** phase (in the particular class method):
+
+* Receives the returned order records and initializes a new Portfolio object
+
+**Analysis** phase (in the Portfolio object)
+
+* Offers a broad range of risk & performance metrics based on order records
+
+It requires `BacktestConfig` **dataclass**, a configuration pipeline which simplifies model configurations.
 
 !!! info "`@classmethod`"
     A class method is a method that is bound to the class and not the instance of the class. It can be called on the class itself, as well as on any instance of the class. In Python, a class method is defined using the `@classmethod` decorator.
@@ -31,6 +63,13 @@ Dict
 ```
 <div class="result" markdown>
 Additional parameters for `vbt.portfolio.base.Portfolio.from_order_func` function.
+
+!!! warning "When Vectorbt Default to None"
+        If you look at the arguments of each class method, you will notice that most of them default to None. None has a special meaning in `vectorbt`: it's a command to pull the default value from the global settings config - `settings`. The branch for the Portfolio can be found` under the key 'portfolio'. For example, the default size is:
+
+        ```python
+        vbt.settings.portfolio['size']
+        ```
 </div>
 
 ### Returns
@@ -85,7 +124,7 @@ Additional parameters for `vbt.portfolio.base.Portfolio.from_order_func` functio
         ```
         </div>
 
-## backtest.BacktestConfig
+## BacktestConfig
 
 ```python
 @dataclass

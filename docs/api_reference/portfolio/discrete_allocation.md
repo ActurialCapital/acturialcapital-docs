@@ -1,13 +1,13 @@
 # Discrete Allocation
 
-## Portfolio.discrete_allocation
+## discrete_allocation
 
 ```python
-Portfolio.discrete_allocation(
+PortfolioConstruction.discrete_allocation(
     model: str,
     model_params: Dict[str, Any] = None,
     range_bound: Optional[str] = 'mid'
-) -> opendesk.portfolio.Portfolio
+) -> opendesk.portfolio.PortfolioConstruction
 ```
 
 Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale.
@@ -52,12 +52,12 @@ Defaults to `mid`.
 
 ### Returns
 
-opendesk.portfolio.Portfolio instance.
+opendesk.portfolio.PortfolioConstruction instance.
 
-## Portfolio.equal_weighted_model
+## equal_weighted_model
 
 ```python
-Portfolio.equal_weighted_model() ‑> Dict[str, float]
+PortfolioConstruction.equal_weighted_model() ‑> Dict[str, float]
 ```
 
 Asset equally weighted.
@@ -66,10 +66,10 @@ Asset equally weighted.
 
 `Dict[str, float]`, weights.
 
-## Portfolio.inverse_volatility_weighted_model
+## inverse_volatility_weighted_model
 
 ```python
-Portfolio.inverse_volatility_weighted_model() ‑> Dict[str, float]
+PortfolioConstruction.inverse_volatility_weighted_model() ‑> Dict[str, float]
 ```
 
 Asset weighted in proportion to the inverse of their historical volatility.
@@ -78,10 +78,10 @@ Asset weighted in proportion to the inverse of their historical volatility.
 
 `Dict[str, float]`, weights.
 
-## Portfolio.market_cap_weighted_model
+## market_cap_weighted_model
 
 ```python
-Portfolio.market_cap_weighted_model(
+PortfolioConstruction.market_cap_weighted_model(
     market_caps: pandas.core.series.Series
 ) ‑> Dict[str, float]
 ```
@@ -101,10 +101,10 @@ Asset free-float market cap.
 
 `Dict[str, float]`, weights.
 
-## Portfolio.minimum_correlation_weighted_model
+## minimum_correlation_weighted_model
 
 ```python
-Portfolio.minimum_correlation_weighted_model(
+PortfolioConstruction.minimum_correlation_weighted_model(
     l1_regularization: Optional[bool] = False
 ) ‑> Dict[str, float]
 ```
@@ -124,10 +124,10 @@ Sparse inverse covariance w/ cross-validated choice of the l1 penalty. Scikit-Le
 
 `Dict[str, float]`, weights.
 
-## Portfolio.score_tilt_weighted_model
+## score_tilt_weighted_model
 
 ```python
-Portfolio.score_tilt_weighted_model(
+PortfolioConstruction.score_tilt_weighted_model(
     scores: pandas.core.series.Series, 
     market_caps: pandas.core.series.Series
 ) ‑> Dict[str, float]
@@ -155,10 +155,10 @@ Asset free-float market cap.
 
 `Dict[str, float]`, weights.
 
-## Portfolio.score_weighted_model
+## score_weighted_model
 
 ```python
-Portfolio.score_weighted_model(
+PortfolioConstruction.score_weighted_model(
     scores: pandas.core.series.Series, 
 ) ‑> Dict[str, float]
 ```
@@ -177,10 +177,10 @@ Asset scores. Scikit-Learn `MinMaxScaler` is used to rescale the data set such t
 
 `Dict[str, float]`, weights.
 
-## Portfolio.clean_weights
+## clean_weights
 
 ```python
-Portfolio.clean_weights(
+PortfolioConstruction.clean_weights(
     cutoff: Optional[float] = 0.0001, 
     rounding: Optional[int] = 5
 ) ‑> OrderedDict

@@ -1,6 +1,6 @@
 # Discrete Allocation
 
-The `portfolio()` calls the [`Portfolio`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for discrete allocation procedures:
+The `portfolio()` calls the [`PortfolioConstruction`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for discrete allocation procedures:
 
 * `discrete_allocation()` Implementation of single or multiple pre-determined rule-based allocation strategies
 
@@ -8,7 +8,7 @@ Which triggers **PyPortfolioOpt** inherited method:
 
 * `clean_weights()`: rounds the weights and clips near-zeros
   
-## Strategy.discrete_allocation
+## discrete_allocation
 
 ```python
 Strategy.discrete_allocation(
@@ -60,9 +60,9 @@ Defaults to `mid`.
 
 ### Returns
 
-`opendesk.strategy.Strategy` instance
+`opendesk.portfolio.PortfolioConstruction` instance
 
-## Strategy.clean_weights
+## clean_weights
 
 ```python
 Strategy.clean_weights(

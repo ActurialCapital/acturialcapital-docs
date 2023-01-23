@@ -1,6 +1,6 @@
 # Exposures
 
-## Strategy.add_blocks
+## add_blocks
 
 ```python
 Strategy.add_blocks(
@@ -61,7 +61,7 @@ Additional blocks to be added.
     ```
     </div>
 
-## Strategy.check_goup_constraints
+## check_goup_constraints
 
 ```python
 Strategy.check_group_constraints(
@@ -139,7 +139,7 @@ Portfolio weights calculated either with the `optimize` or the `discrete_allocat
     ```
     </div>
 
-## Strategy.estimate
+## estimate
 
 ```python
 Strategy.estimate(
@@ -253,7 +253,7 @@ Returns a copy of `exposures`. Defaults to `False`.
         ```
         </div>
 
-## Strategy.fit
+## fit
 
 ```python
 Strategy.fit(

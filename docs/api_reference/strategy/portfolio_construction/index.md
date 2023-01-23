@@ -7,7 +7,7 @@ Portfolio construction, which involves translating scores into weights, can be a
 
 These approach enables the exploration of a wide range of potential portfolio compositions.
 
-## Strategy.portfolio
+## portfolio
 
 ```python
 Strategy.portfolio(

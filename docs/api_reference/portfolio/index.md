@@ -1,9 +1,9 @@
 # Portfolio
 
-## Portfolio
+## PortfolioConstruction
 
 ```python
-portfolio.Portfolio(
+portfolio.PortfolioConstruction(
     data: pandas.core.frame.DataFrame,
     group_constraints: Optional[Dict[str, Tuple[float, float]]] = None,
     exposures: Optional[pandas.core.series.Series] = None,

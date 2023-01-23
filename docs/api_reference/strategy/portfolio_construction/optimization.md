@@ -2,7 +2,7 @@
 
 Portfolio optimization capabilities, which is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `portfolio()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
 
-The `portfolio()` calls the [`Portfolio`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for optimization procedures:
+The `portfolio()` calls the [`PortfolioConstruction`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for optimization procedures:
 
 * `add()` Add a new objectives and constraints to the optimization problem
 * `optimize()` Base optimizer model
@@ -19,7 +19,7 @@ Which triggers **PyPortfolioOpt** inherited methods:
 !!! sucess "PyPortfolioOpt"
     `pyportopt`: PyPortfolioOpt is a library that implements portfolio optimization methods, including classical efficient frontier techniques and Black-Litterman allocation, as well as more recent developments in the field like shrinkage and Hierarchical Risk Parity, along with some novel experimental features, like exponentially-weighted covariance matrices. 
 
-## Strategy.add
+## add
 
 ```python
 Strategy.add(
@@ -29,7 +29,7 @@ Strategy.add(
     gamma: Optional[int] = 2,
     custom_objectives: Optional[List[Tuple[Type, Dict[str, Any]]]] = None,
     custom_constraints: Optional[List[Type]] = None
-) -> "Portfolio"
+) ->  opendesk.portfolio.PortfolioConstruction
 ```
 
 Add a new objectives and constraints to the optimization problem.
@@ -90,9 +90,9 @@ Optional[List[Type]] = None
 
 ### Returns
 
-`opendesk.strategy.Strategy` instance.
+`opendesk.portfolio.PortfolioConstruction` instance.
 
-## Strategy.optimize
+## optimize
 
 ```python
 Strategy.optimize(
@@ -103,7 +103,7 @@ Strategy.optimize(
     black_litterman_params: Optional[Dict[str, Any]] = None,
     weight_bounds: Optional[Tuple[int, int]] = (-1, 1),
     **kwargs
-) ‑> opendesk.strategy.Strategy
+) ‑> opendesk.portfolio.PortfolioConstruction
 ```
 
 Base optimizer model, allowing for the efficient computation of optimized asset weights. The portfolio method houses different optimization methods, which generate optimal portfolios for various possible objective functions and parameters.
@@ -208,9 +208,9 @@ Model specificities.
 
 ### Returns
 
-`opendesk.strategy.Strategy` instance.
+`opendesk.portfolio.PortfolioConstruction` instance.
 
-## Strategy.min_volatility
+## min_volatility
 
 ```python
 Strategy.min_volatility() ‑> OrderedDict
@@ -222,7 +222,7 @@ Optimizes for minimum volatility
 
 `OrderedDict`, asset weights for the volatility-minimising portfolio.
 
-## Strategy.max_sharpe
+## max_sharpe
 
 ```python
 Strategy.max_sharpe(
@@ -247,7 +247,7 @@ Risk-free rate of borrowing/lending, defaults to 0.02. The period of the risk-fr
 
 `OrderedDict`, asset weights for the Sharpe-maximising portfolio.
 
-## Strategy.max_quadratic_utility
+## max_quadratic_utility
 
 ```python
 Strategy.max_quadratic_utility(
@@ -282,10 +282,10 @@ whether the portfolio should be market neutral (weights sum to zero), defaults t
 
 `OrderedDict`, asset weights for the maximum-utility portfolio.
 
-## Strategy.efficient_risk
+## efficient_risk
 
 ```python
-Strategy.max_quadratic_utility(
+Strategy.efficient_risk(
     target_volatility: float, 
     market_neutral: Optional[bool] = False
 ) ‑> OrderedDict
@@ -313,10 +313,10 @@ whether the portfolio should be market neutral (weights sum to zero), defaults t
 
 `OrderedDict`, asset weights for the efficient risk portfolio.
 
-## Strategy.efficient_return
+## efficient_return
 
 ```python
-Strategy.max_quadratic_utility(
+Strategy.efficient_return(
     target_return: float, 
     market_neutral: Optional[bool] = False
 ) ‑> OrderedDict
@@ -344,38 +344,7 @@ whether the portfolio should be market neutral (weights sum to zero), defaults t
 
 `OrderedDict`, asset weights for the Markowitz portfolio.
 
-### Strategy.clean_weights
-
-```python
-Strategy.clean_weights(
-    cutoff: Optional[float] = 0.0001, 
-    rounding: Optional[int] = 5
-) ‑> OrderedDict
-```
-
-Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
-
-### Parameters
-
-``` markdown title="cutoff"
-Optional[float] = 0.0001
-```
-<div class="result" markdown>
-The lower bound, defaults to 1e-4
-</div>
-
-``` markdown title="rounding"
-Optional[int] = 5
-```
-<div class="result" markdown>
-Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
-</div>
-
-### Returns
-
-`OrderedDict`, asset weights.
-
-## Strategy.clean_weights
+### clean_weights
 
 ```python
 Strategy.clean_weights(
