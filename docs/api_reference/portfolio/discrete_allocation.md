@@ -10,7 +10,7 @@ PortfolioConstruction.discrete_allocation(
 ) -> opendesk.portfolio.PortfolioConstruction
 ```
 
-Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale.
+Discrete allocation is a method for implementing predefined, rule-based allocation strategies for building optimal, diversified portfolios at scale. The use of the `topdown` parameter, when set to `True`, can introduce additional complexity in the portfolio construction process, as it involves diversifying allocation across a wide range of assets, using techniques such as uniform or market cap-based allocation. The `PortfolioConstruction.discrete_allocation()` function calls the `DiscreteAllocation` class (only when `topdown=True`), which offers a variety of rule-based weighting schemes. These weighting schemes, which are commonly used to construct factor portfolios, are designed to achieve a range of portfolio objectives.
 
 ### Parameters
 
@@ -24,8 +24,8 @@ Model used to allocate weights. Possible methods are:
 * `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
 * `score_weighted`: Asset weighted in proportion to their target-factor scores
 * `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
-* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
-* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
+* `inv_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
+* `min_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
 
 Defaults to `equal_weighted`.
 </div>
