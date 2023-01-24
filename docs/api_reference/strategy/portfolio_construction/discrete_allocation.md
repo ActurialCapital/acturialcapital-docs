@@ -32,8 +32,8 @@ Model used to allocate weights. Possible methods are:
 * `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
 * `score_weighted`: Asset weighted in proportion to their target-factor scores
 * `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
-* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
-* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
+* `inv_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
+* `min_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
 
 Defaults to `equal_weighted`.
 </div>
