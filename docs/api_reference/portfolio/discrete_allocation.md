@@ -54,7 +54,7 @@ Defaults to `mid`.
 
 opendesk.portfolio.PortfolioConstruction instance.
 
-## equal_weighted_model
+## equal_weighted
 
 ```python
 PortfolioConstruction.equal_weighted_model() ‑> Dict[str, float]
@@ -66,7 +66,7 @@ Asset equally weighted.
 
 `Dict[str, float]`, weights.
 
-## inverse_volatility_weighted_model
+## inv_volatility_weighted
 
 ```python
 PortfolioConstruction.inverse_volatility_weighted_model() ‑> Dict[str, float]
@@ -78,7 +78,7 @@ Asset weighted in proportion to the inverse of their historical volatility.
 
 `Dict[str, float]`, weights.
 
-## market_cap_weighted_model
+## market_cap_weighted
 
 ```python
 PortfolioConstruction.market_cap_weighted_model(
@@ -101,7 +101,7 @@ Asset free-float market cap.
 
 `Dict[str, float]`, weights.
 
-## minimum_correlation_weighted_model
+## min_correlation_weighted
 
 ```python
 PortfolioConstruction.minimum_correlation_weighted_model(
@@ -124,7 +124,7 @@ Sparse inverse covariance w/ cross-validated choice of the l1 penalty. Scikit-Le
 
 `Dict[str, float]`, weights.
 
-## score_tilt_weighted_model
+## score_tilt_weighted
 
 ```python
 PortfolioConstruction.score_tilt_weighted_model(
@@ -155,7 +155,7 @@ Asset free-float market cap.
 
 `Dict[str, float]`, weights.
 
-## score_weighted_model
+## score_weighted
 
 ```python
 PortfolioConstruction.score_weighted_model(
