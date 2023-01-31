@@ -16,7 +16,7 @@ The `backtest` instance of the `Strategy` class is a **classmethod**. It is used
 
 ### Workflow
 
-**Preparation** phase (in the particular class method):
+#### Preparation
 
 * Receives a set of inputs, such as signal arrays and other parameters
 * Resolves parameter defaults by searching for them in the global settings
@@ -24,7 +24,7 @@ The `backtest` instance of the `Strategy` class is a **classmethod**. It is used
 * Does some basic validation of inputs and converts Pandas objects to NumPy arrays
 * Passes everything to a Numba-compiled simulation function
 
-**Simulation** phase (in the particular simulation function using Numba):
+#### Simulation
 
 * The simulation function traverses the broadcasted shape element by element, row by row (time dimension), column by column (asset dimension)
 * For each asset and timestamp (= element):
@@ -34,11 +34,11 @@ The `backtest` instance of the `Strategy` class is a **classmethod**. It is used
     * If the order has been filled, registers the result by appending it to the order records
     * Updates the current state such as the cash and asset balances
 
-**Construction** phase (in the particular class method):
+#### Construction
 
 * Receives the returned order records and initializes a new Portfolio object
 
-**Analysis** phase (in the Portfolio object)
+#### Analysis
 
 * Offers a broad range of risk & performance metrics based on order records
 
@@ -62,7 +62,17 @@ Backtesting configuration pipeline `dataclass`, which includes the necessary par
 Dict
 ```
 <div class="result" markdown>
-Additional parameters for `vbt.portfolio.base.Portfolio.from_order_func` function.
+Additional parameters for `vbt.portfolio.base.Portfolio.from_order_func` function. It accepts:
+
+* wrapper: ArrayWrapper,
+* close: tp.ArrayLike,
+* order_records: tp.RecordArray,
+* log_records: tp.RecordArray,
+* init_cash: tp.ArrayLike,
+* cash_sharing: bool,
+* call_seq: tp.Optional[tp.Array2d] = None,
+* fillna_close: tp.Optional[bool] = None,
+* trades_type: tp.Optional[tp.Union[int, str]] = None) -> None:
 
 !!! warning "When Vectorbt Default to None"
         If you look at the arguments of each class method, you will notice that most of them default to None. None has a special meaning in `vectorbt`: it's a command to pull the default value from the global settings config - `settings`. The branch for the Portfolio can be found` under the key 'portfolio'. For example, the default size is:

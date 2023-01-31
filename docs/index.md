@@ -1,3 +1,1 @@
 # Acturial Capital
-
-## Coming Soon!

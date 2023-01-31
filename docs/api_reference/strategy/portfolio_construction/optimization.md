@@ -1,6 +1,6 @@
 # Optimization
 
-Portfolio optimization capabilities, which is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `portfolio()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
+Portfolio optimization capabilities is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The `portfolio()` method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.
 
 The `portfolio()` calls the [`PortfolioConstruction`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for optimization procedures:
 
@@ -18,6 +18,360 @@ Which triggers **PyPortfolioOpt** inherited methods:
 
 !!! sucess "PyPortfolioOpt"
     `pyportopt`: PyPortfolioOpt is a library that implements portfolio optimization methods, including classical efficient frontier techniques and Black-Litterman allocation, as well as more recent developments in the field like shrinkage and Hierarchical Risk Parity, along with some novel experimental features, like exponentially-weighted covariance matrices. 
+
+## VBT Pro Integration
+
+!!! info "Vectorbt Pro"
+    This section is largely inspired from Vectorbt Pro and can be accessed through [subsription](https://vectorbt.pro/getting-started/#how-to-get-access).
+
+PyPortfolioOpt implements a range of optimization methods that are very easy to use. The optimization procedure consists of several distinct steps (some of them may be skipped depending on the optimizer):
+
+* Calculate the expected returns (mostly located in `pfopt.expected_returns`)
+* Calculate the covariance matrix (mostly located in `pfopt.risk_models`)
+* Initialize and set up an optimizer (mostly located in `pypfopt.efficient_frontier`, with the base class located in `pypfopt.base_optimizer) including objectives, constraints, and target
+* Run the optimizer to get the weights
+* Convert the weights into a discrete allocation (optional)
+
+For example, let's perform the mean-variance optimization (MVO) for maximum Sharpe:
+
+```python
+from pypfopt.expected_returns import mean_historical_return
+from pypfopt.risk_models import CovarianceShrinkage
+from pypfopt.efficient_frontier import EfficientFrontier
+
+expected_returns = mean_historical_return(data)
+cov_matrix = CovarianceShrinkage(data).ledoit_wolf()
+optimizer = EfficientFrontier(expected_returns, cov_matrix)
+```
+
+<div class="termy">
+```console
+$ weights = optimizer.max_sharpe()
+$ weights
+<span style="color: grey;">OrderedDict([
+    ('ADAUSDT', 0.1166001117223088),
+    ('BNBUSDT', 0.0),
+    ('BTCUSDT', 0.0),
+    ('ETHUSDT', 0.8833998882776911),
+    ('XRPUSDT', 0.0)
+])
+</span>
+```
+</div>
+
+### Parsing
+
+The entire codebase of PyPortfolioOpt (with a few exceptions) has consistent argument and function namings, such that we can build a semantic web of functions acting as inputs to other functions. THerefore, the user just needs to provide the target function (e.g. `EfficientFrontier.max_sharpe`), and we can programmatically figure out the entire call stack having the pricing data alonw. If the user passes any additional keyword arguments, we can check which functions from the stack accept those arguments and automatically pass them.
+
+For the example above, the web would be:
+
+```mermaid
+flowchart TD
+    U[User] -- prices --> m[mean_historical_return]
+    U -- prices --> c[CovarianceShrinkage.ledoit_wolf]
+    m -- expected_returns --> e[EfficientFrontier]
+    c -- cov_matrix --> e
+```
+
+### Auto-optimization
+
+Knowing how to parse and resolve function arguments, vectorbt implements a function `pypfopt_optimize`, which takes user requirements and translates them into function calls. The usage of this function cannot be easier!
+
+<div class="termy">
+```console
+$ vbt.pypfopt_optimize(prices=data.get("Close"))
+$ weights
+<span style="color: grey;">{'ADAUSDT': 0.1166,
+ 'BNBUSDT': 0.0,
+ 'BTCUSDT': 0.0,
+ 'ETHUSDT': 0.8834,
+ 'XRPUSDT': 0.0}
+</span>
+```
+</div>
+
+In short, `pypfopt_optimize` triggers a waterfall of argument resolutions by parsing arguments, including the calculation of the expected returns and the risk model quantifying asset risk. Then, it adds objectives and constraints to the optimizer instance. Finally, it calls the target metric method (such as `max_sharpe`) or custom convex/non-convex objective using the same parsing procedure as we did above. If wanted, it can also translate continuous weights into discrete ones using `pypfopt.DiscreteAllocation`.
+
+Since multiple PyPortfolioOpt functions can require the same argument that has to be pre-computed yet, pypfopt_optimize deploys a built-in caching mechanism. Additionally, if any of the arguments weren't used, it throws a warning (which can be mitigated by setting `silence_warnings` to True) stating that an argument wasn't required by any function in the call stack.
+
+Below, we will demonstrate various optimizations done both using PyPortfolioOpt and vectorbt. Optimizing a long/short portfolio to minimise total variance:
+
+=== "PyPortfolioOpt"
+    ```python
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
+    ef = EfficientFrontier(None, S, weight_bounds=(-1, 1))
+    ef.min_volatility()
+    weights = ef.clean_weights()
+
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        expected_returns=None,
+        weight_bounds=(-1, 1),
+        target="min_volatility"
+    )
+    ```
+
+For the alpha blocks strategy at the top-down level, which aims to constraint portfolio depending on pre-modeled tilts, we can apply the pyportfolioopt `sector_constraints` as follow:
+
+=== "PyPortfolioOpt"
+    ```python
+    from pypfopt.expected_returns import capm_return
+
+    mu = capm_return(data)
+    S = CovarianceShrinkage(data).ledoit_wolf()
+    ef = EfficientFrontier(mu, S)
+    ef.add_sector_constraints(sector_mapper, sector_lower, sector_upper)
+    ef.max_sharpe()
+    weights = ef.clean_weights()
+    weights
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        expected_returns="capm_return",
+        sector_mapper=sector_mapper,
+        sector_lower=sector_lower,
+        sector_upper=sector_upper,
+    )
+    ```
+
+Optimizing a portfolio to maximise return for a given risk, subject to sector constraints, with an L2 regularisation objective:
+
+=== "PyPortfolioOpt"
+    ```python
+    from pypfopt.objective_functions import L2_reg
+
+    mu = capm_return(data.get("Close"))
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
+    ef = EfficientFrontier(mu, S)
+    ef.add_sector_constraints(sector_mapper, sector_lower, sector_upper)
+    ef.add_objective(L2_reg, gamma=0.1)
+    ef.efficient_risk(0.15)
+    weights = ef.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        expected_returns="capm_return",
+        sector_mapper=sector_mapper,
+        sector_lower=sector_lower,
+        sector_upper=sector_upper,
+        objectives=["L2_reg"],  
+        gamma=0.1,  
+        target="efficient_risk",
+        target_volatility=0.15  
+    )
+    ```
+
+Optimizing along the mean-semivariance frontier:
+
+=== "PyPortfolioOpt"
+    ```python
+    from pypfopt import EfficientSemivariance
+    from pypfopt.expected_returns import returns_from_prices
+
+    mu = capm_return(data.get("Close"))
+    returns = returns_from_prices(data.get("Close"))
+    returns = returns.dropna()
+    es = EfficientSemivariance(mu, returns)
+    es.efficient_return(0.01)
+    weights = es.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(
+        prices=data.get("Close"),
+        expected_returns="capm_return",
+        optimizer="efficient_semivariance",  
+        target="efficient_return",
+        target_return=0.01
+    )
+    ```
+
+Minimizing transaction costs:
+
+```python
+initial_weights = np.array([1 / len(data.symbols)] * len(data.symbols))
+```
+=== "PyPortfolioOpt"
+    ```python
+    from pypfopt.objective_functions import transaction_cost
+
+    mu = mean_historical_return(data.get("Close"))
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
+    ef = EfficientFrontier(mu, S)
+    ef.add_objective(transaction_cost, w_prev=initial_weights, k=0.001)
+    ef.add_objective(L2_reg, gamma=0.05)
+    ef.min_volatility()
+    weights = ef.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        objectives=["transaction_cost", "L2_reg"],
+        w_prev=initial_weights, 
+        k=0.001,
+        gamma=0.05,
+        target="min_volatility"
+    )
+    ```
+
+Custom convex objective:
+
+```python
+import cvxpy as cp
+
+def logarithmic_barrier_objective(w, cov_matrix, k=0.1):
+    log_sum = cp.sum(cp.log(w))
+    var = cp.quad_form(w, cov_matrix)
+    return var - k * log_sum
+```
+
+=== "PyPortfolioOpt"
+    ```python
+    mu = mean_historical_return(data.get("Close"))
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
+    ef = EfficientFrontier(mu, S, weight_bounds=(0.01, 0.3))
+    ef.convex_objective(logarithmic_barrier_objective, cov_matrix=S, k=0.001)
+    weights = ef.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        weight_bounds=(0.01, 0.3),
+        k=0.001,
+        target=logarithmic_barrier_objective  
+    )
+    ```
+
+Custom non-convex objective:
+
+```python
+def deviation_risk_parity(w, cov_matrix):
+    cov_matrix = np.asarray(cov_matrix)
+    n = cov_matrix.shape[0]
+    rp = (w * (cov_matrix @ w)) / cp.quad_form(w, cov_matrix)
+    return cp.sum_squares(rp - 1 / n).value
+```
+
+=== "PyPortfolioOpt"
+    ```python
+    mu = mean_historical_return(data.get("Close"))
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
+    ef = EfficientFrontier(mu, S)
+    ef.nonconvex_objective(deviation_risk_parity, ef.cov_matrix)
+    weights = ef.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        target=deviation_risk_parity,  
+        target_is_convex=False
+    )
+    ```
+
+Black-Litterman Allocation, where `viewdict` is integrated within alpha blocks methods (more to follow):
+
+```python
+sp500_data = vbt.YFData.fetch(
+    "^GSPC", 
+    start=data.wrapper.index[0], 
+    end=data.wrapper.index[-1]
+)
+market_caps = data.get("Close") * data.get("Volume")
+viewdict = {
+    "ADAUSDT": 0.20, 
+    "BNBUSDT": -0.30, 
+    "BTCUSDT": 0, 
+    "ETHUSDT": -0.2, 
+    "XRPUSDT": 0.15
+}
+```
+
+=== "PyPortfolioOpt"
+    ```python
+    from pypfopt.black_litterman import (
+        market_implied_risk_aversion,
+        market_implied_prior_returns,
+        BlackLittermanModel
+    )
+
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
+    delta = market_implied_risk_aversion(sp500_data.get("Close"))
+    prior = market_implied_prior_returns(market_caps.iloc[-1], delta, S)
+    bl = BlackLittermanModel(S, pi=prior, absolute_views=viewdict)
+    rets = bl.bl_returns()
+    ef = EfficientFrontier(rets, S)
+    ef.min_volatility()
+    weights = ef.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(  
+        prices=data.get("Close"),
+        expected_returns="bl_returns",  
+        market_prices=sp500_data.get("Close"),
+        market_caps=market_caps.iloc[-1],
+        absolute_views=viewdict,
+        target="min_volatility"
+    )
+    ```
+
+Hierarchical Risk Parity:
+
+=== "PyPortfolioOpt"
+    ```python
+    from pypfopt import HRPOpt
+
+    rets = returns_from_prices(data.get("Close"))
+    hrp = HRPOpt(rets)
+    hrp.optimize()
+    weights = hrp.clean_weights()
+    ```
+
+=== "vectorbt"
+    ```python
+    vbt.pypfopt_optimize(
+        prices=data.get("Close"),  
+        optimizer="hrp",
+        target="optimize"
+    )
+    ```
+
+### Argument groups
+
+In cases where two functions require an argument with the same name but you want to pass different values to them, pass the argument as an instance of `pfopt_func_dict` where keys should be functions or their names, and values should be different argument values:
+
+```python
+vbt.pypfopt_optimize(  
+    prices=data.get("Close"),
+    expected_returns="bl_returns",  
+    market_prices=sp500_data.get("Close"),
+    market_caps=market_caps.iloc[-1],
+    absolute_views=viewdict,
+    target="min_volatility",
+    cov_matrix=vbt.pfopt_func_dict({
+        "EfficientFrontier": "sample_cov",  
+        "_def": "ledoit_wolf"  
+    })
+)
+```
 
 ## add
 
@@ -443,3 +797,4 @@ Number of decimal places to round the weights, defaults to 5. Set to None if rou
         Name: weights, Length: 100, dtype: float64
         </span>
         ```
+        </div>
