@@ -65,24 +65,5 @@ Defaults to `mid`.
     strategy = Strategy(steps=steps, topdown=True, mapping_table=mapping_table)
     strategy.fit(df).estimate(sum)
     weights = strategy.portfolio(stock_prices).discrete_allocation(model="equal_weighted")
-    series_weights = pd.Series(weights, name="weights")
     ```
-
-    <div class="termy">
-      ```console
-      $ weights = series_weights
-      <span style="color: grey;">asset 1      0.00
-      asset 2      0.01
-      asset 3      0.00
-      asset 4      0.00
-      asset 5      0.01
-
-      asset 96     0.00
-      asset 97    -0.01
-      asset 98     0.00
-      asset 99    -0.01
-      asset 100    0.00
-      Name: weights, Length: 100, dtype: float64
-      </span>
-      ```
 

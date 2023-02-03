@@ -57,7 +57,7 @@ Since multiple PyPortfolioOpt functions can require the same argument that has t
 
 Optimizing a long/short portfolio to minimise total variance:
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
     ef = EfficientFrontier(None, S, weight_bounds=(-1, 1))
@@ -77,21 +77,21 @@ Optimizing a long/short portfolio to minimise total variance:
     ```
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         expected_returns=None,
         weight_bounds=(-1, 1),
         target="min_volatility"
     )
     ```
 
-For the alpha blocks strategy at the top-down level, which aims to constraint portfolio depending on pre-modeled tilts, we can apply the pyportfolioopt `sector_constraints` as follow:
+Optimizing a portfolio to maximise the Sharpe ratio, subject to sector constraints. In opendesk, while the sector constraints is also an option, we can set the `alpha_block_constraints` to True, which constraints the portfolio depending on pre-modeled alpha blocks exposures:
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     from pypfopt.expected_returns import capm_return
 
-    mu = capm_return(data)
-    S = CovarianceShrinkage(data).ledoit_wolf()
+    mu = capm_return(data.get("Close"))
+    S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
     ef = EfficientFrontier(mu, S)
     ef.add_sector_constraints(sector_mapper, sector_lower, sector_upper)
     ef.max_sharpe()
@@ -112,17 +112,15 @@ For the alpha blocks strategy at the top-down level, which aims to constraint po
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         expected_returns="capm_return",
-        sector_mapper=sector_mapper,
-        sector_lower=sector_lower,
-        sector_upper=sector_upper,
+        alpha_block_constraints=True
     )
     ```
 
 Optimizing a portfolio to maximise return for a given risk, subject to sector constraints, with an L2 regularisation objective:
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     from pypfopt.objective_functions import L2_reg
 
@@ -152,7 +150,7 @@ Optimizing a portfolio to maximise return for a given risk, subject to sector co
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         expected_returns="capm_return",
         sector_mapper=sector_mapper,
         sector_lower=sector_lower,
@@ -166,7 +164,7 @@ Optimizing a portfolio to maximise return for a given risk, subject to sector co
 
 Optimizing along the mean-semivariance frontier:
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     from pypfopt import EfficientSemivariance
     from pypfopt.expected_returns import returns_from_prices
@@ -192,7 +190,7 @@ Optimizing along the mean-semivariance frontier:
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         expected_returns="capm_return",
         optimizer="efficient_semivariance",  
         target="efficient_return",
@@ -205,7 +203,7 @@ Minimizing transaction costs:
 ```python
 initial_weights = np.array([1 / len(data.symbols)] * len(data.symbols))
 ```
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     from pypfopt.objective_functions import transaction_cost
 
@@ -232,7 +230,7 @@ initial_weights = np.array([1 / len(data.symbols)] * len(data.symbols))
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         objectives=["transaction_cost", "L2_reg"],
         w_prev=initial_weights, 
         k=0.001,
@@ -252,7 +250,7 @@ def logarithmic_barrier_objective(w, cov_matrix, k=0.1):
     return var - k * log_sum
 ```
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     mu = mean_historical_return(data.get("Close"))
     S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
@@ -271,9 +269,9 @@ def logarithmic_barrier_objective(w, cov_matrix, k=0.1):
     )
     ```
 
-=== "opendesk"
+=== "pypfopt"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         weight_bounds=(0.01, 0.3),
         k=0.001,
         target=logarithmic_barrier_objective  
@@ -290,7 +288,7 @@ def deviation_risk_parity(w, cov_matrix):
     return cp.sum_squares(rp - 1 / n).value
 ```
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     mu = mean_historical_return(data.get("Close"))
     S = CovarianceShrinkage(data.get("Close")).ledoit_wolf()
@@ -310,13 +308,13 @@ def deviation_risk_parity(w, cov_matrix):
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         target=deviation_risk_parity,  
         target_is_convex=False
     )
     ```
 
-Black-Litterman Allocation, where `viewdict` is integrated within alpha blocks methods (more to follow):
+Black-Litterman Allocation, where `viewdict` is integrated within alpha blocks methods, where views are extracted from the median of weight range and magnitude calculated by multiplying the annualized volatility times $1.96$ (95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean):
 
 ```python
 sp500_data = vbt.YFData.fetch(
@@ -324,6 +322,7 @@ sp500_data = vbt.YFData.fetch(
     start=data.wrapper.index[0], 
     end=data.wrapper.index[-1]
 )
+# example given in vectorbt
 market_caps = data.get("Close") * data.get("Volume")
 viewdict = {
     "ADAUSDT": 0.20, 
@@ -334,7 +333,7 @@ viewdict = {
 }
 ```
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     from pypfopt.black_litterman import (
         market_implied_risk_aversion,
@@ -366,18 +365,18 @@ viewdict = {
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         expected_returns="bl_returns",  
         market_prices=sp500_data.get("Close"),
         market_caps=market_caps.iloc[-1],
-        absolute_views=viewdict,
+        absolute_views='alpha_blocks',
         target="min_volatility"
     )
     ```
 
 Hierarchical Risk Parity:
 
-=== "PyPortfolioOpt"
+=== "pypfopt"
     ```python
     from pypfopt import HRPOpt
 
@@ -398,7 +397,7 @@ Hierarchical Risk Parity:
 
 === "opendesk"
     ```python
-    strategy.portfolio(prices).optimize(  
+    strategy.portfolio(data.get("Close")).optimize(  
         optimizer="hrp",
         target="optimize"
     )
@@ -420,16 +419,6 @@ vbt.pypfopt_optimize(
         "EfficientFrontier": "sample_cov",  
         "_def": "ledoit_wolf"  
     })
-)
-```
-
-### Alpha Blocks
-
-Alpha blocks exposures are core constraints to the strategy when using an optimizer. It adds constraints on the sum of weights of different groups of assets. Most commonly, it uses `sector_constraints` seen above. It aims to limit our exposure to paricular group of assets:
-
-```python
-strategy.portfolio(prices).optimize(  
-    alpha_blocks_constraints=True,
 )
 ```
 
@@ -537,9 +526,6 @@ Built-in objective functions wrapper includes:
 
 * `L2_reg`: L2 regularisation, i.e $\gamma ||w||^2$, to increase the number of nonzero weights. Mean-variance optimization often results in many weights being negligible, i.e the efficient portfolio does not end up including most of the assets. This is expected behaviour, but it may be undesirable if you need a certain number of assets in your portfolio. In order to coerce the mean-variance optimizer to produce more non-negligible weights, we add what can be thought of as a “small weights penalty” to all of the objective functions, parameterised by $\gamma$ (gamma). This term reduces the number of negligible weights, because it has a minimum value when all weights are equally distributed, and maximum value in the limiting case where the entire portfolio is allocated to one asset. We refer to it as L2 regularisation because it has exactly the same form as the L2 regularisation term in machine learning, though a slightly different purpose (in ML it is used to keep weights small while here it is used to make them larger).
 
-!!! note "Gamma"
-    In practice, $\gamma$ must be tuned to achieve the level of regularisation that you want. However, if the universe of assets is small (less than 20 assets), then gamma=1 is a good starting point. For larger universes, or if you want more non-negligible weights in the final portfolio, increase gamma.
-
 * `ex_ante_tracking_error`: Calculate the (square of) the ex-ante Tracking Error, i.e $(w - w_b)^T \Sigma (w-w_b)$
 * `ex_post_tracking_error`: Calculate the (square of) the ex-post Tracking Error, i.e $Var(r - r_b)$
 * `portfolio_return`: Calculate the (negative) mean return of a portfolio
@@ -547,6 +533,20 @@ Built-in objective functions wrapper includes:
 * `quadratic_utility`: Quadratic utility function, i.e $\mu - \frac 1 2 \delta  w^T \Sigma w$
 * `sharpe_ratio`: Calculate the (negative) Sharpe ratio of a portfolio
 * `transaction_cost`: A very simple transaction cost model: sum all the weight changes and multiply by a given fraction (default to 10bps). This simulates a fixed percentage commission from your broker.
+</div>
+
+``` markdown title="gamma"
+Optional[float] = 1
+```
+<div class="result" markdown>
+L2 regularisation parameter, defaults to 1. Increase if you want more non-negligible weights. In practice, $\gamma$ must be tuned to achieve the level of regularisation that you want. However, if the universe of assets is small (less than 20 assets), then gamma=1 is a good starting point. For larger universes, or if you want more non-negligible weights in the final portfolio, increase gamma.
+</div>
+
+``` markdown title="k"
+Optional[float] = 0.001
+```
+<div class="result" markdown>
+When transaction cost objective is set, fractional cost per unit weight exchanged.
 </div>
 
 ``` markdown title="constraints"
@@ -628,24 +628,52 @@ Specify the optimizer. It can be an instance of `pypfopt.base_optimizer.BaseOpti
 * `black_litterman` or `bl`: `pypfopt.black_litterman.BlackLittermanModel`
 * `hrp`: `pypfopt.hierarchical_portfolio.HRPOpt`
 * `cla`: `pypfopt.cla.CLA`
+
+!!! note "Black-litterman"
+    > Black-Litterman model takes a Bayesian approach to asset allocation. Specifically, it combines a prior estimate of returns (for example, the market-implied returns) with views on certain assets, to produce a posterior estimate of expected returns. It will then meaningfully propagate views, taking into account the covariance with other assets. 
 </div>
 
-!!! note "Black-litterman integration"
-    > Black-Litterman model takes a Bayesian approach to asset allocation. Specifically, it combines a prior estimate of returns (for example, the market-implied returns) with views on certain assets, to produce a posterior estimate of expected returns. It will then meaningfully propagate views, taking into account the covariance with other assets. 
+``` markdown title="absolute_views"
+Optional[pandas.core.series.Series | Dict[str, float] | str] = None
+```
+<div class="result" markdown>
+A colleciton of K absolute views on a subset of assets, defaults to None. If set to `alpha_blocks`, it computes the "alpha blocks views". The alpha blocks implementation works with the Black-Litterman absolute views, where views are extracted from the median of weight range and magnitude calculated by multiplying the annualized volatility times $1.96$. In probability and statistics, the 97.5th percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.
+</div>
 
-    The alpha blocks implementation works with the Black-Litterman absolute views, where views direction is extracted from the median of weight range and the magnitude is $1.96\sigma$. 
-    
-    In probability and statistics, the 97.5th percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.
+``` markdown title="pi"
+Optional[pandas.core.series.Series | numpy.ndarray] = None
+```
+<div class="result" markdown>
+Nx1 prior estimate of returns, defaults to None. If pi=”market”, calculate a market-implied prior (requires market_caps to be passed). If pi=”equal”, use an equal-weighted prior.
+</div>
 
-    Black-Litterman parameters:
+``` markdown title="omega"
+Optional[pandas.core.frame.DataFrame | numpy.ndarray | string] = None
+```
+<div class="result" markdown>
+KxK view uncertainty matrix (diagonal), defaults to None Can instead pass “idzorek” to use Idzorek’s method (requires you to pass view_confidences). If omega=”default” or None, we set the uncertainty proportional to the variance.
+</div>
 
-    * `pi` (np.ndarray, pd.Series, optional) – Nx1 prior estimate of returns, defaults to None. If pi=”market”, calculate a market-implied prior (requires market_caps to be passed). If pi=”equal”, use an equal-weighted prior.
-    * `omega` (np.ndarray or Pd.DataFrame, or string, optional) – KxK view uncertainty matrix (diagonal), defaults to None Can instead pass “idzorek” to use Idzorek’s method (requires you to pass view_confidences). If omega=”default” or None, we set the uncertainty proportional to the variance.
-    * `view_confidences` (np.ndarray, pd.Series, list, optional) – Kx1 vector of percentage view confidences (between 0 and 1), required to compute omega via Idzorek’s method.
-    * `tau` (float, optional) – the weight-on-views scalar (default is 0.05)
-    risk_aversion (positive float, optional) – risk aversion parameter, defaults to 1
-    * `market_caps` (np.ndarray, pd.Series, optional) – (kwarg) market caps for the assets, required if pi=”market”
-    * `risk_free_rate` (float, defaults to 0.02) – (kwarg) risk_free_rate is needed in some methods
+``` markdown title="view_confidences"
+Optional[pandas.core.series.Series | numpy.ndarray | List] = None
+```
+<div class="result" markdown>
+Kx1 vector of percentage view confidences (between 0 and 1), required to compute omega via Idzorek’s method.
+</div>
+
+``` markdown title="tau"
+Optional[float] = 0.05
+```
+<div class="result" markdown>
+the weight-on-views scalar (default is 0.05) risk_aversion (positive float, optional) – risk aversion parameter, defaults to 1.
+</div>
+
+``` markdown title="market_caps"
+Optional[pandas.core.series.Series | numpy.ndarray] = None
+```
+<div class="result" markdown>
+Market caps for the assets, required if pi=”market”
+</div>
 
 ``` markdown title="risk_free_rate"
 Optional[float] = 0.02
@@ -745,31 +773,20 @@ Number of assets in the portfolio constraints. Cardinality constraints are not c
         ```py
         from opendesk import Strategy
 
-        strategy = (
-            Strategy(
+        strategy = Strategy(
             steps=steps, 
             topdown=True,
             mapping_table=mapping_table # (3)
-            )
-            .fit(df) # (1)
-            .estimate(sum)
-            .portfolio(stock_prices) # (2)
-            .optimize(
-                model="mvo",
-                expected_returns_params={
-                    "method": "capm_return",
-                },
-                cov_matrix_params={
-                    "method": "sample_cov",
-                },   
-                weight_bounds=(-1, 1) # (4)
-            )
-            .add(
-                custom_constraints=[
-                    lambda w: w <=  .1, 
-                    lambda w: w >= -.1
-                ] # (5)
-            )
+        )
+        strategy.fit(sector_prices).estimate(sum) # (1)
+        weights = strategy.portfolio(stock_prices) .optimize( # (2)
+            weight_bounds=(-1, 1),
+            target="min_volatility"
+            weight_bounds=(-1, 1) # (4)
+            constraints=[
+                lambda w: w <=  .1, 
+                lambda w: w >= -.1
+            ] # (5)
         )
         ```
 
@@ -778,25 +795,3 @@ Number of assets in the portfolio constraints. Cardinality constraints are not c
         3.  Mapping table where stock ticker/id are keys and sector name are values.
         4. `weight_bounds` parameter serves as a constraint by limiting the minimum and maximum weight of each asset in portfolios. Because it ranges from `-1` to `1`, it allows Long and Shorts.
         5. Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
-
-        The wrapper class gives access to `optmize`, a public method allowing for the efficient computation of optimized asset weights through inheritance. Here is an example with `efficient_risk()`, which maximises return for a given target risk of 8% (`target_volatility=.08`) and market neutrality (`market_neutral=True`):
-
-        <div class="termy">
-        ```console
-        $ strategy.efficient_risk(target_volatility=.08, market_neutral=True)
-        $ weights = pd.Series(strategy.clean_weights(), name="weights")
-        <span style="color: grey;">asset 1      0.10
-        asset 2      0.03
-        asset 3     -0.02
-        asset 4      0.03
-        asset 5     -0.05
-
-        asset 96     0.00
-        asset 97    -0.09
-        asset 98     0.00
-        asset 99    -0.07
-        asset 100    0.00
-        Name: weights, Length: 100, dtype: float64
-        </span>
-        ```
-        </div>
