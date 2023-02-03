@@ -1,24 +1,18 @@
 # Discrete Allocation
 
-The `portfolio()` calls the [`PortfolioConstruction`](../../portfolio/index.md) class, which includes the implementation of the following built-in public methods for discrete allocation procedures:
+The `portfolio()` calls the [`PortfolioConstruction`](../../portfolio/index.md) class, which includes the implementation of the `discrete_allocation()` built-in public methods for discrete allocation procedures, which allows multiple pre-determined rule-based allocation strategies
 
-* `discrete_allocation()` Implementation of single or multiple pre-determined rule-based allocation strategies
-
-Which triggers **PyPortfolioOpt** inherited method:
-
-* `clean_weights()`: rounds the weights and clips near-zeros
-  
 ## discrete_allocation
 
 ```python
-Strategy.discrete_allocation(
+Portfolio.discrete_allocation(
     model: str,
     model_params: Dict[str, Any] = None,
     range_bound: Optional[str] = 'mid'
-) ‑> opendesk.strategy.Strategy
+) ‑> OrderedDict
 ```
 
-Discrete allocation allows the implementation of single or multiple pre-determined rule-based allocation strategies. It builds optimal, high level, diversified portfolios, at scale. 
+Discrete allocation is a method for implementing predefined, rule-based allocation strategies for building optimal, diversified portfolios at scale. The use of the `topdown` parameter, when set to `True`, can introduce additional complexity in the portfolio construction process, as it involves diversifying allocation across a wide range of assets, using techniques such as uniform or market cap-based allocation. The `PortfolioConstruction.discrete_allocation()` function calls the `DiscreteAllocation` class (only when `topdown=True`), which offers a variety of rule-based weighting schemes. These weighting schemes, which are commonly used to construct factor portfolios, are designed to achieve a range of portfolio objectives.
 
 ### Parameters
 
@@ -60,38 +54,7 @@ Defaults to `mid`.
 
 ### Returns
 
-`opendesk.portfolio.PortfolioConstruction` instance
-
-## clean_weights
-
-```python
-Strategy.clean_weights(
-    cutoff: Optional[float] = 0.0001, 
-    rounding: Optional[int] = 5
-) ‑> OrderedDict
-```
-
-Helper method to clean the raw weights, setting any weights whose absolute values are below the cutoff to zero, and rounding the rest.
-
-### Parameters
-
-``` markdown title="cutoff"
-Optional[float] = 0.0001
-```
-<div class="result" markdown>
-The lower bound, defaults to 1e-4
-</div>
-
-``` markdown title="rounding"
-Optional[int] = 5
-```
-<div class="result" markdown>
-Number of decimal places to round the weights, defaults to 5. Set to None if rounding is not desired.
-</div>
-
-### Returns
-
-`OrderedDict`, asset weights.
+`OrderedDict`, discrete weights.
 
 ## Example Discrete Allocation
 !!! example "Example Discrete Allocation"
@@ -101,12 +64,13 @@ Number of decimal places to round the weights, defaults to 5. Set to None if rou
 
     strategy = Strategy(steps=steps, topdown=True, mapping_table=mapping_table)
     strategy.fit(df).estimate(sum)
-    strategy.portfolio(stock_prices).discrete_allocation(model="equal_weighted")
+    weights = strategy.portfolio(stock_prices).discrete_allocation(model="equal_weighted")
+    series_weights = pd.Series(weights, name="weights")
     ```
 
     <div class="termy">
       ```console
-      $ weights = pd.Series(strategy.clean_weights(), name="weights")
+      $ weights = series_weights
       <span style="color: grey;">asset 1      0.00
       asset 2      0.01
       asset 3      0.00

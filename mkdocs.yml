@@ -183,28 +183,24 @@ nav:
       - getting_started/create_blocks.md
       - getting_started/optimize_blocks.md
       - getting_started/backtest_blocks.md
-      - API Reference:
-        - api_reference/index.md
-        - Strategy:
-          - api_reference/strategy/index.md
-          - api_reference/strategy/exposures.md
-          - Porfolio Construction:
-            - api_reference/strategy/portfolio_construction/index.md
-            - api_reference/strategy/portfolio_construction/discrete_allocation.md
-            - api_reference/strategy/portfolio_construction/optimization.md
-          - api_reference/strategy/backtest.md
-        - Portfolio:
-          - api_reference/portfolio/index.md
-          - api_reference/portfolio/discrete_allocation.md
-          - api_reference/portfolio/optimization.md
-        - Signals:
-            - api_reference/signals/index.md
-        - Categorize:
-            - api_reference/categorize/index.md
-      - Contributing:
-        - contributing/index.md
-        - contributing/philosophy.md
-        - contributing/development_guidelines.md
+  - API:
+    - api/index.md
+    - Strategy:
+      - api/strategy/index.md
+      - api/strategy/exposures.md
+      - Porfolio:
+        - api/strategy/portfolio_construction/index.md
+        - api/strategy/portfolio_construction/discrete_allocation.md
+        - api/strategy/portfolio_construction/optimization.md
+      - api/strategy/backtest.md
+    - Signals:
+        - api/signals/index.md
+    - Categorize:
+        - api/categorize/index.md
+  - Contributing:
+    - contributing/index.md
+    - contributing/philosophy.md
+    - contributing/development_guidelines.md
   - Model Glossary: 
       - model_glossary/index.md
       - Sentiment:

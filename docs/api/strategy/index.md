@@ -63,11 +63,7 @@ Maps scores with range of weights. Defaults to `None`.
 
 ## Ancestors (in MRO)
 
-* opendesk.portfolio.Portfolio
-* pypfopt.efficient_frontier.efficient_frontier.EfficientFrontier
-* pypfopt.base_optimizer.BaseConvexOptimizer
-* pypfopt.base_optimizer.BaseOptimizer
-
+* opendesk.portfolio.PortfolioConstruction
 
 ## Attributes
 
@@ -220,49 +216,18 @@ Strategy constraints by group. Product of `exposures` and `mapping_weights`.
 
 ### Exposures
 
-!!! note "Exposures API"
-    API available in [Exposures](./exposures.md).
-
 * `add_blocks()`: After initialization, additional blocks can be added to `steps`
 * `check_group_constraints()`: Check group constraints after creating a portfolio
 * `estimate()`: Aggregate exposures by summing each units using a predetermined function
 * `fit()`: Executes each provided blocks with provided dataset
+* `run_block()`: Executes one block
 
 ### Portfolio Construction
 
-!!! note "Portfolio Construction API"
-    API available in [Portfolio Construction](./portfolio_construction/index.md).
-
-
 * `portfolio()`: Find portfolio weights, at any levels
-
-### Discrete Allocation
-
-#### Built-In Methods
-
 * `discrete_allocation()`: Set portfolio weights following a discrete allocation weighting scheme
-
-#### Inherited Methods
-
-* `equal_weighted`: Asset equally weighted
-* `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
-* `score_weighted`: Asset weighted in proportion to their target-factor scores
-* `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
-* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
-* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
-  
-### Optimization
-
-#### Built-In Methods
-
-* `add()`: Add a new objectives and constraints to the optimization problem 
 * `optimize()`: Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
 
-#### Inherited Methods
+### Backtest
 
-* `min_volatility()`: optimizes for minimum volatility
-* `max_sharpe()`: optimizes for maximal Sharpe ratio (a.k.a the tangency portfolio)
-* `max_quadratic_utility()`: maximises the quadratic utility, given some risk aversion
-* `efficient_risk()`: maximises return for a given target risk
-* `efficient_return()`: minimises risk for a given target return
-* `clean_weights()`: rounds the weights and clips near-zeros
+* `backtest()`: Backtest portfolio

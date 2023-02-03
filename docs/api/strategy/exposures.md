@@ -27,15 +27,11 @@ Additional blocks to be added.
 
     ```py 
     from opendesk import Strategy
-    from opendesk.blocks import Reversion, MarkovRegression)
+    from opendesk.blocks import Reversion, MarkovRegression
 
-    # pre-trained model
     strategy = Strategy(steps)
-    # print(strategy)
-    # Blocks -> signal + gaussian_mixture
-
-    strategy.add_blocks(
-        (
+    other_blocks = (
+            (
             "reversion",
             Reversion, # (1)
             {'short_term_rule': None, 'long_term_rule': None}
@@ -47,6 +43,7 @@ Additional blocks to be added.
             {"cli": cli}
         )
     )
+
     ```
 
     1.  Calculate sentiment using Reversion Ranking Method.
@@ -56,7 +53,9 @@ Additional blocks to be added.
 
     <div class="termy">
     ```console
-    $ print(strategy)
+    $ strategy = Strategy(steps)
+     <span style="color: grey;">Blocks -> signal + gaussian_mixture</span>
+    $ strategy.add_blocks(other_blocks)
     <span style="color: grey;">Blocks -> signal + gaussian_mixture + reversion + markov_regression</span>
     ```
     </div>
@@ -86,44 +85,19 @@ Portfolio weights calculated either with the `optimize` or the `discrete_allocat
 
 !!! example "Example Group Constraints"
 
-    ```python
+    ```py
     from opendesk import Strategy
     from opendesk.blocks import Reversion, TrendFollowing
 
-    strategy = (
-      Strategy(
-        steps=steps,
-        topdown=True,
-        mapping_table=mapping_table,
-      )
-      .fit(df)
-      .estimate(sum)
-      .optimize(data=stock_prices, backend="pypfopt")
-      .portfolio(
-        model="mvo",
-        expected_returns_params={
-            "method": "capm_return",
-        },
-        cov_matrix_params={
-            "method": "sample_cov",
-        },   
-        weight_bounds=(-1, 1)
-      )
-      .add(
-        constraints=[
-          lambda w: w <= 0.1, 
-          lambda w: w >= -0.1
-        ]
-      )
-    )
-
-    strategy.efficient_risk(target_volatility=0.08, market_neutral=True)
-    weights = pd.Series(strategy.clean_weights(), name="weights")
+    strategy = Strategy(steps, topdown, mapping_table)
+    strategy.fit(df).estimate(sum).portfolio(stock_prices)    
+    weights = strategy.discrete_allocation("equal_weighted")
+    series_weights = pd.Series(weights, name="weights")
     ```
 
     <div class="termy">
     ```console
-    $ strategy.check_group_constraints(weights)
+    $ strategy.check_group_constraints(series_weights))
     <span style="color: grey;">            weights  target weights
     sector 1      0.15    (0.05, 0.15)
     sector 10     0.10    (0.05, 0.15)

@@ -1,4 +1,36 @@
-# Portfolio
+# Porfolio
+
+
+Portfolio construction is the process of creating a balanced collection of investments that aligns with an investor's financial goals, risk tolerance, and investment horizon. The goal of portfolio construction is to maximize returns while minimizing risk.
+
+Portfolio construction involves translating scores into weights, can be a complex and nuanced process. We have developed two methods that allows for greater flexibility and experimentation: 
+
+* [Optimization](./optimization.md)
+* [Discrete Allocation](./discrete_allocation.md)
+
+These approach enables the exploration of a wide range of potential top-down and bottom-up portfolio compositions.
+
+## portfolio
+
+```python
+Strategy.portfolio(
+  data: Optional[pandas.core.frame.DataFrame] = None, 
+) ‑> opendesk.strategy.Strategy
+```
+
+### Parameters
+
+``` markdown title="data"
+Optional[pandas.core.frame.DataFrame] = None
+```
+<div class="result" markdown>
+Market price time-series, each row is a date and each column is a ticker/id. If `None`, it takes `model_data`, the dataset used in the `fit()` method. Defaults to `None`.
+</div>
+
+
+### Returns
+
+`opendesk.strategy.Strategy` instance.
 
 ## PortfolioConstruction
 
@@ -83,47 +115,11 @@ Optional[int] = 252
 <div class="result" markdown>
 Number of time periods in a year, Defaults to 252 (the number of trading days in a year).
 </div>
-
-## Ancestors (in MRO)
-
-* pypfopt.efficient_frontier.efficient_frontier.EfficientFrontier
-* pypfopt.base_optimizer.BaseConvexOptimizer
-* pypfopt.base_optimizer.BaseOptimizer
-* opendesk.portfolio.DiscreteAllocation
   
 ## Descendants
 
 * opendesk.strategy.Strategy
   
-## Attributes
-
-### target_weights
-
-``` markdown title="target_weights"
-Dict[str, float]
-```
-<div class="result" markdown>
-Target weights set through `range_bound` parameter, which equals either `lower_bound`, `mid_bound` or `upper_bound`.
-</div>
-
-### weights
-
-``` markdown title="weights"
-pandas.core.series.Series
-```
-<div class="result" markdown>
-Weights output from the model.
-</div>
-
-### weight_bounds
-
-``` markdown title="weight_bounds"
-Optional[Tuple[int, int]]
-```
-<div class="result" markdown>
-Minimum and maximum weight of each asset or single min/max pair if all identical, defaults to (-1, 1). If `weight_bounds=(-1, 1)`, allows short positions.
-</div>
-
 ## Instance variables
 
 ### asset_scores
@@ -177,40 +173,5 @@ Upper weight level constraints by group, from `group_constraints`.
 
 ## Public Methods
 
-### Discrete Allocation
-
-!!! note "Discrete Allocation API"
-    API available in [Discrete Allocation](./discrete_allocation.md).
-
-#### Built-In Methods
-
 * `discrete_allocation()`: Set portfolio weights following a discrete allocation weighting scheme
-  
-#### Inherited Methods
-
-* `equal_weighted`: Asset equally weighted
-* `market_cap_weighted`: Asset weighted in proportion to their free-float market cap
-* `score_weighted`: Asset weighted in proportion to their target-factor scores
-* `score_tilt_weighted`: Asset weighted in proportion to the product of their market cap and factor score
-* `inverse_volatility_weighted`: Asset weighted in proportion to the inverse of their historical volatility
-* `minimum_correlation_weighted`: Optimized weighting scheme to obtain a portfolio with minimum volatility under the assumption that all asset have identical volatilities
-
-### Optimization
-
-!!! note "Optimization API"
-    API available in [Optimization](./optimization.md).
-
-#### Built-In Methods
-
-* `add()`: Add a new objectives and constraints to the optimization problem 
 * `optimize()`: Portfolio optimization, which aims to select the optimal mix of assets in a portfolio in order to satisfy the defined objectives and constraints
-
-#### Inherited Methods
-
-* `min_volatility()`: optimizes for minimum volatility
-* `max_sharpe()`: optimizes for maximal Sharpe ratio (a.k.a the tangency portfolio)
-* `max_quadratic_utility()`: maximises the quadratic utility, given some risk aversion
-* `efficient_risk()`: maximises return for a given target risk
-* `efficient_return()`: minimises risk for a given target return
-* `clean_weights()`: rounds the weights and clips near-zeros
-

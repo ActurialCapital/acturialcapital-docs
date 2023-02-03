@@ -53,7 +53,7 @@ The building blocks approach involves sequentially executing multiple steps on a
 graph LR
   id1[(Database)] --> B[Strategy];
   B --> C[Block A] & D[Block B] & E[Block N];
-  C --> I[/Exposures/];
+  C --> I[Exposures];
   D --> I;
   E --> I;
 ```
@@ -73,7 +73,7 @@ graph LR
   D --- G[/Score B/];
   E --- H[/Score N/];
   end
-  F --> I[/Exposures/];
+  F --> I[Exposures];
   G --> I;
   H -->I;
 ```
@@ -240,49 +240,35 @@ A summary breakdown and final tilts can be shown using the `breakdown` and `expo
 
 ### Step 3: Portfolio Construction
 
-Let's find individual stocks weights. To accomplish this, you can use the `optimize()` method, which allows us to align the portfolio with your objectives and constraints. 
+To find individual stocks weights, you can use the `optimize()` method, which allows us to align the portfolio with your objectives and constraints. 
 
-The modular structure of our code pipeline enables you to choose various optimization techniques, return estimation methods, and risk models within the `portfolio()` method, leveraging open-source capabilities. 
+The modular structure of our code pipeline enables you to choose various optimization techniques, return estimation methods, and risk models within the `portfolio()` method. 
 
-Additionally, we have the ability to incorporate additional constraints using the `add()` method, such as lower and upper bounds for each individual stocks. You can adjust the weightings of you investment strategy in order to achieve a targeted level of volatility and market neutrality, as follow:
+Additionally, the built-in functionality  incorporates custom objetives and constraints, such as lower and upper bounds for each individual stocks. You can adjust the weightings of you investment strategy in order to achieve a targeted level of volatility and market neutrality, as follow:
 
 ```python
-# Optimize portfolio
-port = (
-    strategy
-    .portfolio(stock_prices) # (1)
-    .optimize(
-        model="mvo",
-        expected_returns_params=dict(
-          method: "capm_return"
-        ), # (2)
-        cov_matrix_params=dict(
-          method="sample_cov"
-        ), # (3)
-        weight_bounds=(-1, 1) # (4)
-    )
-    .add(
-      custom_constraints=[
-        lambda w: w <=  0.1, 
-        lambda w: w >= -0.1
-      ]
-    )
+output = strategy.portfolio(stock_prices).optimize( # (1)
+  expected_returns="capm_return", # (2)
+  optimizer="efficient_semivariance",  
+  target="efficient_return",
+  target_return=0.01
+  weight_bounds=(-1, 1) # (3)
+  constraints=[
+    lambda w: w <=  0.1, 
+    lambda w: w >= -0.1
+  ]
 )
-
-# Solver target volatility and market neutrality
-port.efficient_risk(target_volatility=0.08, market_neutral=True)
 ```
 
 1.  Because it is a top-down strategy, we want to optimize your portfolio (finding weights which align with both objectives and constraints) at the stock level.
 2.  Mean-variance optimization requires knowledge of the expected returns.
-3.  Mean-variance optimization requires a risk model for quantifying asset risk. Commonly, the covariance matrix, which describes asset volatilities and their co-dependence, is used.
-4.  Minimum and maximum weight of each asset. When `weight_bounds=(-1, 1)`, it allows for portfolios with shorting.
+3.  Minimum and maximum weight of each asset. When `weight_bounds=(-1, 1)`, it allows for portfolios with shorting.
 
-To finalize the portfolio weightings, we can utilize `clean_weights()`, a utility function provided by the [PyPortfolioOpt library](https://pyportfolioopt.readthedocs.io/en/latest/index.html) and integrated within `Strategy`. This function allows us to filter out any weightings with absolute values below a specified cutoff, setting them to zero, and rounding the remaining entities.
+Which returns an `OrderedDict` of `clean_weights`, a utility function provided by the [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/en/latest/index.html) library and integrated within the module. This function allows us to filter out any weightings with absolute values below a specified cutoff, setting them to zero, and rounding the remaining entities.
 
 <div class="termy">
   ```console
-  $ weights = pd.Series(port.clean_weights(), name="weights")
+  $ weights = pd.Series(output, name="weights")
   <span style="color: grey;">asset 1     -0.09
   stock 2      0.09
   stock 3     -0.08

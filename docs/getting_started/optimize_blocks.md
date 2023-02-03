@@ -16,16 +16,16 @@ Portfolio optimization using alpha scores has been studied extensively in the fi
 An interval query is used to assign scores to elements in a portfolio. These scores are then used to determine the relative weightings of the highest and lowest elements in the portfolio. The resulting portfolio reflects these weightings and adheres to any specified objectives and constraints.
 
 ``` mermaid
-sequenceDiagram
-  Exposures->>Map: Default Config File
-  Exposures-->Map: Custom Config File
-  Map->>Portfolio: Range Bound Constraints
-  Portfolio-->>Optimizer: Parameters
-  Portfolio-->>Optimizer: Objectives
-  Portfolio-->>Optimizer: Constraints
-  Optimizer->>Portfolio: Weights
+flowchart TD
+    B[Strategy] --> E[Exposures];
+    E -- Default Config --> M[Map]
+    E -- Custom Config --> M
+    M -- Bound Constraints --> P[Portfolio]
+    P -- Objectives --> O[Optimizer]
+    P -- Constraints --> O
+    O -- Weights --> P
+    P -. Analysis .-> Backtests
 ```
-
 !!! question "Why Are We Not Creating Weights in the First Place?"
 
     There are a few reasons why you might calculate scores rather than directly assigning "weights" to potential assets in their investment portfolios. 
@@ -63,38 +63,21 @@ strategy.portfolio(data=stock_prices) # (1)
 
 ### Step 2: Optimize
 
-The wrapper class inherite from `Portfolio`, which adds the `optimize` public method to your toolbox, allowing for the efficient computation of optimized asset weights:
+The wrapper class inherite from `PortfolioConstruction`, which adds the `optimize` public method to your toolbox, allowing for the efficient computation of optimized asset weights. Constraints are lambda functions (e.i. all assets must be lower or equal to 10% of the total portfolio would simply translate to `[lambda w: w <= .1]`. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint. Here is an example with "min_volatility", which finds the minimum risk portfolio:
 
 ```python
-strategy.optimize(
-    model="mvo",
-    expected_returns_params={"method": "capm_return"},
-    cov_matrix_params={"method": "sample_cov"},   
-    weight_bounds=(-1, 1) # (1)
+weights = strategy.optimize(  
+    weight_bounds=(-1, 1), # (1)
+    target="min_volatility",
+    constraints=[lambda w: w <= .1]
 )
 ```
 
 1. `weight_bounds` parameter serves as a constraint by limiting the minimum and maximum weight of each asset in portfolios. Because it ranges from `-1` to `1`, it allows Long and Shorts.
 
-
-### Step 3: Add Objectives & Constraints
-
-Constraints are lambda functions (e.i. all assets must be lower or equal to 10% of the total portfolio would simply translate to `[lambda w: w <= .1]`. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint. We added the following:
-
-```python
-strategy.add(custom_constraints=[lambda w: w <= .1, lambda w: w >= -.1]) # (1)
-```
-
-1. Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.
-
-### Step 4: Weights
-
-Here is an example with `efficient_risk()`, which maximises return for a given target risk of 8% (`target_volatility=.08`) and market neutrality (`market_neutral=True`):
-
 <div class="termy">
   ```console
-  $ strategy.efficient_risk(target_volatility=.08, market_neutral=True)
-  $ weights = pd.Series(strategy.clean_weights(), name="weights")
+  $ pd.Series(weights, name="weights")
   <span style="color: grey;">asset 1      0.10
   asset 2      0.03
   asset 3     -0.02
