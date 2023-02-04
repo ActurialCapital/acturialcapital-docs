@@ -31,7 +31,7 @@ weights = optimizer.max_sharpe()
 
 ### Parsing
 
-The entire codebase of PyPortfolioOpt (with a few exceptions) has consistent argument and function namings, such that we can build a semantic web of functions acting as inputs to other functions. THerefore, the user just needs to provide the target function (e.g. `EfficientFrontier.max_sharpe`), and we can programmatically figure out the entire call stack having the pricing data alonw. If the user passes any additional keyword arguments, we can check which functions from the stack accept those arguments and automatically pass them.
+The entire codebase of PyPortfolioOpt (with a few exceptions) has consistent argument and function namings, such that we can build a semantic web of functions acting as inputs to other functions. Therefore, the user just needs to provide the target function (e.g. `EfficientFrontier.max_sharpe`), and we can programmatically figure out the entire call stack having the pricing data alonw. If the user passes any additional keyword arguments, we can check which functions from the stack accept those arguments and automatically pass them.
 
 For the example above, the web would be:
 
@@ -779,8 +779,7 @@ Number of assets in the portfolio constraints. Cardinality constraints are not c
             mapping_table=mapping_table # (3)
         )
         strategy.fit(sector_prices).estimate(sum) # (1)
-        weights = strategy.portfolio(stock_prices) .optimize( # (2)
-            weight_bounds=(-1, 1),
+        weights = strategy.portfolio(stock_prices).optimize( # (2)
             target="min_volatility"
             weight_bounds=(-1, 1) # (4)
             constraints=[
