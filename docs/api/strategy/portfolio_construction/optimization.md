@@ -269,7 +269,7 @@ def logarithmic_barrier_objective(w, cov_matrix, k=0.1):
     )
     ```
 
-=== "pypfopt"
+=== "opendesk"
     ```python
     strategy.portfolio(data.get("Close")).optimize(  
         weight_bounds=(0.01, 0.3),
