@@ -1,0 +1,1295 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../portfolio_construction/optimization/" rel="prev"/>
+<link href="../../signals/" rel="next"/>
+<link href="../../../assets/images/lightning.png" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.0.12" name="generator"/>
+<title>Backtest - ActurialCapital</title>
+<link href="../../../assets/stylesheets/main.0d440cfe.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.2505c338.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../../assets/_mkdocstrings.css" rel="stylesheet"/>
+<link href="../../../assets/css/extra.css" rel="stylesheet"/>
+<link href="../../../assets/css/termynal.css" rel="stylesheet"/>
+<link href="../../../assets/css/custom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="blue" data-md-color-primary="" data-md-color-scheme="slate" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#backtest">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<div data-md-component="outdated" hidden="">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="ActurialCapital" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="ActurialCapital">
+<img alt="logo" src="../../../assets/images/flash.png"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            ActurialCapital
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Backtest
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-hidden="true" class="md-option" data-md-color-accent="blue" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+</form>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ActurialCapital/xyz" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    acturialcapital/xyz
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-tabs__inner md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../getting_started/">
+        Getting Started
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="../../">
+        API
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../contributing/">
+        Contributing
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../model_glossary/">
+        Model Glossary
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../dataset/">
+        Dataset
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../terminal/">
+        Terminal
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="ActurialCapital" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="ActurialCapital">
+<img alt="logo" src="../../../assets/images/flash.png"/>
+</a>
+    ActurialCapital
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ActurialCapital/xyz" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    acturialcapital/xyz
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../getting_started/">Getting Started</a>
+<label for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../getting_started/installation/">
+        Installation
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../getting_started/main_concepts/">
+        Main Concepts
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../getting_started/create_blocks/">
+        Create Blocks
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../getting_started/optimize_blocks/">
+        Optimize Blocks
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../getting_started/backtest_blocks/">
+        Backtest Blocks
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../">API</a>
+<label for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../">Strategy</a>
+<label for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+          Strategy
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../exposures/">
+        Exposures
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_2_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../portfolio_construction/">Porfolio</a>
+<label for="__nav_2_2_3">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_2_3">
+<span class="md-nav__icon md-icon"></span>
+          Porfolio
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../portfolio_construction/discrete_allocation/">
+        Discrete Allocation
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../portfolio_construction/optimization/">
+        Optimization
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Backtest
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Backtest
+      </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backtest_1">
+    backtest
+  </a>
+<nav aria-label="backtest" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#workflow">
+    Workflow
+  </a>
+<nav aria-label="Workflow" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#preparation">
+    Preparation
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simulation">
+    Simulation
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#construction">
+    Construction
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#analysis">
+    Analysis
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parameters">
+    Parameters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#returns">
+    Returns
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backtestconfig">
+    BacktestConfig
+  </a>
+<nav aria-label="BacktestConfig" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parameters_1">
+    Parameters
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-backtest">
+    Example Backtest
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../signals/">Signals</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+          Signals
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_4" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../categorize/">Categorize</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+          Categorize
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../contributing/">Contributing</a>
+<label for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+          Contributing
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../contributing/philosophy/">
+        Philosophy
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../contributing/development_guidelines/">
+        Development Guidelines
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../model_glossary/">Model Glossary</a>
+<label for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+          Model Glossary
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+          Sentiment
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_2">
+<span class="md-nav__icon md-icon"></span>
+          Sentiment
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/sentiment/hurst_exponent/">
+        🔒 Hurst Exponent
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/sentiment/range_strategy_models/">
+        🔒 Range Strategy
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/sentiment/reversion_models/">
+        🔒 Reversion Models
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/sentiment/short_interest_models/">
+        🔒 Short-Interest Models
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/sentiment/trend_following_models/">
+        🔒 Trend Following Models
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          Valuation
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_3">
+<span class="md-nav__icon md-icon"></span>
+          Valuation
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/valuation/zscore_models/">
+        🔒 Zscore Models
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../model_glossary/phase_identification/">Phase Identification</a>
+<label for="__nav_4_4">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_4">
+<span class="md-nav__icon md-icon"></span>
+          Phase Identification
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/phase_identification/factor_performance/">
+        🔒 Factor Performance
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../model_glossary/phase_identification/cluster_models/">Cluster Models</a>
+<label for="__nav_4_4_3">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_4_4_3">
+<span class="md-nav__icon md-icon"></span>
+          Cluster Models
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/phase_identification/cluster_models/gaussian_mixture/">
+        🔒 Gaussian Mixture
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/phase_identification/cluster_models/asset_allocation/">
+        🔒 Asset Allocation
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/phase_identification/markov_models/">
+        🔒 Markov Models
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../model_glossary/phase_identification/signal_models/">
+        🔒 Signal Models
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../dataset/">Dataset</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+          Dataset
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../terminal/">Terminal</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+          Terminal
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backtest_1">
+    backtest
+  </a>
+<nav aria-label="backtest" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#workflow">
+    Workflow
+  </a>
+<nav aria-label="Workflow" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#preparation">
+    Preparation
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simulation">
+    Simulation
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#construction">
+    Construction
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#analysis">
+    Analysis
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parameters">
+    Parameters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#returns">
+    Returns
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backtestconfig">
+    BacktestConfig
+  </a>
+<nav aria-label="BacktestConfig" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parameters_1">
+    Parameters
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-backtest">
+    Example Backtest
+  </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="backtest">Backtest<a class="headerlink" href="#backtest" title="Permanent link">¶</a></h1>
+<h2 id="backtest_1">backtest<a class="headerlink" href="#backtest_1" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nd">@classmethod</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="n">opendesk</span><span class="o">.</span><span class="n">Strategy</span><span class="o">.</span><span class="n">backtest</span><span class="p">(</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="n">config</span><span class="p">:</span> <span class="n">BacktestConfig</span><span class="p">,</span> 
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    <span class="o">**</span><span class="n">kwargs</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="p">)</span> <span class="err">‑</span><span class="o">&gt;</span> <span class="n">vectorbt</span><span class="o">.</span><span class="n">portfolio</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Portfolio</span>
+</code></pre></div>
+<p>The <code>backtest</code> instance of the <code>Strategy</code> class is a <strong>classmethod</strong>. It is used to run a simulation using a custom order function <code>from_order_func</code> from <code>vectorbt.Portfolio</code> class. </p>
+<blockquote>
+<p>The job of the Portfolio class is to create a series of positions allocated against a cash component, produce an equity curve, incorporate basic transaction costs and produce a set of statistics about its performance. In particular, it outputs position/profit metrics and drawdown information.</p>
+</blockquote>
+<h3 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">¶</a></h3>
+<h4 id="preparation">Preparation<a class="headerlink" href="#preparation" title="Permanent link">¶</a></h4>
+<ul>
+<li>Receives a set of inputs, such as signal arrays and other parameters</li>
+<li>Resolves parameter defaults by searching for them in the global settings</li>
+<li>Brings input arrays to a single shape</li>
+<li>Does some basic validation of inputs and converts Pandas objects to NumPy arrays</li>
+<li>Passes everything to a Numba-compiled simulation function</li>
+</ul>
+<h4 id="simulation">Simulation<a class="headerlink" href="#simulation" title="Permanent link">¶</a></h4>
+<ul>
+<li>The simulation function traverses the broadcasted shape element by element, row by row (time dimension), column by column (asset dimension)</li>
+<li>For each asset and timestamp (= element):<ul>
+<li>Gets all available information related to this element and executes the logic</li>
+<li>Generates an order or skips the element altogether</li>
+<li>If an order has been issued, processes the order and fills/ignores/rejects it</li>
+<li>If the order has been filled, registers the result by appending it to the order records</li>
+<li>Updates the current state such as the cash and asset balances</li>
+</ul>
+</li>
+</ul>
+<h4 id="construction">Construction<a class="headerlink" href="#construction" title="Permanent link">¶</a></h4>
+<ul>
+<li>Receives the returned order records and initializes a new Portfolio object</li>
+</ul>
+<h4 id="analysis">Analysis<a class="headerlink" href="#analysis" title="Permanent link">¶</a></h4>
+<ul>
+<li>Offers a broad range of risk &amp; performance metrics based on order records</li>
+</ul>
+<p>It requires <code>BacktestConfig</code> <strong>dataclass</strong>, a configuration pipeline which simplifies model configurations.</p>
+<div class="admonition info">
+<p class="admonition-title"><code>@classmethod</code></p>
+<p>A class method is a method that is bound to the class and not the instance of the class. It can be called on the class itself, as well as on any instance of the class. In Python, a class method is defined using the <code>@classmethod</code> decorator.</p>
+</div>
+<p>The <code>backtest</code> classmethod initially initializes and fits the strategy using the <code>fit()</code> method, and estimates its exposures using the <code>estimate()</code> method. Afterwards, it constructs a portfolio based on specified orchestration and methodologies at each point in time. The final result is a vectorbt object, which provides access to the full range of functionality offered by the vectorbt ecosystem.</p>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">¶</a></h3>
+<div class="highlight"><span class="filename">config</span><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a>opendesk.backtest.config.BacktestConfig
+</code></pre></div>
+<div class="result">
+<p>Backtesting configuration pipeline <code>dataclass</code>, which includes the necessary parameters to activate the internal strategy builder, is required for this process.</p>
+</div>
+<div class="highlight"><span class="filename">kwargs</span><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a>Dict
+</code></pre></div>
+<div class="result">
+<p>Additional parameters for <code>vbt.portfolio.base.Portfolio.from_order_func</code> function. It accepts:</p>
+<ul>
+<li>wrapper: ArrayWrapper,</li>
+<li>close: tp.ArrayLike,</li>
+<li>order_records: tp.RecordArray,</li>
+<li>log_records: tp.RecordArray,</li>
+<li>init_cash: tp.ArrayLike,</li>
+<li>cash_sharing: bool,</li>
+<li>call_seq: tp.Optional[tp.Array2d] = None,</li>
+<li>fillna_close: tp.Optional[bool] = None,</li>
+<li>trades_type: tp.Optional[tp.Union[int, str]] = None) -&gt; None:</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">When Vectorbt Default to None<p>If you look at the arguments of each class method, you will notice that most of them default to None. None has a special meaning in <code>vectorbt</code>: it's a command to pull the default value from the global settings config - <code>settings</code>. The branch for the Portfolio can be found` under the key 'portfolio'. For example, the default size is:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s1">'size'</span><span class="p">]</span>
+</code></pre></div>
+</p>
+</div>
+</div>
+<h3 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">¶</a></h3>
+<p><code>vectorbt.Portfolio.from_order_func</code>: vectorbt <code>Portfolio</code> ecosystem.</p>
+<div class="admonition example">
+<p class="admonition-title">Example Backtest<p>The <code>backtest</code> classmethod is initalized through the <code>BacktestConfig</code> dataclass, which facilitates feature integration. Mandatory variables <code>universe</code>, <code>model_data</code> and <code>steps</code> are set, as follow:</p>
+<p><div class="termy">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="gp">$ </span>from<span class="w"> </span>opendesk<span class="w"> </span>import<span class="w"> </span>BacktestConfig
+<a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="gp">$ </span>from<span class="w"> </span>opendesk<span class="w"> </span>import<span class="w"> </span>Strategy
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="gp">$ </span><span class="nv">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>BacktestConfig<span class="o">(</span>
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="gp">$     </span><span class="nv">universe</span><span class="o">=</span>stock_prices,<span class="w"> </span>
+<a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="gp">$     </span><span class="nv">model_data</span><span class="o">=</span>model_data,<span class="w"> </span>
+<a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="gp">$     </span><span class="nv">steps</span><span class="o">=</span>steps
+<a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="gp">$ </span><span class="o">)</span>
+<a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="gp">$ </span><span class="nv">backtest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Strategy.backtest<span class="o">(</span>config<span class="o">)</span>
+<a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="gp">$ </span>backtest.stats<span class="o">()</span>
+<a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="go">&lt;span style="color: grey;"&gt;Start                                 2019-01-02 00:00:00</span>
+<a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="go">End                                   2022-12-30 00:00:00</span>
+<a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="go">Period                                 1008 days 00:00:00</span>
+<a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="go">Start Value                                         100.0</span>
+<a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a><span class="go">End Value                                      152.092993</span>
+<a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a><span class="go">Total Return [%]                                52.092993</span>
+<a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a><span class="go">Benchmark Return [%]                            62.173178</span>
+<a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="go">Max Gross Exposure [%]                          31.819902</span>
+<a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="go">Total Fees Paid                                       0.0</span>
+<a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="go">Max Drawdown [%]                                13.822639</span>
+<a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a><span class="go">Max Drawdown Duration                   320 days 00:00:00</span>
+<a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="go">Total Trades                                          391</span>
+<a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a><span class="go">Total Closed Trades                                   372</span>
+<a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a><span class="go">Total Open Trades                                      19</span>
+<a href="#__codelineno-4-24" id="__codelineno-4-24" name="__codelineno-4-24"></a><span class="go">Open Trade PnL                                  14.614093</span>
+<a href="#__codelineno-4-25" id="__codelineno-4-25" name="__codelineno-4-25"></a><span class="go">Win Rate [%]                                    54.301075</span>
+<a href="#__codelineno-4-26" id="__codelineno-4-26" name="__codelineno-4-26"></a><span class="go">Best Trade [%]                                 122.866679</span>
+<a href="#__codelineno-4-27" id="__codelineno-4-27" name="__codelineno-4-27"></a><span class="go">Worst Trade [%]                               -164.309231</span>
+<a href="#__codelineno-4-28" id="__codelineno-4-28" name="__codelineno-4-28"></a><span class="go">Avg Winning Trade [%]                           22.115064</span>
+<a href="#__codelineno-4-29" id="__codelineno-4-29" name="__codelineno-4-29"></a><span class="go">Avg Losing Trade [%]                            -19.44764</span>
+<a href="#__codelineno-4-30" id="__codelineno-4-30" name="__codelineno-4-30"></a><span class="go">Avg Winning Trade Duration    158 days 21:51:40.990099010</span>
+<a href="#__codelineno-4-31" id="__codelineno-4-31" name="__codelineno-4-31"></a><span class="go">Avg Losing Trade Duration     143 days 02:49:24.705882354</span>
+<a href="#__codelineno-4-32" id="__codelineno-4-32" name="__codelineno-4-32"></a><span class="go">Profit Factor                                    1.417933</span>
+<a href="#__codelineno-4-33" id="__codelineno-4-33" name="__codelineno-4-33"></a><span class="go">Expectancy                                        0.10075</span>
+<a href="#__codelineno-4-34" id="__codelineno-4-34" name="__codelineno-4-34"></a><span class="go">Sharpe Ratio                                     0.942305</span>
+<a href="#__codelineno-4-35" id="__codelineno-4-35" name="__codelineno-4-35"></a><span class="go">Calmar Ratio                                     0.799575</span>
+<a href="#__codelineno-4-36" id="__codelineno-4-36" name="__codelineno-4-36"></a><span class="go">Omega Ratio                                      1.179846</span>
+<a href="#__codelineno-4-37" id="__codelineno-4-37" name="__codelineno-4-37"></a><span class="go">Sortino Ratio                                    1.431216</span>
+<a href="#__codelineno-4-38" id="__codelineno-4-38" name="__codelineno-4-38"></a><span class="go">Name: group, dtype: object</span>
+<a href="#__codelineno-4-39" id="__codelineno-4-39" name="__codelineno-4-39"></a><span class="go">&lt;/span&gt;</span>
+</code></pre></div>
+</div></p>
+</p>
+</div>
+<h2 id="backtestconfig">BacktestConfig<a class="headerlink" href="#backtestconfig" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="nd">@dataclass</span>
+<a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="n">backtest</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">BacktestConfig</span><span class="p">(</span>
+<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="n">steps</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> 
+<a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">universe</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> 
+<a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">model_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="n">topdown</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="n">mapping_table</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="n">mapping_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="n">freq</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">252</span><span class="p">,</span> 
+<a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+<a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>    <span class="n">fit_backend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'joblib'</span><span class="p">,</span> 
+<a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>    <span class="n">estimate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">built</span><span class="o">-</span><span class="ow">in</span> <span class="n">function</span> <span class="nb">sum</span><span class="o">&gt;</span><span class="p">,</span> 
+<a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="n">portfolio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'optimize'</span><span class="p">,</span> 
+<a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="n">optimize_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mvo'</span><span class="p">,</span> 
+<a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="n">optimize_cov_matrix_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">factory</span><span class="o">&gt;</span><span class="p">,</span> 
+<a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="n">optimize_expected_returns_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">factory</span><span class="o">&gt;</span><span class="p">,</span> 
+<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>    <span class="n">optimize_black_litterman</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>    <span class="n">optimize_black_litterman_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>    <span class="n">optimize_weight_bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+<a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="n">optimize_solver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>    <span class="n">optimize_verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+<a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>    <span class="n">optimize_solver_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>    <span class="n">add_alpha_block_constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>    <span class="n">add_n_asset_constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>    <span class="n">add_l2_regularization</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+<a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>    <span class="n">add_gamma</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> 
+<a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>    <span class="n">add_custom_objectives</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>    <span class="n">add_custom_constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>    <span class="n">optimize_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'efficient_risk'</span><span class="p">,</span> 
+<a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>    <span class="n">optimize_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">factory</span><span class="o">&gt;</span><span class="p">,</span> 
+<a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>    <span class="n">discrete_allocation_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'equal_weighted'</span><span class="p">,</span>
+<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>    <span class="n">discrete_allocation_model_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>    <span class="n">discrete_allocation_range_bound</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mid'</span><span class="p">,</span> 
+<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>    <span class="n">backtest_every_nth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> 
+<a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a>    <span class="n">backtest_history_len</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> 
+<a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a>    <span class="n">backtest_direction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'long_short'</span><span class="p">,</span> 
+<a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>    <span class="n">backtest_backup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'discrete_allocation'</span><span class="p">,</span> 
+<a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>    <span class="n">backtest_backup_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">factory</span><span class="o">&gt;</span>
+<a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title"><code>@dataclass</code></p>
+<p>A <code>dataclass</code> is a decorator that is used to define a class that will be used to store data. It automatically generates special methods, such as <code>__init__</code>, <code>__repr__</code>, and <code>__eq__</code>, based on the class's attributes. A dataclass is defined using the <code>@dataclass</code> decorator.</p>
+</div>
+<h3 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">¶</a></h3>
+<div class="highlight"><span class="filename">steps</span><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a>List[Tuple[str, Type, Dict, Dict]]
+</code></pre></div>
+<div class="result">
+<p>Alpha blocks in order of execution. More information, please visit <a href="../../../model_glossary/">the Model Glossary</a>.
+The parameter <code>steps</code> is required to enable the smooth integration of the strategy into the module with minimal disruption. It is a list of tuples containing:</p>
+<ul>
+<li>Custom name of the selected block (e.i. <code>myblock</code>)</li>
+<li>Class object of the selected block (e.i. <code>MyBlock</code>)</li>
+<li>Necessary parameters used at the block initialization (<code>__init__</code>) section (e.i. <code>dict(param_1="param_1, param_2="param_2")</code>)</li>
+<li>Additional data, <code>**kwargs</code>, required to train the model from the method <code>processing()</code></li>
+</ul>
+</div>
+<div class="highlight"><span class="filename">universe</span><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a>pandas.core.frame.DataFrame
+</code></pre></div>
+<div class="result">
+<p>Market price time-series universe, each row is a date and each column is a ticker/id.</p>
+</div>
+<div class="highlight"><span class="filename">model_data</span><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a>Optional[pandas.core.frame.DataFrame] = None
+</code></pre></div>
+<div class="result">
+<p>Market returns time-series used to train the model.</p>
+</div>
+<div class="highlight"><span class="filename">topdown</span><pre><span></span><code><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a>Optional[bool] = False
+</code></pre></div>
+<div class="result">
+<p>Activates top-down strategy. The strategy tilts is processed at a higher level (e.i. sector level) than the actual allocation exectution (e.i. stock level). If set to <code>True</code>, a mapping table should be passed. Defaults to <code>False</code>.</p>
+</div>
+<div class="highlight"><span class="filename">mapping_table</span><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a>Optional[Dict[str, str]] = None
+</code></pre></div>
+<div class="result">
+<p>Maps higher with lower level assets. Variable <code>topdown</code> needs to be turned to <code>True</code>. Defaults to <code>None</code>.</p>
+</div>
+<div class="highlight"><span class="filename">mapping_weights</span><pre><span></span><code><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a>Optional[Dict[int, Tuple]] = None
+</code></pre></div>
+<div class="result">
+<p>Maps scores with range of weights. Defaults to <code>None</code>.</p>
+</div>
+<div class="highlight"><span class="filename">fit_backend</span><pre><span></span><code><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a>Optional[str] = "joblib"
+</code></pre></div>
+<div class="result">
+<p>Run parallel multiprocessing or iterative process.</p>
+</div>
+<div class="highlight"><span class="filename">verbose</span><pre><span></span><code><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a>Optional[bool] = None
+</code></pre></div>
+<div class="result">
+<p>Progress messages are printed. Applied to <code>fit()</code> and <code>optimize()</code> functions.</p>
+</div>
+<div class="highlight"><span class="filename">estimate</span><pre><span></span><code><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a>Optional[Type] = sum
+</code></pre></div>
+<div class="result">
+<p>Strategy exposures/tilts aggregated from model scores. The <code>func</code> parameter can be any object that is compatible with the <code>.apply</code> function in the pandas library.</p>
+</div>
+<div class="highlight"><span class="filename">portfolio</span><pre><span></span><code><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a>Optional[str] = "optimize"
+</code></pre></div>
+<div class="result">
+<p>Portfolio construction procedure to allocate weights. It could be <code>optimize</code> or <code>discrete allocation</code>. Defauts to <code>optimize</code></p>
+</div>
+<div class="highlight"><span class="filename">optimize_model</span><pre><span></span><code><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a>Optional[str] = "mvo"
+</code></pre></div>
+<div class="result">
+<p>Type of optimizer to be used.
+Type of optimization:</p>
+<ul>
+<li><code>mvo</code>: Mean-variance optimization</li>
+<li><code>hrp</code>: Hierarchical Risk Parity</li>
+</ul>
+</div>
+<div class="highlight"><span class="filename">optimize_expected_returns_params</span><pre><span></span><code><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a>Optional[Dict[str, Any]]
+</code></pre></div>
+<div class="result">
+<p>Parameters to compute an estimate of future returns:</p>
+<ul>
+<li><code>method</code> (str): the return model to use. Should be one of:<ul>
+<li><code>mean_historical_return</code></li>
+<li><code>ema_historical_return</code></li>
+<li><code>capm_return</code></li>
+</ul>
+</li>
+<li><code>**kwargs</code>: Method specificities
+Defaults to:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="nb">dict</span><span class="p">(</span>
+<a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a>    <span class="n">method</span><span class="o">=</span><span class="s2">"ema_historical_return"</span><span class="p">,</span> 
+<a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a>    <span class="n">compounding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+<a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a>    <span class="n">span</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> 
+<a href="#__codelineno-18-5" id="__codelineno-18-5" name="__codelineno-18-5"></a>    <span class="n">frequency</span><span class="o">=</span><span class="mi">252</span><span class="p">,</span> 
+<a href="#__codelineno-18-6" id="__codelineno-18-6" name="__codelineno-18-6"></a>    <span class="n">log_returns</span><span class="o">=</span><span class="kc">False</span>
+<a href="#__codelineno-18-7" id="__codelineno-18-7" name="__codelineno-18-7"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="highlight"><span class="filename">optimize_cov_matrix_params</span><pre><span></span><code><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a>Optional[Dict[str, Any]]
+</code></pre></div>
+<div class="result">
+<p>Parameters to compute a covariance matrix:</p>
+<ul>
+<li><code>method</code> (str): the risk model to use. Should be one of:<ul>
+<li><code>sample_cov</code></li>
+<li><code>semicovariance</code></li>
+<li><code>exp_cov</code></li>
+<li><code>ledoit_wolf</code></li>
+<li><code>ledoit_wolf_constant_variance</code></li>
+<li><code>ledoit_wolf_single_factor</code></li>
+<li><code>ledoit_wolf_constant_correlation</code></li>
+<li><code>oracle_approximating</code></li>
+</ul>
+</li>
+<li><code>**kwargs</code>: Method specificities
+Defautls to:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="nb">dict</span><span class="p">(</span>
+<a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a>    <span class="n">method</span><span class="o">=</span><span class="s2">"ledoit_wolf"</span><span class="p">,</span> 
+<a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a>    <span class="n">frequency</span><span class="o">=</span><span class="mi">252</span><span class="p">,</span> 
+<a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a>    <span class="n">log_returns</span><span class="o">=</span><span class="kc">False</span>
+<a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="highlight"><span class="filename">optimize_weight_bounds</span><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a>Optional[Tuple[int, int]] = (-1, 1)
+</code></pre></div>
+<div class="result">
+<p>Minimum and maximum weight of each asset or single min/max pair if all identical, defaults to (-1, 1). If <code>weight_bounds=(-1, 1)</code>, allows short positions. Defaults to <code>(-1, 1)</code>.</p>
+</div>
+<div class="highlight"><span class="filename">optimize_solver</span><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a>Optional[str] = None
+</code></pre></div>
+<div class="result">
+<p>name of solver. list available solvers with: <code>cvxpy.installed_solvers()</code>.</p>
+</div>
+<div class="highlight"><span class="filename">optimize_solver_options</span><pre><span></span><code><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a>Optional[Dict] = None
+</code></pre></div>
+<div class="result">
+<p>Parameters for the given solver.</p>
+</div>
+<div class="highlight"><span class="filename">add_alpha_block_constraints</span><pre><span></span><code><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a>Optional[bool] = True
+</code></pre></div>
+<div class="result">
+<p>Alpha blocks core constraints. It adds constraints on the sum of weights of different groups of assets. Most commonly, these will be sector constraints. These constraints a particularly relevant when working with alpha blocks (top-down or bottom-up), as we aim to limit our exposure to paricular group of assets. Defaults to <code>True</code>.</p>
+</div>
+<div class="highlight"><span class="filename">add_n_asset_constraints</span><pre><span></span><code><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a>Optional[List[Type]] = None
+</code></pre></div>
+<div class="result">
+<p>Number of assets in the portfolio constraints. Cardinality constraints are not convex, making them difficult to implement. However, we can treat it as a mixed-integer program and solve (provided you have access to a solver). for small problems with less than 1000 variables and constraints, you can use the community version of <a href="https://en.wikipedia.org/wiki/CPLEX">CPLEX</a> available in python <code>pip install cplex</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>n_asset_constraints</code></p>
+<p>This functionnality is still work in progress, as it requires external capabilities (<code>cplex</code>).</p>
+</div>
+</div>
+<div class="highlight"><span class="filename">add_l2_regularization</span><pre><span></span><code><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a>Optional[bool] = True
+</code></pre></div>
+<div class="result">
+<p>L2 regularisation, i.e <span class="arithmatex">\(\gamma ||w||^2\)</span>, to increase the number of nonzero weights.</p>
+<p>Mean-variance optimization often results in many weights being negligible, i.e the efficient portfolio does not end up including most of the assets. This is expected behaviour, but it may be undesirable if you need a certain number of assets in your portfolio. </p>
+<p>In order to coerce the mean-variance optimizer to produce more non-negligible weights, we add what can be thought of as a “small weights penalty” to all of the objective functions, parameterised by <span class="arithmatex">\(\gamma\)</span> (gamma). This term reduces the number of negligible weights, because it has a minimum value when all weights are equally distributed, and maximum value in the limiting case where the entire portfolio is allocated to one asset. We refer to it as L2 regularisation because it has exactly the same form as the L2 regularisation term in machine learning, though a slightly different purpose (in ML it is used to keep weights small while here it is used to make them larger).</p>
+<div class="admonition note">
+<p class="admonition-title">Gamma</p>
+<p>In practice, <span class="arithmatex">\(\gamma\)</span> must be tuned to achieve the level of regularisation that you want. However, if the universe of assets is small (less than 20 assets), then gamma=1 is a good starting point. For larger universes, or if you want more non-negligible weights in the final portfolio, increase gamma.</p>
+</div>
+</div>
+<div class="highlight"><span class="filename">add_gamma</span><pre><span></span><code><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a>Optional[int] = 2
+</code></pre></div>
+<div class="result">
+<p>L2 regularisation parameter. Defaults to 2. Increase if you want more non-negligible weights</p>
+</div>
+<div class="highlight"><span class="filename">add_custom_objectives</span><pre><span></span><code><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a>Optional[List[Tuple[Type, Dict[str, Any]]]] = None
+</code></pre></div>
+<div class="result">
+<p>List of lambda functions to add new term into the based objective function. This term must be convex, and built from cvxpy atomic functions.</p>
+</div>
+<div class="highlight"><span class="filename">add_custom_constraints</span><pre><span></span><code><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a>Optional[List[Type]] = None
+</code></pre></div>
+<div class="result">
+<p>List of lambda function (e.i. all assets &lt;= 3% of the total portfolio = [lambda w: w &lt;= .03]. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.</p>
+</div>
+<div class="highlight"><span class="filename">optimize_method</span><pre><span></span><code><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a>Optional[str] = "efficient_risk"
+</code></pre></div>
+<div class="result">
+<p>Optimization method that can be called (corresponding to different objective functions).</p>
+<div class="admonition success">
+<p class="admonition-title">Object Instantiation</p>
+<p>A new EfficientFrontier object should be instantiated if you want to make any change to objectives/constraints/bounds/parameters. 
+The backtesting framework re-instantiate the optimization process at every rebalancing periods.</p>
+</div>
+</div>
+<div class="highlight"><span class="filename">optimize_params</span><pre><span></span><code><a href="#__codelineno-31-1" id="__codelineno-31-1" name="__codelineno-31-1"></a>Optional[Dict[str, Any]] = dict(target_volatility=0.08, market_neutral=True)
+</code></pre></div>
+<div class="result">
+<p>Optimization method parameters. Defaults to:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-32-1" id="__codelineno-32-1" name="__codelineno-32-1"></a><span class="nb">dict</span><span class="p">(</span>
+<a href="#__codelineno-32-2" id="__codelineno-32-2" name="__codelineno-32-2"></a>    <span class="n">target_volatility</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> 
+<a href="#__codelineno-32-3" id="__codelineno-32-3" name="__codelineno-32-3"></a>    <span class="n">market_neutral</span><span class="o">=</span><span class="kc">True</span>
+<a href="#__codelineno-32-4" id="__codelineno-32-4" name="__codelineno-32-4"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="highlight"><span class="filename">discrete_allocation_method</span><pre><span></span><code><a href="#__codelineno-33-1" id="__codelineno-33-1" name="__codelineno-33-1"></a>Optional[str] = "uniform"
+</code></pre></div>
+<div class="result">
+<p>Method used to allocate weights.</p>
+</div>
+<div class="highlight"><span class="filename">discrete_allocation_model_params</span><pre><span></span><code><a href="#__codelineno-34-1" id="__codelineno-34-1" name="__codelineno-34-1"></a>Dict[str, Any] = None
+</code></pre></div>
+<div class="result">
+<p>Model specific parameters.</p>
+</div>
+<div class="highlight"><span class="filename">discrete_allocation_range_bound</span><pre><span></span><code><a href="#__codelineno-35-1" id="__codelineno-35-1" name="__codelineno-35-1"></a>Optional[str] = "mid"
+</code></pre></div>
+<div class="result">
+<p>Bound from <code>mapping_weights</code>. Total budget (in %) to apply.</p>
+</div>
+<div class="highlight"><span class="filename">backtest_every_nth</span><pre><span></span><code><a href="#__codelineno-36-1" id="__codelineno-36-1" name="__codelineno-36-1"></a>Optional[int] = 30
+</code></pre></div>
+<div class="result">
+<p>Backtest rebalancing period in days. Defaults to 30. </p>
+</div>
+<div class="highlight"><span class="filename">backtest_history_len</span><pre><span></span><code><a href="#__codelineno-37-1" id="__codelineno-37-1" name="__codelineno-37-1"></a>Optional[int] = -1
+</code></pre></div>
+<div class="result">
+<p>Backtest model training period. If -1, the model trains the entire history. Defaults to -1.</p>
+</div>
+<div class="highlight"><span class="filename">backtest_direction</span><pre><span></span><code><a href="#__codelineno-38-1" id="__codelineno-38-1" name="__codelineno-38-1"></a>Optional[str] = "long_short"
+</code></pre></div>
+<div class="result">
+<p>Backtest Direction. It can be <code>long_only</code>, <code>short_only' or</code>long_short<code>. Defaults to</code>long_short`.</p>
+</div>
+<div class="highlight"><span class="filename">backtest_backup</span><pre><span></span><code><a href="#__codelineno-39-1" id="__codelineno-39-1" name="__codelineno-39-1"></a> Optional[str] = "discrete_allocation"
+</code></pre></div>
+<div class="result">
+<p>Backtest "back-up" used as a fallback in the event that the optimizer is unable to deliver feasible weights. It can be another portfolio construction procedure to allocate weights: <code>optimize</code> or <code>discrete allocation</code>. Defauts to <code>discrete_allocation</code>.</p>
+</div>
+<div class="highlight"><span class="filename">backtest_backup_params</span><pre><span></span><code><a href="#__codelineno-40-1" id="__codelineno-40-1" name="__codelineno-40-1"></a>Optional[Dict[str, Any]] = dict(range_bound="mid")
+</code></pre></div>
+<div class="result">
+<p>Backtest "back-up" configuration. Defauts to <code>dict(range_bound="mid")</code> as <code>discrete_allocation</code> is set in <code>backtest_backup</code>.</p>
+</div>
+<h2 id="example-backtest">Example Backtest<a class="headerlink" href="#example-backtest" title="Permanent link">¶</a></h2>
+<div class="admonition example">
+<p class="admonition-title">Example Backtest<p>For this example, we are using <code>yfinance</code>, a <a href="https://github.com/ranaroussi/yfinance">python library to fetch yahoo market data</a>. First, we import the module and query some tickers from 2019 to 2022:
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-41-1" id="__codelineno-41-1" name="__codelineno-41-1"></a><span class="kn">import</span> <span class="nn">yfinance</span> <span class="k">as</span> <span class="nn">yf</span>
+<a href="#__codelineno-41-2" id="__codelineno-41-2" name="__codelineno-41-2"></a>
+<a href="#__codelineno-41-3" id="__codelineno-41-3" name="__codelineno-41-3"></a><span class="c1"># Date range</span>
+<a href="#__codelineno-41-4" id="__codelineno-41-4" name="__codelineno-41-4"></a><span class="n">start</span> <span class="o">=</span> <span class="s2">"2019-01-01"</span>
+<a href="#__codelineno-41-5" id="__codelineno-41-5" name="__codelineno-41-5"></a><span class="n">end</span> <span class="o">=</span> <span class="s2">"2022-12-31"</span>
+<a href="#__codelineno-41-6" id="__codelineno-41-6" name="__codelineno-41-6"></a>
+<a href="#__codelineno-41-7" id="__codelineno-41-7" name="__codelineno-41-7"></a><span class="c1"># Tickers of assets</span>
+<a href="#__codelineno-41-8" id="__codelineno-41-8" name="__codelineno-41-8"></a><span class="n">assets</span> <span class="o">=</span> <span class="p">[</span>
+<a href="#__codelineno-41-9" id="__codelineno-41-9" name="__codelineno-41-9"></a>    <span class="s2">"JCI"</span><span class="p">,</span> <span class="s2">"TGT"</span><span class="p">,</span> <span class="s2">"CMCSA"</span><span class="p">,</span> <span class="s2">"CPB"</span><span class="p">,</span> 
+<a href="#__codelineno-41-10" id="__codelineno-41-10" name="__codelineno-41-10"></a>    <span class="s2">"MO"</span><span class="p">,</span> <span class="s2">"APA"</span><span class="p">,</span> <span class="s2">"MMC"</span><span class="p">,</span> <span class="s2">"JPM"</span><span class="p">,</span>
+<a href="#__codelineno-41-11" id="__codelineno-41-11" name="__codelineno-41-11"></a>    <span class="s2">"ZION"</span><span class="p">,</span> <span class="s2">"PSA"</span><span class="p">,</span> <span class="s2">"BAX"</span><span class="p">,</span> <span class="s2">"BMY"</span><span class="p">,</span> 
+<a href="#__codelineno-41-12" id="__codelineno-41-12" name="__codelineno-41-12"></a>    <span class="s2">"LUV"</span><span class="p">,</span> <span class="s2">"PCAR"</span><span class="p">,</span> <span class="s2">"TXT"</span><span class="p">,</span> <span class="s2">"TMO"</span><span class="p">,</span>
+<a href="#__codelineno-41-13" id="__codelineno-41-13" name="__codelineno-41-13"></a>    <span class="s2">"DE"</span><span class="p">,</span> <span class="s2">"MSFT"</span><span class="p">,</span> <span class="s2">"HPQ"</span><span class="p">,</span> <span class="s2">"SEE"</span><span class="p">,</span>
+<a href="#__codelineno-41-14" id="__codelineno-41-14" name="__codelineno-41-14"></a><span class="p">]</span>
+<a href="#__codelineno-41-15" id="__codelineno-41-15" name="__codelineno-41-15"></a>
+<a href="#__codelineno-41-16" id="__codelineno-41-16" name="__codelineno-41-16"></a><span class="c1"># Downloading data</span>
+<a href="#__codelineno-41-17" id="__codelineno-41-17" name="__codelineno-41-17"></a><span class="n">data</span> <span class="o">=</span> <span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">assets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
+<a href="#__codelineno-41-18" id="__codelineno-41-18" name="__codelineno-41-18"></a><span class="n">stock_prices</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">(</span><span class="s2">"Close"</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))]</span>
+<a href="#__codelineno-41-19" id="__codelineno-41-19" name="__codelineno-41-19"></a><span class="n">stock_prices</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">assets</span>
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-42-1" id="__codelineno-42-1" name="__codelineno-42-1"></a><span class="kn">from</span> <span class="nn">opendesk.backtest</span> <span class="kn">import</span> <span class="n">BacktestConfig</span>
+<a href="#__codelineno-42-2" id="__codelineno-42-2" name="__codelineno-42-2"></a><span class="kn">from</span> <span class="nn">opendesk.blocks</span> <span class="kn">import</span> <span class="n">Reversion</span><span class="p">,</span> <span class="n">SignalBased</span><span class="p">,</span> <span class="n">TrendFollowing</span>
+<a href="#__codelineno-42-3" id="__codelineno-42-3" name="__codelineno-42-3"></a><span class="kn">from</span> <span class="nn">opendesk.strategy</span> <span class="kn">import</span> <span class="n">Strategy</span>
+<a href="#__codelineno-42-4" id="__codelineno-42-4" name="__codelineno-42-4"></a>
+<a href="#__codelineno-42-5" id="__codelineno-42-5" name="__codelineno-42-5"></a><span class="c1"># Config</span>
+<a href="#__codelineno-42-6" id="__codelineno-42-6" name="__codelineno-42-6"></a><span class="n">config</span> <span class="o">=</span> <span class="n">BacktestConfig</span><span class="p">(</span>
+<a href="#__codelineno-42-7" id="__codelineno-42-7" name="__codelineno-42-7"></a>    <span class="n">universe</span><span class="o">=</span><span class="n">close_prices</span><span class="p">,</span>
+<a href="#__codelineno-42-8" id="__codelineno-42-8" name="__codelineno-42-8"></a>    <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+<a href="#__codelineno-42-9" id="__codelineno-42-9" name="__codelineno-42-9"></a>        <span class="p">(</span><span class="s2">"Reversion"</span><span class="p">,</span> <span class="n">Reversion</span><span class="p">),</span>
+<a href="#__codelineno-42-10" id="__codelineno-42-10" name="__codelineno-42-10"></a>        <span class="p">(</span><span class="s2">"TrendFollowing"</span><span class="p">,</span> <span class="n">TrendFollowing</span><span class="p">),</span>
+<a href="#__codelineno-42-11" id="__codelineno-42-11" name="__codelineno-42-11"></a>    <span class="p">],</span>
+<a href="#__codelineno-42-12" id="__codelineno-42-12" name="__codelineno-42-12"></a>    <span class="n">portfolio_construction</span><span class="o">=</span><span class="s2">"optimize"</span><span class="p">,</span>
+<a href="#__codelineno-42-13" id="__codelineno-42-13" name="__codelineno-42-13"></a>    <span class="n">portfolio_expected_returns_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<a href="#__codelineno-42-14" id="__codelineno-42-14" name="__codelineno-42-14"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">"capm_return"</span>
+<a href="#__codelineno-42-15" id="__codelineno-42-15" name="__codelineno-42-15"></a>    <span class="p">),</span>
+<a href="#__codelineno-42-16" id="__codelineno-42-16" name="__codelineno-42-16"></a>    <span class="n">portfolio_cov_matrix_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<a href="#__codelineno-42-17" id="__codelineno-42-17" name="__codelineno-42-17"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">"sample_cov"</span>
+<a href="#__codelineno-42-18" id="__codelineno-42-18" name="__codelineno-42-18"></a>    <span class="p">),</span>
+<a href="#__codelineno-42-19" id="__codelineno-42-19" name="__codelineno-42-19"></a>    <span class="n">solver_method</span><span class="o">=</span><span class="s2">"efficient_risk"</span><span class="p">,</span>
+<a href="#__codelineno-42-20" id="__codelineno-42-20" name="__codelineno-42-20"></a>    <span class="n">solver_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<a href="#__codelineno-42-21" id="__codelineno-42-21" name="__codelineno-42-21"></a>        <span class="n">target_volatility</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> 
+<a href="#__codelineno-42-22" id="__codelineno-42-22" name="__codelineno-42-22"></a>        <span class="n">market_neutral</span><span class="o">=</span><span class="kc">True</span>
+<a href="#__codelineno-42-23" id="__codelineno-42-23" name="__codelineno-42-23"></a>    <span class="p">),</span>
+<a href="#__codelineno-42-24" id="__codelineno-42-24" name="__codelineno-42-24"></a>    <span class="n">add_constraints</span><span class="o">=</span><span class="p">[</span>
+<a href="#__codelineno-42-25" id="__codelineno-42-25" name="__codelineno-42-25"></a>        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="mf">0.1</span><span class="p">,</span> 
+<a href="#__codelineno-42-26" id="__codelineno-42-26" name="__codelineno-42-26"></a>        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">0.1</span>
+<a href="#__codelineno-42-27" id="__codelineno-42-27" name="__codelineno-42-27"></a>    <span class="p">],</span>
+<a href="#__codelineno-42-28" id="__codelineno-42-28" name="__codelineno-42-28"></a>    <span class="n">backtest_every_nth</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a href="#__codelineno-42-29" id="__codelineno-42-29" name="__codelineno-42-29"></a><span class="p">)</span>
+</code></pre></div>
+<p><div class="termy">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-43-1" id="__codelineno-43-1" name="__codelineno-43-1"></a><span class="gp">$ </span><span class="nv">backtest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Strategy.backtest<span class="o">(</span>config<span class="o">)</span>
+<a href="#__codelineno-43-2" id="__codelineno-43-2" name="__codelineno-43-2"></a><span class="gp">$ </span>backtest.total_profit<span class="o">(</span><span class="nv">group_by</span><span class="o">=</span>False<span class="o">)</span>
+<a href="#__codelineno-43-3" id="__codelineno-43-3" name="__codelineno-43-3"></a><span class="go">&lt;span style="color: grey;"&gt;APA      20.123646</span>
+<a href="#__codelineno-43-4" id="__codelineno-43-4" name="__codelineno-43-4"></a><span class="go">BAX       6.338269</span>
+<a href="#__codelineno-43-5" id="__codelineno-43-5" name="__codelineno-43-5"></a><span class="go">BMY      -4.664290</span>
+<a href="#__codelineno-43-6" id="__codelineno-43-6" name="__codelineno-43-6"></a><span class="go">CMCSA     1.361760</span>
+<a href="#__codelineno-43-7" id="__codelineno-43-7" name="__codelineno-43-7"></a><span class="go">CPB       1.361636</span>
+<a href="#__codelineno-43-8" id="__codelineno-43-8" name="__codelineno-43-8"></a><span class="go">DE        8.268657</span>
+<a href="#__codelineno-43-9" id="__codelineno-43-9" name="__codelineno-43-9"></a><span class="go">HPQ       2.813247</span>
+<a href="#__codelineno-43-10" id="__codelineno-43-10" name="__codelineno-43-10"></a><span class="go">JCI      11.984073</span>
+<a href="#__codelineno-43-11" id="__codelineno-43-11" name="__codelineno-43-11"></a><span class="go">JPM       1.150170</span>
+<a href="#__codelineno-43-12" id="__codelineno-43-12" name="__codelineno-43-12"></a><span class="go">LUV      12.407130</span>
+<a href="#__codelineno-43-13" id="__codelineno-43-13" name="__codelineno-43-13"></a><span class="go">MMC      -4.770791</span>
+<a href="#__codelineno-43-14" id="__codelineno-43-14" name="__codelineno-43-14"></a><span class="go">MO       -4.857592</span>
+<a href="#__codelineno-43-15" id="__codelineno-43-15" name="__codelineno-43-15"></a><span class="go">MSFT      6.389380</span>
+<a href="#__codelineno-43-16" id="__codelineno-43-16" name="__codelineno-43-16"></a><span class="go">PCAR      5.609880</span>
+<a href="#__codelineno-43-17" id="__codelineno-43-17" name="__codelineno-43-17"></a><span class="go">PSA       4.577316</span>
+<a href="#__codelineno-43-18" id="__codelineno-43-18" name="__codelineno-43-18"></a><span class="go">SEE      -2.475789</span>
+<a href="#__codelineno-43-19" id="__codelineno-43-19" name="__codelineno-43-19"></a><span class="go">TGT      -7.691861</span>
+<a href="#__codelineno-43-20" id="__codelineno-43-20" name="__codelineno-43-20"></a><span class="go">TMO      -5.878451</span>
+<a href="#__codelineno-43-21" id="__codelineno-43-21" name="__codelineno-43-21"></a><span class="go">TXT       7.768601</span>
+<a href="#__codelineno-43-22" id="__codelineno-43-22" name="__codelineno-43-22"></a><span class="go">ZION     -7.347374</span>
+<a href="#__codelineno-43-23" id="__codelineno-43-23" name="__codelineno-43-23"></a><span class="go">Name: total_profit, dtype: float64</span>
+<a href="#__codelineno-43-24" id="__codelineno-43-24" name="__codelineno-43-24"></a><span class="go">&lt;/span&gt;</span>
+</code></pre></div>
+</div></p>
+<p>More information about the vectorbt ecosystem can be found in the <a href="https://vectorbt.dev/api/portfolio/base/#vectorbt.portfolio.base">official documentation</a>.</p>
+</p>
+</div>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 13, 2023</span>
+<br/>
+        Created:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 13, 2023</span>
+</small>
+</div>
+<form class="md-feedback" hidden="" name="feedback">
+<fieldset>
+<legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+<div class="md-feedback__inner">
+<div class="md-feedback__list">
+<button class="md-feedback__icon md-icon" data-md-value="1" title="This page was helpful" type="submit">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35Z"></path></svg>
+</button>
+<button class="md-feedback__icon md-icon" data-md-value="0" title="This page could be improved" type="submit">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c.67 0 1.32.12 1.94.33L13 9.35l-4 5 3 7M16.5 3C19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35l-1-7 4.5-5-2.65-5.08C13.87 3.47 15.17 3 16.5 3Z"></path></svg>
+</button>
+</div>
+<div class="md-feedback__note">
+<div data-md-value="1" hidden="">
+              
+              
+                
+              
+              Thanks for your feedback!
+            </div>
+<div data-md-value="0" hidden="">
+              
+              
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="..." rel="noopener" target="_blank">feedback form</a>.
+            </div>
+</div>
+</div>
+</fieldset>
+</form>
+</article>
+</div>
+</div>
+<a class="md-top md-icon" data-md-component="top" hidden="" href="#">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Back to top
+          </a>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">
+      Copyright © 2015 - 2022 ActurialCapital
+    </div>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/squidfunk" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</a>
+<a class="md-social__link" href="https://gitter.im/squidfunk/mkdocs-material" rel="noopener" target="_blank" title="gitter.im">
+<svg viewbox="0 0 384 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4v322.5zM166.9 76.1h-50.4V512h50.4V76.1zm100.6 0h-50.4V512h50.4V76.1zM368 76h-50.4v247H368V76z"></path></svg>
+</a>
+<a class="md-social__link" href="https://hub.docker.com/r/squidfunk/mkdocs-material/" rel="noopener" target="_blank" title="hub.docker.com">
+<svg viewbox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"></path></svg>
+</a>
+<a class="md-social__link" href="https://pypi.org/project/mkdocs-material/" rel="noopener" target="_blank" title="pypi.org">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"></path></svg>
+</a>
+<a class="md-social__link" href="https://twitter.com/squidfunk" rel="noopener" target="_blank" title="twitter.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg>
+</a>
+<a class="md-social__link" href="https://twitter.com/squidfunk" rel="noopener" target="_blank" title="twitter.com">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<div class="md-consent" data-md-component="consent" hidden="" id="__consent">
+<div class="md-consent__overlay"></div>
+<aside class="md-consent__inner">
+<form class="md-consent__form md-grid md-typeset" name="consent">
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" id="__settings" type="checkbox"/>
+<div class="md-consent__settings">
+<ul class="task-list">
+<li class="task-list-item">
+<label class="task-list-control">
+<input checked="" name="analytics" type="checkbox"/>
+<span class="task-list-indicator"></span>
+          Google Analytics
+        </label>
+</li>
+<li class="task-list-item">
+<label class="task-list-control">
+<input checked="" name="github" type="checkbox"/>
+<span class="task-list-indicator"></span>
+          GitHub
+        </label>
+</li>
+</ul>
+</div>
+<div class="md-consent__controls">
+<button class="md-button md-button--primary">Accept</button>
+<label class="md-button" for="__settings">Manage settings</label>
+</div>
+</form>
+</aside>
+</div>
+<script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.expand", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+<script src="../../../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+<script src="../../../javascripts/mathjax.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../../javascripts/shortcuts.js"></script>
+<script src="../../../assets/js/termynal.js"></script>
+<script src="../../../assets/js/termynal.min.js"></script>
+<script src="../../../assets/js/custom.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

@@ -1,0 +1,1472 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../discrete_allocation/" rel="prev"/>
+<link href="../../backtest/" rel="next"/>
+<link href="../../../../assets/images/lightning.png" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.0.12" name="generator"/>
+<title>Optimization - ActurialCapital</title>
+<link href="../../../../assets/stylesheets/main.0d440cfe.min.css" rel="stylesheet"/>
+<link href="../../../../assets/stylesheets/palette.2505c338.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../../../assets/_mkdocstrings.css" rel="stylesheet"/>
+<link href="../../../../assets/css/extra.css" rel="stylesheet"/>
+<link href="../../../../assets/css/termynal.css" rel="stylesheet"/>
+<link href="../../../../assets/css/custom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../../../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="blue" data-md-color-primary="" data-md-color-scheme="slate" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#optimization">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<div data-md-component="outdated" hidden="">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="ActurialCapital" class="md-header__button md-logo" data-md-component="logo" href="../../../.." title="ActurialCapital">
+<img alt="logo" src="../../../../assets/images/flash.png"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            ActurialCapital
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Optimization
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-hidden="true" class="md-option" data-md-color-accent="blue" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+</form>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ActurialCapital/xyz" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    acturialcapital/xyz
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-tabs__inner md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../../getting_started/">
+        Getting Started
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="../../../">
+        API
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../../contributing/">
+        Contributing
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../../model_glossary/">
+        Model Glossary
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../../dataset/">
+        Dataset
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../../../terminal/">
+        Terminal
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="ActurialCapital" class="md-nav__button md-logo" data-md-component="logo" href="../../../.." title="ActurialCapital">
+<img alt="logo" src="../../../../assets/images/flash.png"/>
+</a>
+    ActurialCapital
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ActurialCapital/xyz" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    acturialcapital/xyz
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../getting_started/">Getting Started</a>
+<label for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
+<span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../getting_started/installation/">
+        Installation
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../getting_started/main_concepts/">
+        Main Concepts
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../getting_started/create_blocks/">
+        Create Blocks
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../getting_started/optimize_blocks/">
+        Optimize Blocks
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../getting_started/backtest_blocks/">
+        Backtest Blocks
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../">API</a>
+<label for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../">Strategy</a>
+<label for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+          Strategy
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../exposures/">
+        Exposures
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2_2_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../">Porfolio</a>
+<label for="__nav_2_2_3">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_2_2_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_2_2_3">
+<span class="md-nav__icon md-icon"></span>
+          Porfolio
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../discrete_allocation/">
+        Discrete Allocation
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Optimization
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Optimization
+      </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration">
+    Integration
+  </a>
+<nav aria-label="Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parsing">
+    Parsing
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#auto-optimization">
+    Auto-optimization
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#argument-groups">
+    Argument groups
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optimize">
+    optimize
+  </a>
+<nav aria-label="optimize" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parameters">
+    Parameters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#returns">
+    Returns
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-optimizer">
+    Example Optimizer
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../backtest/">
+        Backtest
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../signals/">Signals</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+          Signals
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_4" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../categorize/">Categorize</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+          Categorize
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../contributing/">Contributing</a>
+<label for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+          Contributing
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../contributing/philosophy/">
+        Philosophy
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../contributing/development_guidelines/">
+        Development Guidelines
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../model_glossary/">Model Glossary</a>
+<label for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+          Model Glossary
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+          Sentiment
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_2">
+<span class="md-nav__icon md-icon"></span>
+          Sentiment
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/sentiment/hurst_exponent/">
+        🔒 Hurst Exponent
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/sentiment/range_strategy_models/">
+        🔒 Range Strategy
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/sentiment/reversion_models/">
+        🔒 Reversion Models
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/sentiment/short_interest_models/">
+        🔒 Short-Interest Models
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/sentiment/trend_following_models/">
+        🔒 Trend Following Models
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          Valuation
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_3">
+<span class="md-nav__icon md-icon"></span>
+          Valuation
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/valuation/zscore_models/">
+        🔒 Zscore Models
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../model_glossary/phase_identification/">Phase Identification</a>
+<label for="__nav_4_4">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_4">
+<span class="md-nav__icon md-icon"></span>
+          Phase Identification
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/phase_identification/factor_performance/">
+        🔒 Factor Performance
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4_3" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../model_glossary/phase_identification/cluster_models/">Cluster Models</a>
+<label for="__nav_4_4_3">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_4_4_3">
+<span class="md-nav__icon md-icon"></span>
+          Cluster Models
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/phase_identification/cluster_models/gaussian_mixture/">
+        🔒 Gaussian Mixture
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/phase_identification/cluster_models/asset_allocation/">
+        🔒 Asset Allocation
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/phase_identification/markov_models/">
+        🔒 Markov Models
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../model_glossary/phase_identification/signal_models/">
+        🔒 Signal Models
+      </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../dataset/">Dataset</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+          Dataset
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<div class="md-nav__link md-nav__link--index">
+<a href="../../../../terminal/">Terminal</a>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+          Terminal
+        </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration">
+    Integration
+  </a>
+<nav aria-label="Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parsing">
+    Parsing
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#auto-optimization">
+    Auto-optimization
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#argument-groups">
+    Argument groups
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optimize">
+    optimize
+  </a>
+<nav aria-label="optimize" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parameters">
+    Parameters
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#returns">
+    Returns
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-optimizer">
+    Example Optimizer
+  </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="optimization">Optimization<a class="headerlink" href="#optimization" title="Permanent link">¶</a></h1>
+<p>Portfolio optimization capabilities is the process of selecting the optimal mix of assets in a portfolio, with respect to the alpha scores, in order to maximize returns while minimizing risk. The <code>portfolio()</code> method has been implemented to streamline the process of optimization and facilitate the integration of backtesting.</p>
+<p>The <code>portfolio()</code> calls the <a href="../../portfolio/index.md"><code>PortfolioConstruction</code></a> class, which includes the implementation of the <code>optimize()</code> built-in public methods for optimization procedures, which integrates vectorbt pro <strong>PyPortfolioOpt</strong> wrapper.</p>
+<h2 id="integration">Integration<a class="headerlink" href="#integration" title="Permanent link">¶</a></h2>
+<blockquote>
+<p>PyPortfolioOpt is a library that implements portfolio optimization methods, including classical efficient frontier techniques and Black-Litterman allocation, as well as more recent developments in the field like shrinkage and Hierarchical Risk Parity, along with some novel experimental features, like exponentially-weighted covariance matrices. </p>
+</blockquote>
+<p>PyPortfolioOpt implements a range of optimization methods that are very easy to use. The optimization procedure consists of several distinct steps (some of them may be skipped depending on the optimizer):</p>
+<ul>
+<li>Calculate the expected returns (mostly located in <code>pypfopt.expected_returns</code>)</li>
+<li>Calculate the covariance matrix (mostly located in <code>pypfopt.risk_models</code>)</li>
+<li>Initialize and set up an optimizer (mostly located in <code>pypfopt.efficient_frontier</code>, with the base class located in `pypfopt.base_optimizer) including objectives, constraints, and target</li>
+<li>Run the optimizer to get the weights</li>
+<li>Convert the weights into a discrete allocation (optional)</li>
+</ul>
+<p>For example, let's perform the mean-variance optimization (MVO) for maximum Sharpe:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">pypfopt.expected_returns</span> <span class="kn">import</span> <span class="n">mean_historical_return</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">pypfopt.risk_models</span> <span class="kn">import</span> <span class="n">CovarianceShrinkage</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">pypfopt.efficient_frontier</span> <span class="kn">import</span> <span class="n">EfficientFrontier</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="n">expected_returns</span> <span class="o">=</span> <span class="n">mean_historical_return</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="n">optimizer</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">expected_returns</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">max_sharpe</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="parsing">Parsing<a class="headerlink" href="#parsing" title="Permanent link">¶</a></h3>
+<p>The entire codebase of PyPortfolioOpt (with a few exceptions) has consistent argument and function namings, such that we can build a semantic web of functions acting as inputs to other functions. Therefore, the user just needs to provide the target function (e.g. <code>EfficientFrontier.max_sharpe</code>), and we can programmatically figure out the entire call stack having the pricing data alonw. If the user passes any additional keyword arguments, we can check which functions from the stack accept those arguments and automatically pass them.</p>
+<p>For the example above, the web would be:</p>
+<pre class="mermaid"><code>flowchart TD
+    U[User] -- prices --&gt; m[mean_historical_return]
+    U -- prices --&gt; c[CovarianceShrinkage.ledoit_wolf]
+    m -- expected_returns --&gt; e[EfficientFrontier]
+    c -- cov_matrix --&gt; e</code></pre>
+<h3 id="auto-optimization">Auto-optimization<a class="headerlink" href="#auto-optimization" title="Permanent link">¶</a></h3>
+<p>Knowing how to parse and resolve function arguments, vectorbt implements a function <code>pypfopt_optimize</code>, which takes user requirements and translates them into function calls:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span><span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+</code></pre></div>
+<p>In short, <code>pypfopt_optimize</code> triggers a waterfall of argument resolutions by parsing arguments, including the calculation of the expected returns and the risk model quantifying asset risk. Then, it adds objectives and constraints to the optimizer instance. Finally, it calls the target metric method (such as <code>max_sharpe</code>) or custom convex/non-convex objective using the same parsing procedure as we did above. If wanted, it can also translate continuous weights into discrete ones using <code>pypfopt.DiscreteAllocation</code>.</p>
+<p>Since multiple PyPortfolioOpt functions can require the same argument that has to be pre-computed yet, pypfopt_optimize deploys a built-in caching mechanism. Below, we will demonstrate various optimizations done both using PyPortfolioOpt and vectorbt:</p>
+<p>Optimizing a long/short portfolio to minimise total variance:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">pypfopt</label><label for="__tabbed_1_2">vectorbt</label><label for="__tabbed_1_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="n">ef</span><span class="o">.</span><span class="n">min_volatility</span><span class="p">()</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></input></input></div>
+<p>Optimizing a portfolio to maximise the Sharpe ratio, subject to sector constraints. In opendesk, while the sector constraints is also an option, we can set the <code>alpha_block_constraints</code> to True, which constraints the portfolio depending on pre-modeled alpha blocks exposures:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><input id="__tabbed_2_3" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">pypfopt</label><label for="__tabbed_2_2">vectorbt</label><label for="__tabbed_2_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">pypfopt.expected_returns</span> <span class="kn">import</span> <span class="n">capm_return</span>
+<a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
+<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">capm_return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="n">ef</span><span class="o">.</span><span class="n">add_sector_constraints</span><span class="p">(</span><span class="n">sector_mapper</span><span class="p">,</span> <span class="n">sector_lower</span><span class="p">,</span> <span class="n">sector_upper</span><span class="p">)</span>
+<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="n">ef</span><span class="o">.</span><span class="n">max_sharpe</span><span class="p">()</span>
+<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+<a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="n">weights</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"capm_return"</span><span class="p">,</span>
+<a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>    <span class="n">sector_mapper</span><span class="o">=</span><span class="n">sector_mapper</span><span class="p">,</span>
+<a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>    <span class="n">sector_lower</span><span class="o">=</span><span class="n">sector_lower</span><span class="p">,</span>
+<a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>    <span class="n">sector_upper</span><span class="o">=</span><span class="n">sector_upper</span><span class="p">,</span>
+<a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"capm_return"</span><span class="p">,</span>
+<a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>    <span class="n">alpha_block_constraints</span><span class="o">=</span><span class="kc">True</span>
+<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></input></input></div>
+<p>Optimizing a portfolio to maximise return for a given risk, subject to sector constraints, with an L2 regularisation objective:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><input id="__tabbed_3_3" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">pypfopt</label><label for="__tabbed_3_2">vectorbt</label><label for="__tabbed_3_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span> <span class="nn">pypfopt.objective_functions</span> <span class="kn">import</span> <span class="n">L2_reg</span>
+<a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>
+<a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">capm_return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="n">ef</span><span class="o">.</span><span class="n">add_sector_constraints</span><span class="p">(</span><span class="n">sector_mapper</span><span class="p">,</span> <span class="n">sector_lower</span><span class="p">,</span> <span class="n">sector_upper</span><span class="p">)</span>
+<a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="n">ef</span><span class="o">.</span><span class="n">add_objective</span><span class="p">(</span><span class="n">L2_reg</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="n">ef</span><span class="o">.</span><span class="n">efficient_risk</span><span class="p">(</span><span class="mf">0.15</span><span class="p">)</span>
+<a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"capm_return"</span><span class="p">,</span>
+<a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>    <span class="n">sector_mapper</span><span class="o">=</span><span class="n">sector_mapper</span><span class="p">,</span>
+<a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>    <span class="n">sector_lower</span><span class="o">=</span><span class="n">sector_lower</span><span class="p">,</span>
+<a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>    <span class="n">sector_upper</span><span class="o">=</span><span class="n">sector_upper</span><span class="p">,</span>
+<a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">"L2_reg"</span><span class="p">],</span>  
+<a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a>    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  
+<a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"efficient_risk"</span><span class="p">,</span>
+<a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>    <span class="n">target_volatility</span><span class="o">=</span><span class="mf">0.15</span>  
+<a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"capm_return"</span><span class="p">,</span>
+<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>    <span class="n">sector_mapper</span><span class="o">=</span><span class="n">sector_mapper</span><span class="p">,</span>
+<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>    <span class="n">sector_lower</span><span class="o">=</span><span class="n">sector_lower</span><span class="p">,</span>
+<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>    <span class="n">sector_upper</span><span class="o">=</span><span class="n">sector_upper</span><span class="p">,</span>
+<a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">"L2_reg"</span><span class="p">],</span>  
+<a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  
+<a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"efficient_risk"</span><span class="p">,</span>
+<a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>    <span class="n">target_volatility</span><span class="o">=</span><span class="mf">0.15</span>  
+<a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></input></input></div>
+<p>Optimizing along the mean-semivariance frontier:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio"><input id="__tabbed_4_2" name="__tabbed_4" type="radio"><input id="__tabbed_4_3" name="__tabbed_4" type="radio"><div class="tabbed-labels"><label for="__tabbed_4_1">pypfopt</label><label for="__tabbed_4_2">vectorbt</label><label for="__tabbed_4_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">pypfopt</span> <span class="kn">import</span> <span class="n">EfficientSemivariance</span>
+<a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="kn">from</span> <span class="nn">pypfopt.expected_returns</span> <span class="kn">import</span> <span class="n">returns_from_prices</span>
+<a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>
+<a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">capm_return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="n">returns</span> <span class="o">=</span> <span class="n">returns_from_prices</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="n">es</span> <span class="o">=</span> <span class="n">EfficientSemivariance</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">returns</span><span class="p">)</span>
+<a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="n">es</span><span class="o">.</span><span class="n">efficient_return</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>
+<a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"capm_return"</span><span class="p">,</span>
+<a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>    <span class="n">optimizer</span><span class="o">=</span><span class="s2">"efficient_semivariance"</span><span class="p">,</span>  
+<a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"efficient_return"</span><span class="p">,</span>
+<a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>    <span class="n">target_return</span><span class="o">=</span><span class="mf">0.01</span>
+<a href="#__codelineno-12-7" id="__codelineno-12-7" name="__codelineno-12-7"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"capm_return"</span><span class="p">,</span>
+<a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>    <span class="n">optimizer</span><span class="o">=</span><span class="s2">"efficient_semivariance"</span><span class="p">,</span>  
+<a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"efficient_return"</span><span class="p">,</span>
+<a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>    <span class="n">target_return</span><span class="o">=</span><span class="mf">0.01</span>
+<a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></input></input></div>
+<p>Minimizing transaction costs:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="n">initial_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">symbols</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio"><input id="__tabbed_5_2" name="__tabbed_5" type="radio"><input id="__tabbed_5_3" name="__tabbed_5" type="radio"><div class="tabbed-labels"><label for="__tabbed_5_1">pypfopt</label><label for="__tabbed_5_2">vectorbt</label><label for="__tabbed_5_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="kn">from</span> <span class="nn">pypfopt.objective_functions</span> <span class="kn">import</span> <span class="n">transaction_cost</span>
+<a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a>
+<a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">mean_historical_return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a href="#__codelineno-15-6" id="__codelineno-15-6" name="__codelineno-15-6"></a><span class="n">ef</span><span class="o">.</span><span class="n">add_objective</span><span class="p">(</span><span class="n">transaction_cost</span><span class="p">,</span> <span class="n">w_prev</span><span class="o">=</span><span class="n">initial_weights</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<a href="#__codelineno-15-7" id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="n">ef</span><span class="o">.</span><span class="n">add_objective</span><span class="p">(</span><span class="n">L2_reg</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<a href="#__codelineno-15-8" id="__codelineno-15-8" name="__codelineno-15-8"></a><span class="n">ef</span><span class="o">.</span><span class="n">min_volatility</span><span class="p">()</span>
+<a href="#__codelineno-15-9" id="__codelineno-15-9" name="__codelineno-15-9"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-16-2" id="__codelineno-16-2" name="__codelineno-16-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-16-3" id="__codelineno-16-3" name="__codelineno-16-3"></a>    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">"transaction_cost"</span><span class="p">,</span> <span class="s2">"L2_reg"</span><span class="p">],</span>
+<a href="#__codelineno-16-4" id="__codelineno-16-4" name="__codelineno-16-4"></a>    <span class="n">w_prev</span><span class="o">=</span><span class="n">initial_weights</span><span class="p">,</span> 
+<a href="#__codelineno-16-5" id="__codelineno-16-5" name="__codelineno-16-5"></a>    <span class="n">k</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<a href="#__codelineno-16-6" id="__codelineno-16-6" name="__codelineno-16-6"></a>    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<a href="#__codelineno-16-7" id="__codelineno-16-7" name="__codelineno-16-7"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-16-8" id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a>    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">"transaction_cost"</span><span class="p">,</span> <span class="s2">"L2_reg"</span><span class="p">],</span>
+<a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a>    <span class="n">w_prev</span><span class="o">=</span><span class="n">initial_weights</span><span class="p">,</span> 
+<a href="#__codelineno-17-4" id="__codelineno-17-4" name="__codelineno-17-4"></a>    <span class="n">k</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<a href="#__codelineno-17-5" id="__codelineno-17-5" name="__codelineno-17-5"></a>    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+<a href="#__codelineno-17-6" id="__codelineno-17-6" name="__codelineno-17-6"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-17-7" id="__codelineno-17-7" name="__codelineno-17-7"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></input></input></div>
+<p>Custom convex objective:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="kn">import</span> <span class="nn">cvxpy</span> <span class="k">as</span> <span class="nn">cp</span>
+<a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a>
+<a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a><span class="k">def</span> <span class="nf">logarithmic_barrier_objective</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a>    <span class="n">log_sum</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+<a href="#__codelineno-18-5" id="__codelineno-18-5" name="__codelineno-18-5"></a>    <span class="n">var</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">quad_form</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<a href="#__codelineno-18-6" id="__codelineno-18-6" name="__codelineno-18-6"></a>    <span class="k">return</span> <span class="n">var</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">log_sum</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:3"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio"><input id="__tabbed_6_2" name="__tabbed_6" type="radio"><input id="__tabbed_6_3" name="__tabbed_6" type="radio"><div class="tabbed-labels"><label for="__tabbed_6_1">pypfopt</label><label for="__tabbed_6_2">vectorbt</label><label for="__tabbed_6_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">mean_historical_return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-19-2" id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-19-3" id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">))</span>
+<a href="#__codelineno-19-4" id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="n">ef</span><span class="o">.</span><span class="n">convex_objective</span><span class="p">(</span><span class="n">logarithmic_barrier_objective</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<a href="#__codelineno-19-5" id="__codelineno-19-5" name="__codelineno-19-5"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a>    <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+<a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a>    <span class="n">k</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a>    <span class="n">target</span><span class="o">=</span><span class="n">logarithmic_barrier_objective</span>  
+<a href="#__codelineno-20-6" id="__codelineno-20-6" name="__codelineno-20-6"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a>    <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+<a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>    <span class="n">k</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>    <span class="n">target</span><span class="o">=</span><span class="n">logarithmic_barrier_objective</span>  
+<a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></input></input></div>
+<p>Custom non-convex objective:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="k">def</span> <span class="nf">deviation_risk_parity</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">):</span>
+<a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>    <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+<a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>    <span class="n">n</span> <span class="o">=</span> <span class="n">cov_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>    <span class="n">rp</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="p">(</span><span class="n">cov_matrix</span> <span class="o">@</span> <span class="n">w</span><span class="p">))</span> <span class="o">/</span> <span class="n">cp</span><span class="o">.</span><span class="n">quad_form</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">)</span>
+<a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>    <span class="k">return</span> <span class="n">cp</span><span class="o">.</span><span class="n">sum_squares</span><span class="p">(</span><span class="n">rp</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:3"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio"><input id="__tabbed_7_2" name="__tabbed_7" type="radio"/><input id="__tabbed_7_3" name="__tabbed_7" type="radio"/><div class="tabbed-labels"><label for="__tabbed_7_1">pypfopt</label><label for="__tabbed_7_2">vectorbt</label><label for="__tabbed_7_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="n">mu</span> <span class="o">=</span> <span class="n">mean_historical_return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a><span class="n">ef</span><span class="o">.</span><span class="n">nonconvex_objective</span><span class="p">(</span><span class="n">deviation_risk_parity</span><span class="p">,</span> <span class="n">ef</span><span class="o">.</span><span class="n">cov_matrix</span><span class="p">)</span>
+<a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>    <span class="n">target</span><span class="o">=</span><span class="n">deviation_risk_parity</span><span class="p">,</span>  
+<a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>    <span class="n">target_is_convex</span><span class="o">=</span><span class="kc">False</span>
+<a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a>    <span class="n">target</span><span class="o">=</span><span class="n">deviation_risk_parity</span><span class="p">,</span>  
+<a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a>    <span class="n">target_is_convex</span><span class="o">=</span><span class="kc">False</span>
+<a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</input></div>
+<p>Black-Litterman Allocation, where <code>viewdict</code> is integrated within alpha blocks methods, where views are extracted from the median of weight range and magnitude calculated by multiplying the annualized volatility times <span class="arithmatex">\(1.96\)</span> (95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean):</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="n">sp500_data</span> <span class="o">=</span> <span class="n">vbt</span><span class="o">.</span><span class="n">YFData</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+<a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a>    <span class="s2">"^GSPC"</span><span class="p">,</span> 
+<a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a>    <span class="n">start</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">wrapper</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+<a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a>    <span class="n">end</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">wrapper</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a><span class="p">)</span>
+<a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a><span class="c1"># example given in vectorbt</span>
+<a href="#__codelineno-26-7" id="__codelineno-26-7" name="__codelineno-26-7"></a><span class="n">market_caps</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">)</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Volume"</span><span class="p">)</span>
+<a href="#__codelineno-26-8" id="__codelineno-26-8" name="__codelineno-26-8"></a><span class="n">viewdict</span> <span class="o">=</span> <span class="p">{</span>
+<a href="#__codelineno-26-9" id="__codelineno-26-9" name="__codelineno-26-9"></a>    <span class="s2">"ADAUSDT"</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span> 
+<a href="#__codelineno-26-10" id="__codelineno-26-10" name="__codelineno-26-10"></a>    <span class="s2">"BNBUSDT"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.30</span><span class="p">,</span> 
+<a href="#__codelineno-26-11" id="__codelineno-26-11" name="__codelineno-26-11"></a>    <span class="s2">"BTCUSDT"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+<a href="#__codelineno-26-12" id="__codelineno-26-12" name="__codelineno-26-12"></a>    <span class="s2">"ETHUSDT"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> 
+<a href="#__codelineno-26-13" id="__codelineno-26-13" name="__codelineno-26-13"></a>    <span class="s2">"XRPUSDT"</span><span class="p">:</span> <span class="mf">0.15</span>
+<a href="#__codelineno-26-14" id="__codelineno-26-14" name="__codelineno-26-14"></a><span class="p">}</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:3"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio"/><input id="__tabbed_8_2" name="__tabbed_8" type="radio"/><input id="__tabbed_8_3" name="__tabbed_8" type="radio"/><div class="tabbed-labels"><label for="__tabbed_8_1">pypfopt</label><label for="__tabbed_8_2">vectorbt</label><label for="__tabbed_8_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="kn">from</span> <span class="nn">pypfopt.black_litterman</span> <span class="kn">import</span> <span class="p">(</span>
+<a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a>    <span class="n">market_implied_risk_aversion</span><span class="p">,</span>
+<a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a>    <span class="n">market_implied_prior_returns</span><span class="p">,</span>
+<a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>    <span class="n">BlackLittermanModel</span>
+<a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a><span class="p">)</span>
+<a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>
+<a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a><span class="n">S</span> <span class="o">=</span> <span class="n">CovarianceShrinkage</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">ledoit_wolf</span><span class="p">()</span>
+<a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a><span class="n">delta</span> <span class="o">=</span> <span class="n">market_implied_risk_aversion</span><span class="p">(</span><span class="n">sp500_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-27-9" id="__codelineno-27-9" name="__codelineno-27-9"></a><span class="n">prior</span> <span class="o">=</span> <span class="n">market_implied_prior_returns</span><span class="p">(</span><span class="n">market_caps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">delta</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a href="#__codelineno-27-10" id="__codelineno-27-10" name="__codelineno-27-10"></a><span class="n">bl</span> <span class="o">=</span> <span class="n">BlackLittermanModel</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">pi</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span> <span class="n">absolute_views</span><span class="o">=</span><span class="n">viewdict</span><span class="p">)</span>
+<a href="#__codelineno-27-11" id="__codelineno-27-11" name="__codelineno-27-11"></a><span class="n">rets</span> <span class="o">=</span> <span class="n">bl</span><span class="o">.</span><span class="n">bl_returns</span><span class="p">()</span>
+<a href="#__codelineno-27-12" id="__codelineno-27-12" name="__codelineno-27-12"></a><span class="n">ef</span> <span class="o">=</span> <span class="n">EfficientFrontier</span><span class="p">(</span><span class="n">rets</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<a href="#__codelineno-27-13" id="__codelineno-27-13" name="__codelineno-27-13"></a><span class="n">ef</span><span class="o">.</span><span class="n">min_volatility</span><span class="p">()</span>
+<a href="#__codelineno-27-14" id="__codelineno-27-14" name="__codelineno-27-14"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">ef</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"bl_returns"</span><span class="p">,</span>  
+<a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>    <span class="n">market_prices</span><span class="o">=</span><span class="n">sp500_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>    <span class="n">market_caps</span><span class="o">=</span><span class="n">market_caps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>    <span class="n">absolute_views</span><span class="o">=</span><span class="n">viewdict</span><span class="p">,</span>
+<a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-29-2" id="__codelineno-29-2" name="__codelineno-29-2"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"bl_returns"</span><span class="p">,</span>  
+<a href="#__codelineno-29-3" id="__codelineno-29-3" name="__codelineno-29-3"></a>    <span class="n">market_prices</span><span class="o">=</span><span class="n">sp500_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-29-4" id="__codelineno-29-4" name="__codelineno-29-4"></a>    <span class="n">market_caps</span><span class="o">=</span><span class="n">market_caps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<a href="#__codelineno-29-5" id="__codelineno-29-5" name="__codelineno-29-5"></a>    <span class="n">absolute_views</span><span class="o">=</span><span class="s1">'alpha_blocks'</span><span class="p">,</span>
+<a href="#__codelineno-29-6" id="__codelineno-29-6" name="__codelineno-29-6"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-29-7" id="__codelineno-29-7" name="__codelineno-29-7"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Hierarchical Risk Parity:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:3"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio"/><input id="__tabbed_9_2" name="__tabbed_9" type="radio"/><input id="__tabbed_9_3" name="__tabbed_9" type="radio"/><div class="tabbed-labels"><label for="__tabbed_9_1">pypfopt</label><label for="__tabbed_9_2">vectorbt</label><label for="__tabbed_9_3">opendesk</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a><span class="kn">from</span> <span class="nn">pypfopt</span> <span class="kn">import</span> <span class="n">HRPOpt</span>
+<a href="#__codelineno-30-2" id="__codelineno-30-2" name="__codelineno-30-2"></a>
+<a href="#__codelineno-30-3" id="__codelineno-30-3" name="__codelineno-30-3"></a><span class="n">rets</span> <span class="o">=</span> <span class="n">returns_from_prices</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span>
+<a href="#__codelineno-30-4" id="__codelineno-30-4" name="__codelineno-30-4"></a><span class="n">hrp</span> <span class="o">=</span> <span class="n">HRPOpt</span><span class="p">(</span><span class="n">rets</span><span class="p">)</span>
+<a href="#__codelineno-30-5" id="__codelineno-30-5" name="__codelineno-30-5"></a><span class="n">hrp</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+<a href="#__codelineno-30-6" id="__codelineno-30-6" name="__codelineno-30-6"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">hrp</span><span class="o">.</span><span class="n">clean_weights</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-31-1" id="__codelineno-31-1" name="__codelineno-31-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>
+<a href="#__codelineno-31-2" id="__codelineno-31-2" name="__codelineno-31-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>  
+<a href="#__codelineno-31-3" id="__codelineno-31-3" name="__codelineno-31-3"></a>    <span class="n">optimizer</span><span class="o">=</span><span class="s2">"hrp"</span><span class="p">,</span>
+<a href="#__codelineno-31-4" id="__codelineno-31-4" name="__codelineno-31-4"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"optimize"</span>
+<a href="#__codelineno-31-5" id="__codelineno-31-5" name="__codelineno-31-5"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-32-1" id="__codelineno-32-1" name="__codelineno-32-1"></a><span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">))</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>  
+<a href="#__codelineno-32-2" id="__codelineno-32-2" name="__codelineno-32-2"></a>    <span class="n">optimizer</span><span class="o">=</span><span class="s2">"hrp"</span><span class="p">,</span>
+<a href="#__codelineno-32-3" id="__codelineno-32-3" name="__codelineno-32-3"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"optimize"</span>
+<a href="#__codelineno-32-4" id="__codelineno-32-4" name="__codelineno-32-4"></a><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="argument-groups">Argument groups<a class="headerlink" href="#argument-groups" title="Permanent link">¶</a></h3>
+<p>In cases where two functions require an argument with the same name but you want to pass different values to them, pass the argument as an instance of <code>pfopt_func_dict</code> where keys should be functions or their names, and values should be different argument values:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-33-1" id="__codelineno-33-1" name="__codelineno-33-1"></a><span class="n">vbt</span><span class="o">.</span><span class="n">pypfopt_optimize</span><span class="p">(</span>  
+<a href="#__codelineno-33-2" id="__codelineno-33-2" name="__codelineno-33-2"></a>    <span class="n">prices</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-33-3" id="__codelineno-33-3" name="__codelineno-33-3"></a>    <span class="n">expected_returns</span><span class="o">=</span><span class="s2">"bl_returns"</span><span class="p">,</span>  
+<a href="#__codelineno-33-4" id="__codelineno-33-4" name="__codelineno-33-4"></a>    <span class="n">market_prices</span><span class="o">=</span><span class="n">sp500_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Close"</span><span class="p">),</span>
+<a href="#__codelineno-33-5" id="__codelineno-33-5" name="__codelineno-33-5"></a>    <span class="n">market_caps</span><span class="o">=</span><span class="n">market_caps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<a href="#__codelineno-33-6" id="__codelineno-33-6" name="__codelineno-33-6"></a>    <span class="n">absolute_views</span><span class="o">=</span><span class="n">viewdict</span><span class="p">,</span>
+<a href="#__codelineno-33-7" id="__codelineno-33-7" name="__codelineno-33-7"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span><span class="p">,</span>
+<a href="#__codelineno-33-8" id="__codelineno-33-8" name="__codelineno-33-8"></a>    <span class="n">cov_matrix</span><span class="o">=</span><span class="n">vbt</span><span class="o">.</span><span class="n">pfopt_func_dict</span><span class="p">({</span>
+<a href="#__codelineno-33-9" id="__codelineno-33-9" name="__codelineno-33-9"></a>        <span class="s2">"EfficientFrontier"</span><span class="p">:</span> <span class="s2">"sample_cov"</span><span class="p">,</span>  
+<a href="#__codelineno-33-10" id="__codelineno-33-10" name="__codelineno-33-10"></a>        <span class="s2">"_def"</span><span class="p">:</span> <span class="s2">"ledoit_wolf"</span>  
+<a href="#__codelineno-33-11" id="__codelineno-33-11" name="__codelineno-33-11"></a>    <span class="p">})</span>
+<a href="#__codelineno-33-12" id="__codelineno-33-12" name="__codelineno-33-12"></a><span class="p">)</span>
+</code></pre></div>
+<h2 id="optimize">optimize<a class="headerlink" href="#optimize" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-34-1" id="__codelineno-34-1" name="__codelineno-34-1"></a><span class="n">Portfolio</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>
+<a href="#__codelineno-34-2" id="__codelineno-34-2" name="__codelineno-34-2"></a>    <span class="n">target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-3" id="__codelineno-34-3" name="__codelineno-34-3"></a>    <span class="n">target_is_convex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-4" id="__codelineno-34-4" name="__codelineno-34-4"></a>    <span class="n">weights_sum_to_one</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-5" id="__codelineno-34-5" name="__codelineno-34-5"></a>    <span class="n">target_constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-6" id="__codelineno-34-6" name="__codelineno-34-6"></a>    <span class="n">target_solver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-7" id="__codelineno-34-7" name="__codelineno-34-7"></a>    <span class="n">target_initial_guess</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-8" id="__codelineno-34-8" name="__codelineno-34-8"></a>    <span class="n">objectives</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-9" id="__codelineno-34-9" name="__codelineno-34-9"></a>    <span class="n">constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-10" id="__codelineno-34-10" name="__codelineno-34-10"></a>    <span class="n">alpha_block_constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a href="#__codelineno-34-11" id="__codelineno-34-11" name="__codelineno-34-11"></a>    <span class="n">sector_mapper</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-12" id="__codelineno-34-12" name="__codelineno-34-12"></a>    <span class="n">sector_lower</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-13" id="__codelineno-34-13" name="__codelineno-34-13"></a>    <span class="n">sector_upper</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-14" id="__codelineno-34-14" name="__codelineno-34-14"></a>    <span class="n">discrete_allocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-15" id="__codelineno-34-15" name="__codelineno-34-15"></a>    <span class="n">allocation_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-16" id="__codelineno-34-16" name="__codelineno-34-16"></a>    <span class="n">silence_warnings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-17" id="__codelineno-34-17" name="__codelineno-34-17"></a>    <span class="n">ignore_opt_errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-34-18" id="__codelineno-34-18" name="__codelineno-34-18"></a>    <span class="o">**</span><span class="n">kwargs</span>
+<a href="#__codelineno-34-19" id="__codelineno-34-19" name="__codelineno-34-19"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
+</code></pre></div>
+<p>Base optimizer model, allowing for the efficient computation of optimized asset weights. The portfolio method houses different optimization methods from PyPortfolioOpt, which generate optimal portfolios for various possible objective functions and parameters.</p>
+<div class="admonition warning">
+<p class="admonition-title">New Object Instantiation</p>
+<p>A new object should be instantiated if you want to make any change to objectives/constraints/bounds/parameters.</p>
+</div>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">¶</a></h3>
+<div class="highlight"><span class="filename">target</span><pre><span></span><code><a href="#__codelineno-35-1" id="__codelineno-35-1" name="__codelineno-35-1"></a>Optional[Union[Callable, str]] = "max_sharpe"
+</code></pre></div>
+<div class="result">
+<ul>
+<li><code>min_volatility</code>: Optimizes for minimum volatility</li>
+<li><code>min_semivariance</code>: Minimises the portfolio semi-variance (downside deviation)</li>
+<li><code>max_sharpe()</code>: Optimizes for maximal Sharpe ratio (a.k.a the tangency portfolio)</li>
+<li><code>max_quadratic_utility</code>: Maximises the quadratic utility, given some risk aversion</li>
+<li><code>efficient_risk</code>: Maximises return for a given target risk</li>
+<li><code>efficient_return</code>: Minimises risk for a given target return</li>
+<li><code>min_cvar</code>: Minimises the CVaR</li>
+<li><code>min_cdar</code>: Minimises the CDaR</li>
+</ul>
+<div class="admonition example">
+<p class="admonition-title">Custom Objectives: The Kelly Criterion</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-36-1" id="__codelineno-36-1" name="__codelineno-36-1"></a><span class="k">def</span> <span class="nf">kelly_objective</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">e_returns</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="c1"># (1)</span>
+<a href="#__codelineno-36-2" id="__codelineno-36-2" name="__codelineno-36-2"></a>    <span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+<a href="#__codelineno-36-3" id="__codelineno-36-3" name="__codelineno-36-3"></a>    <span class="n">objective</span> <span class="o">=</span> <span class="n">variance</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">k</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">e_returns</span><span class="p">)</span>
+<a href="#__codelineno-36-4" id="__codelineno-36-4" name="__codelineno-36-4"></a>    <span class="k">return</span> <span class="n">objective</span>
+<a href="#__codelineno-36-5" id="__codelineno-36-5" name="__codelineno-36-5"></a>
+<a href="#__codelineno-36-6" id="__codelineno-36-6" name="__codelineno-36-6"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">kelly_objective</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>In probability theory, the Kelly criterion is a formula that determines the optimal theoretical size for a bet. It is valid when the expected returns are known. The Kelly bet size is found by maximizing the expected value of the logarithm of wealth, which is equivalent to maximizing the expected geometric growth rate, J. L. Kelly Jr [1956]. The criterion is also known as the scientific gambling method, as it leads to higher wealth compared to any other strategy in the long run (i.e. the theoretical maximum return as the number of bets goes to infinity).</li>
+</ol>
+</div>
+</div>
+<div class="highlight"><span class="filename">target_is_convex</span><pre><span></span><code><a href="#__codelineno-37-1" id="__codelineno-37-1" name="__codelineno-37-1"></a>Optional[bool] = None
+</code></pre></div>
+<div class="result">
+<p>If <code>target_is_convex</code> is True, the function is added as a convex function. Otherwise, the function is added as a non-convex function.</p>
+</div>
+<div class="highlight"><span class="filename">weights_sum_to_one</span><pre><span></span><code><a href="#__codelineno-38-1" id="__codelineno-38-1" name="__codelineno-38-1"></a>Optional[bool] = None
+</code></pre></div>
+<div class="result">
+<p>Convex objective. Forces the sum of weight equals 1.</p>
+</div>
+<div class="highlight"><span class="filename">target_constraints</span><pre><span></span><code><a href="#__codelineno-39-1" id="__codelineno-39-1" name="__codelineno-39-1"></a>Optional[List[Any]] = None
+</code></pre></div>
+<div class="result"></div>
+<div class="highlight"><span class="filename">target_solver</span><pre><span></span><code><a href="#__codelineno-40-1" id="__codelineno-40-1" name="__codelineno-40-1"></a> Optional[str] = None
+</code></pre></div>
+<div class="result"></div>
+<div class="highlight"><span class="filename">target_initial_guess</span><pre><span></span><code><a href="#__codelineno-41-1" id="__codelineno-41-1" name="__codelineno-41-1"></a>Optional[np.array] = None
+</code></pre></div>
+<div class="result"></div>
+<div class="highlight"><span class="filename">objectives</span><pre><span></span><code><a href="#__codelineno-42-1" id="__codelineno-42-1" name="__codelineno-42-1"></a>Optional[List[Union[Callable, str]]] = None
+</code></pre></div>
+<div class="result">
+<p>List of lambda functions to add new term into the based objective function. This term must be convex, and built from cvxpy atomic functions.</p>
+<p>Built-in objective functions wrapper includes:</p>
+<ul>
+<li>
+<p><code>L2_reg</code>: L2 regularisation, i.e <span class="arithmatex">\(\gamma ||w||^2\)</span>, to increase the number of nonzero weights. Mean-variance optimization often results in many weights being negligible, i.e the efficient portfolio does not end up including most of the assets. This is expected behaviour, but it may be undesirable if you need a certain number of assets in your portfolio. In order to coerce the mean-variance optimizer to produce more non-negligible weights, we add what can be thought of as a “small weights penalty” to all of the objective functions, parameterised by <span class="arithmatex">\(\gamma\)</span> (gamma). This term reduces the number of negligible weights, because it has a minimum value when all weights are equally distributed, and maximum value in the limiting case where the entire portfolio is allocated to one asset. We refer to it as L2 regularisation because it has exactly the same form as the L2 regularisation term in machine learning, though a slightly different purpose (in ML it is used to keep weights small while here it is used to make them larger).</p>
+</li>
+<li>
+<p><code>ex_ante_tracking_error</code>: Calculate the (square of) the ex-ante Tracking Error, i.e <span class="arithmatex">\((w - w_b)^T \Sigma (w-w_b)\)</span></p>
+</li>
+<li><code>ex_post_tracking_error</code>: Calculate the (square of) the ex-post Tracking Error, i.e <span class="arithmatex">\(Var(r - r_b)\)</span></li>
+<li><code>portfolio_return</code>: Calculate the (negative) mean return of a portfolio</li>
+<li><code>portfolio_variance</code>: Calculate the total portfolio variance (i.e square volatility)</li>
+<li><code>quadratic_utility</code>: Quadratic utility function, i.e <span class="arithmatex">\(\mu - \frac 1 2 \delta  w^T \Sigma w\)</span></li>
+<li><code>sharpe_ratio</code>: Calculate the (negative) Sharpe ratio of a portfolio</li>
+<li><code>transaction_cost</code>: A very simple transaction cost model: sum all the weight changes and multiply by a given fraction (default to 10bps). This simulates a fixed percentage commission from your broker.</li>
+</ul>
+</div>
+<div class="highlight"><span class="filename">gamma</span><pre><span></span><code><a href="#__codelineno-43-1" id="__codelineno-43-1" name="__codelineno-43-1"></a>Optional[float] = 1
+</code></pre></div>
+<div class="result">
+<p>L2 regularisation parameter, defaults to 1. Increase if you want more non-negligible weights. In practice, <span class="arithmatex">\(\gamma\)</span> must be tuned to achieve the level of regularisation that you want. However, if the universe of assets is small (less than 20 assets), then gamma=1 is a good starting point. For larger universes, or if you want more non-negligible weights in the final portfolio, increase gamma.</p>
+</div>
+<div class="highlight"><span class="filename">k</span><pre><span></span><code><a href="#__codelineno-44-1" id="__codelineno-44-1" name="__codelineno-44-1"></a>Optional[float] = 0.001
+</code></pre></div>
+<div class="result">
+<p>When transaction cost objective is set, fractional cost per unit weight exchanged.</p>
+</div>
+<div class="highlight"><span class="filename">constraints</span><pre><span></span><code><a href="#__codelineno-45-1" id="__codelineno-45-1" name="__codelineno-45-1"></a>Optional[List[Callable]] = None
+</code></pre></div>
+<div class="result">
+<p>List of lambda function (e.i. all assets &lt;= 3% of the total portfolio = [lambda w: w &lt;= .03]. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.</p>
+</div>
+<div class="highlight"><span class="filename">alpha_block_constraints</span><pre><span></span><code><a href="#__codelineno-46-1" id="__codelineno-46-1" name="__codelineno-46-1"></a>Optional[bool] = True
+</code></pre></div>
+<div class="result">
+<p>Alpha blocks core constraints. It adds constraints on the sum of weights of different groups of assets. Most commonly, these will be sector constraints. These constraints a particularly relevant when working with alpha blocks (top-down or bottom-up), as we aim to limit our exposure to paricular group of assets. Defaults to <code>True</code>.</p>
+</div>
+<div class="highlight"><span class="filename">sector_mapper</span><pre><span></span><code><a href="#__codelineno-47-1" id="__codelineno-47-1" name="__codelineno-47-1"></a>Optional[dict] = None
+</code></pre></div>
+<div class="result">
+<p>Maps tickers to sectors. Equivalent to <code>Strategy.mapping_table</code>.</p>
+</div>
+<div class="highlight"><span class="filename">sector_lower</span><pre><span></span><code><a href="#__codelineno-48-1" id="__codelineno-48-1" name="__codelineno-48-1"></a>Optional[dict] = None
+</code></pre></div>
+<div class="result">
+<p>Lower bounds for each sector. Equivalent to <code>Portfolio.lower_bound</code>.</p>
+</div>
+<div class="highlight"><span class="filename">sector_upper</span><pre><span></span><code><a href="#__codelineno-49-1" id="__codelineno-49-1" name="__codelineno-49-1"></a>Optional[dict] = None
+</code></pre></div>
+<div class="result">
+<p>Upper bounds for each sector. Equivalent to <code>Portfolio.upper_bound</code>.</p>
+</div>
+<div class="highlight"><span class="filename">discrete_allocation</span><pre><span></span><code><a href="#__codelineno-50-1" id="__codelineno-50-1" name="__codelineno-50-1"></a>Optional[bool] = None
+</code></pre></div>
+<div class="result">
+<p>The discrete_allocation module contains the <code>DiscreteAllocation</code> class, which offers multiple methods to generate a discrete portfolio allocation from continuous weights. If <code>discrete_allocation</code> is True, it calls <code>allocation_method</code> as an attribute of the allocation object.</p>
+</div>
+<div class="highlight"><span class="filename">allocation_method</span><pre><span></span><code><a href="#__codelineno-51-1" id="__codelineno-51-1" name="__codelineno-51-1"></a>Optional[str] = "lp_portfolio"
+</code></pre></div>
+<div class="result">
+<p>Generate a discrete portfolio allocation from continuous weights.  Method are:</p>
+<ul>
+<li><code>greedy_portfolio</code>: Uses a greedy algorithm</li>
+<li><code>lp_portfolio</code>: Uses linear programming</li>
+</ul>
+</div>
+<div class="highlight"><span class="filename">silence_warnings</span><pre><span></span><code><a href="#__codelineno-52-1" id="__codelineno-52-1" name="__codelineno-52-1"></a>Optional[bool] = None
+</code></pre></div>
+<div class="result">
+<p>Disable warnings. If set to False, it throws a warning stating that either the optimization fails or that an argument wasn't required by any function in the call stack. </p>
+</div>
+<div class="highlight"><span class="filename">ignore_opt_errors</span><pre><span></span><code><a href="#__codelineno-53-1" id="__codelineno-53-1" name="__codelineno-53-1"></a>Optional[bool] = None
+</code></pre></div>
+<div class="result">
+<p>Ignore any target optimization errors.</p>
+</div>
+<div class="highlight"><span class="filename">optimizer</span><pre><span></span><code><a href="#__codelineno-54-1" id="__codelineno-54-1" name="__codelineno-54-1"></a>Optional[str] = None
+</code></pre></div>
+<div class="result">
+<p>Specify the optimizer. It can be an instance of <code>pypfopt.base_optimizer.BaseOptimizer</code>, an attribute of <code>pypfopt</code>, a subclass of <code>pypfopt.base_optimizer.BaseOptimizer</code>, or one of the following options:</p>
+<ul>
+<li><code>efficient_frontier</code>: <code>pypfopt.efficient_frontier.EfficientFrontier</code></li>
+<li><code>efficient_cdar</code>: <code>pypfopt.efficient_frontier.EfficientCDaR</code></li>
+<li><code>efficient_cvar</code>: <code>pypfopt.efficient_frontier.EfficientCVaR</code></li>
+<li><code>efficient_semivariance</code>: <code>pypfopt.efficient_frontier.EfficientSemivariance</code></li>
+<li><code>black_litterman</code> or <code>bl</code>: <code>pypfopt.black_litterman.BlackLittermanModel</code></li>
+<li><code>hrp</code>: <code>pypfopt.hierarchical_portfolio.HRPOpt</code></li>
+<li><code>cla</code>: <code>pypfopt.cla.CLA</code></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Black-litterman</p>
+<blockquote>
+<p>Black-Litterman model takes a Bayesian approach to asset allocation. Specifically, it combines a prior estimate of returns (for example, the market-implied returns) with views on certain assets, to produce a posterior estimate of expected returns. It will then meaningfully propagate views, taking into account the covariance with other assets. </p>
+</blockquote>
+</div>
+</div>
+<div class="highlight"><span class="filename">absolute_views</span><pre><span></span><code><a href="#__codelineno-55-1" id="__codelineno-55-1" name="__codelineno-55-1"></a>Optional[pandas.core.series.Series | Dict[str, float] | str] = None
+</code></pre></div>
+<div class="result">
+<p>A colleciton of K absolute views on a subset of assets, defaults to None. If set to <code>alpha_blocks</code>, it computes the "alpha blocks views". The alpha blocks implementation works with the Black-Litterman absolute views, where views are extracted from the median of weight range and magnitude calculated by multiplying the annualized volatility times <span class="arithmatex">\(1.96\)</span>. In probability and statistics, the 97.5<sup>th</sup> percentile point of the standard normal distribution is a number commonly used for statistical calculations. The approximate value of this number is 1.96, meaning that 95% of the area under a normal curve lies within approximately 1.96 standard deviations of the mean.</p>
+</div>
+<div class="highlight"><span class="filename">pi</span><pre><span></span><code><a href="#__codelineno-56-1" id="__codelineno-56-1" name="__codelineno-56-1"></a>Optional[pandas.core.series.Series | numpy.ndarray] = None
+</code></pre></div>
+<div class="result">
+<p>Nx1 prior estimate of returns, defaults to None. If pi=”market”, calculate a market-implied prior (requires market_caps to be passed). If pi=”equal”, use an equal-weighted prior.</p>
+</div>
+<div class="highlight"><span class="filename">omega</span><pre><span></span><code><a href="#__codelineno-57-1" id="__codelineno-57-1" name="__codelineno-57-1"></a>Optional[pandas.core.frame.DataFrame | numpy.ndarray | string] = None
+</code></pre></div>
+<div class="result">
+<p>KxK view uncertainty matrix (diagonal), defaults to None Can instead pass “idzorek” to use Idzorek’s method (requires you to pass view_confidences). If omega=”default” or None, we set the uncertainty proportional to the variance.</p>
+</div>
+<div class="highlight"><span class="filename">view_confidences</span><pre><span></span><code><a href="#__codelineno-58-1" id="__codelineno-58-1" name="__codelineno-58-1"></a>Optional[pandas.core.series.Series | numpy.ndarray | List] = None
+</code></pre></div>
+<div class="result">
+<p>Kx1 vector of percentage view confidences (between 0 and 1), required to compute omega via Idzorek’s method.</p>
+</div>
+<div class="highlight"><span class="filename">tau</span><pre><span></span><code><a href="#__codelineno-59-1" id="__codelineno-59-1" name="__codelineno-59-1"></a>Optional[float] = 0.05
+</code></pre></div>
+<div class="result">
+<p>the weight-on-views scalar (default is 0.05) risk_aversion (positive float, optional) – risk aversion parameter, defaults to 1.</p>
+</div>
+<div class="highlight"><span class="filename">market_caps</span><pre><span></span><code><a href="#__codelineno-60-1" id="__codelineno-60-1" name="__codelineno-60-1"></a>Optional[pandas.core.series.Series | numpy.ndarray] = None
+</code></pre></div>
+<div class="result">
+<p>Market caps for the assets, required if pi=”market”</p>
+</div>
+<div class="highlight"><span class="filename">risk_free_rate</span><pre><span></span><code><a href="#__codelineno-61-1" id="__codelineno-61-1" name="__codelineno-61-1"></a>Optional[float] = 0.02
+</code></pre></div>
+<div class="result">
+<p>Risk-free rate of borrowing/lending, defaults to 0.02. The period of the risk-free rate should correspond to the frequency of expected returns.</p>
+</div>
+<div class="highlight"><span class="filename">expected_returns</span><pre><span></span><code><a href="#__codelineno-62-1" id="__codelineno-62-1" name="__codelineno-62-1"></a>Optional[str] = "mean_historical_return"
+</code></pre></div>
+<div class="result">
+<p>Specify the expected returns. <code>expected_returns</code> can be an array, an attribute of <code>pypfopt.expected_returns</code>, a function, or one of the following options:</p>
+<ul>
+<li><code>mean_historical_return</code>: <code>pypfopt.expected_returns.mean_historical_return</code></li>
+<li><code>ema_historical_return</code>: <code>pypfopt.expected_returns.ema_historical_return</code></li>
+<li><code>capm_return</code>: <code>pypfopt.expected_returns.capm_return</code></li>
+<li><code>bl_returns</code>: <code>pypfopt.black_litterman.BlackLittermanModel.bl_returns</code></li>
+</ul>
+</div>
+<div class="highlight"><span class="filename">cov_matrix</span><pre><span></span><code><a href="#__codelineno-63-1" id="__codelineno-63-1" name="__codelineno-63-1"></a>Optional[str] = "ledoit_wolf"
+</code></pre></div>
+<div class="result">
+<p>Specify the covariance matrix. <code>cov_matrix</code> can be an array, an attribute of <code>pypfopt.risk_models</code>, a function, or one of the following options:</p>
+<ul>
+<li><code>sample_cov</code>: pypfopt.risk_models.sample_cov</li>
+<li><code>semicovariance</code> or <code>semivariance</code>: pypfopt.risk_models.semicovariance</li>
+<li><code>exp_cov</code>: pypfopt.risk_models.exp_cov</li>
+<li><code>ledoit_wolf</code>: <code>pypfopt.risk_models.CovarianceShrinkage.ledoit_wolf</code> with <code>constant_variance</code> as shrinkage factor</li>
+<li><code>ledoit_wolf_single_factor</code>: <code>pypfopt.risk_models.CovarianceShrinkage.ledoit_wolf</code> with <code>single_factor</code> as shrinkage factor</li>
+<li><code>ledoit_wolf_constant_correlation</code>: <code>pypfopt.risk_models.CovarianceShrinkage.ledoit_wolf</code> with <code>constant_correlation</code> as shrinkage factor</li>
+<li><code>oracle_approximating</code>: <code>pypfopt.risk_models.CovarianceShrinkage.ledoit_wolf</code> with <code>oracle_approximating</code> as shrinkage factor</li>
+</ul>
+</div>
+<div class="highlight"><span class="filename">weight_bounds</span><pre><span></span><code><a href="#__codelineno-64-1" id="__codelineno-64-1" name="__codelineno-64-1"></a>Optional[Tuple[float, float]] = (-1, 1)
+</code></pre></div>
+<div class="result">
+<p>Minimum and maximum weight of each asset or single min/max pair if all identical, defaults to (-1, 1). If <code>weight_bounds=(-1, 1)</code>, allows short positions.</p>
+</div>
+<div class="highlight"><span class="filename">target_return</span><pre><span></span><code><a href="#__codelineno-65-1" id="__codelineno-65-1" name="__codelineno-65-1"></a>float
+</code></pre></div>
+<div class="result">
+<p>The desired return of the resulting portfolio.</p>
+</div>
+<div class="highlight"><span class="filename">market_neutral</span><pre><span></span><code><a href="#__codelineno-66-1" id="__codelineno-66-1" name="__codelineno-66-1"></a>Optional[bool] = False
+</code></pre></div>
+<div class="result">
+<p>whether the portfolio should be market neutral (weights sum to zero), defaults to False. Requires negative lower weight bound.</p>
+</div>
+<div class="highlight"><span class="filename">target_volatility</span><pre><span></span><code><a href="#__codelineno-67-1" id="__codelineno-67-1" name="__codelineno-67-1"></a>float
+</code></pre></div>
+<div class="result">
+<p>The desired maximum volatility of the resulting portfolio.</p>
+</div>
+<div class="highlight"><span class="filename">risk_aversion</span><pre><span></span><code><a href="#__codelineno-68-1" id="__codelineno-68-1" name="__codelineno-68-1"></a>Optional[int] = 1
+</code></pre></div>
+<div class="result">
+<p>Risk aversion parameter (must be greater than 0), defaults to 1.</p>
+</div>
+<div class="highlight"><span class="filename">n_asset_constraints</span><pre><span></span><code><a href="#__codelineno-69-1" id="__codelineno-69-1" name="__codelineno-69-1"></a>Optional[List[Type]] = None
+</code></pre></div>
+<div class="result">
+<p>Number of assets in the portfolio constraints. Cardinality constraints are not convex, making them difficult to implement. However, we can treat it as a mixed-integer program and solve (provided you have access to a solver). for small problems with less than 1000 variables and constraints, you can use the community version of <a href="https://en.wikipedia.org/wiki/CPLEX">CPLEX</a> available in python <code>pip install cplex</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>n_asset_constraints</code></p>
+<p>This functionnality is still work in progress, as it requires external capabilities (<code>cplex</code>).</p>
+</div>
+</div>
+<h3 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">¶</a></h3>
+<p><code>OrderedDict</code>, optimized weights.</p>
+<h2 id="example-optimizer">Example Optimizer<a class="headerlink" href="#example-optimizer" title="Permanent link">¶</a></h2>
+<div class="admonition example">
+<p class="admonition-title">Example Optimizer<p>Portfolio construction, which involves optimizing the allocation of assets within a portfolio, can be a complex and nuanced process. We have developed a method that allows for greater flexibility and experimentation in the portfolio optimization process. This approach enables the exploration of a wide range of potential portfolio compositions, and the example provided illustrates this method applied from the initial stages of portfolio construction:</p>
+<ul>
+<li>A mapping table, <code>mapping_table</code>, has been defined to specify the group membership of each investable stocks</li>
+<li>The base model is set <code>mvo</code>, the Mean-Variance Optimization from the <a href="https://pyportfolioopt.readthedocs.io/en/latest/MeanVariance.html">pypfopt library</a>, with the appropriate return and risk models</li>
+<li>The weight bounds parameter, <code>weight_bounds</code> is set to <code>(-1, 1)</code>, which serves as the first constraint by limiting the minimum and maximum weight of each asset in portfolios that allow short positions</li>
+<li>Additionally, new constraints are introduced to the optimization problem in the form of convex inequalities, which ensure that long positions do not exceed 10% and short positions do not fall below -10%</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-70-1" id="__codelineno-70-1" name="__codelineno-70-1"></a><span class="kn">from</span> <span class="nn">opendesk</span> <span class="kn">import</span> <span class="n">Strategy</span>
+<a href="#__codelineno-70-2" id="__codelineno-70-2" name="__codelineno-70-2"></a>
+<a href="#__codelineno-70-3" id="__codelineno-70-3" name="__codelineno-70-3"></a><span class="n">strategy</span> <span class="o">=</span> <span class="n">Strategy</span><span class="p">(</span>
+<a href="#__codelineno-70-4" id="__codelineno-70-4" name="__codelineno-70-4"></a>    <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span> 
+<a href="#__codelineno-70-5" id="__codelineno-70-5" name="__codelineno-70-5"></a>    <span class="n">topdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a href="#__codelineno-70-6" id="__codelineno-70-6" name="__codelineno-70-6"></a>    <span class="n">mapping_table</span><span class="o">=</span><span class="n">mapping_table</span> <span class="c1"># (3)</span>
+<a href="#__codelineno-70-7" id="__codelineno-70-7" name="__codelineno-70-7"></a><span class="p">)</span>
+<a href="#__codelineno-70-8" id="__codelineno-70-8" name="__codelineno-70-8"></a><span class="n">strategy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">sector_prices</span><span class="p">)</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span> <span class="c1"># (1)</span>
+<a href="#__codelineno-70-9" id="__codelineno-70-9" name="__codelineno-70-9"></a><span class="n">weights</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">portfolio</span><span class="p">(</span><span class="n">stock_prices</span><span class="p">)</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span> <span class="c1"># (2)</span>
+<a href="#__codelineno-70-10" id="__codelineno-70-10" name="__codelineno-70-10"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">"min_volatility"</span>
+<a href="#__codelineno-70-11" id="__codelineno-70-11" name="__codelineno-70-11"></a>    <span class="n">weight_bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># (4)</span>
+<a href="#__codelineno-70-12" id="__codelineno-70-12" name="__codelineno-70-12"></a>    <span class="n">constraints</span><span class="o">=</span><span class="p">[</span>
+<a href="#__codelineno-70-13" id="__codelineno-70-13" name="__codelineno-70-13"></a>        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">&lt;=</span>  <span class="mf">.1</span><span class="p">,</span> 
+<a href="#__codelineno-70-14" id="__codelineno-70-14" name="__codelineno-70-14"></a>        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">.1</span>
+<a href="#__codelineno-70-15" id="__codelineno-70-15" name="__codelineno-70-15"></a>    <span class="p">]</span> <span class="c1"># (5)</span>
+<a href="#__codelineno-70-16" id="__codelineno-70-16" name="__codelineno-70-16"></a><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>pandas.DataFrame object, with specifiy the variation of sector returns over time.</li>
+<li>pandas.DataFrame object, with specifiy the variation of stock prices over time.</li>
+<li>Mapping table where stock ticker/id are keys and sector name are values.</li>
+<li><code>weight_bounds</code> parameter serves as a constraint by limiting the minimum and maximum weight of each asset in portfolios. Because it ranges from <code>-1</code> to <code>1</code>, it allows Long and Shorts.</li>
+<li>Users can add new constraints in a form of lambda function as the user need to the optimization problem. This constraint must satisfy DCP rules, i.e be either a linear equality constraint or convex inequality constraint.</li>
+</ol>
+</p>
+</div>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 13, 2023</span>
+<br/>
+        Created:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 13, 2023</span>
+</small>
+</div>
+<form class="md-feedback" hidden="" name="feedback">
+<fieldset>
+<legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+<div class="md-feedback__inner">
+<div class="md-feedback__list">
+<button class="md-feedback__icon md-icon" data-md-value="1" title="This page was helpful" type="submit">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35Z"></path></svg>
+</button>
+<button class="md-feedback__icon md-icon" data-md-value="0" title="This page could be improved" type="submit">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c.67 0 1.32.12 1.94.33L13 9.35l-4 5 3 7M16.5 3C19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35l-1-7 4.5-5-2.65-5.08C13.87 3.47 15.17 3 16.5 3Z"></path></svg>
+</button>
+</div>
+<div class="md-feedback__note">
+<div data-md-value="1" hidden="">
+              
+              
+                
+              
+              Thanks for your feedback!
+            </div>
+<div data-md-value="0" hidden="">
+              
+              
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="..." rel="noopener" target="_blank">feedback form</a>.
+            </div>
+</div>
+</div>
+</fieldset>
+</form>
+</article>
+</div>
+</div>
+<a class="md-top md-icon" data-md-component="top" hidden="" href="#">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Back to top
+          </a>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">
+      Copyright © 2015 - 2022 ActurialCapital
+    </div>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/squidfunk" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</a>
+<a class="md-social__link" href="https://gitter.im/squidfunk/mkdocs-material" rel="noopener" target="_blank" title="gitter.im">
+<svg viewbox="0 0 384 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4v322.5zM166.9 76.1h-50.4V512h50.4V76.1zm100.6 0h-50.4V512h50.4V76.1zM368 76h-50.4v247H368V76z"></path></svg>
+</a>
+<a class="md-social__link" href="https://hub.docker.com/r/squidfunk/mkdocs-material/" rel="noopener" target="_blank" title="hub.docker.com">
+<svg viewbox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"></path></svg>
+</a>
+<a class="md-social__link" href="https://pypi.org/project/mkdocs-material/" rel="noopener" target="_blank" title="pypi.org">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"></path></svg>
+</a>
+<a class="md-social__link" href="https://twitter.com/squidfunk" rel="noopener" target="_blank" title="twitter.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg>
+</a>
+<a class="md-social__link" href="https://twitter.com/squidfunk" rel="noopener" target="_blank" title="twitter.com">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<div class="md-consent" data-md-component="consent" hidden="" id="__consent">
+<div class="md-consent__overlay"></div>
+<aside class="md-consent__inner">
+<form class="md-consent__form md-grid md-typeset" name="consent">
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" id="__settings" type="checkbox"/>
+<div class="md-consent__settings">
+<ul class="task-list">
+<li class="task-list-item">
+<label class="task-list-control">
+<input checked="" name="analytics" type="checkbox"/>
+<span class="task-list-indicator"></span>
+          Google Analytics
+        </label>
+</li>
+<li class="task-list-item">
+<label class="task-list-control">
+<input checked="" name="github" type="checkbox"/>
+<span class="task-list-indicator"></span>
+          GitHub
+        </label>
+</li>
+</ul>
+</div>
+<div class="md-consent__controls">
+<button class="md-button md-button--primary">Accept</button>
+<label class="md-button" for="__settings">Manage settings</label>
+</div>
+</form>
+</aside>
+</div>
+<script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+<script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.expand", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+<script src="../../../../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+<script src="../../../../javascripts/mathjax.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../../../javascripts/shortcuts.js"></script>
+<script src="../../../../assets/js/termynal.js"></script>
+<script src="../../../../assets/js/termynal.min.js"></script>
+<script src="../../../../assets/js/custom.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
